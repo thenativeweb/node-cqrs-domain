@@ -2,7 +2,7 @@
 
 [![Build Status](https://secure.travis-ci.org/adrai/node-cqrs-domain.png)](http://travis-ci.org/adrai/node-cqrs-domain)
 
-Node-cqrs-domain is a node.js module based on [nodeEventStore](http://jamuhl.github.com/nodeEventStore/) that.
+Node-cqrs-domain is a node.js module based on [nodeEventStore](http://jamuhl.github.com/nodeEventStore/).
 It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.
 
 # Installation
