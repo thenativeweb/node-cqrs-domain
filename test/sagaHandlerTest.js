@@ -9,6 +9,8 @@ var commandEmitter = new EventEmitter();
 
 var Saga = sagaBase.extend({
     somethingDoneEvent: function(evt) {
+        this.set('a', 'b');
+        this.set({ c: 'd' });
         evt.command = 'blaCmd';
         delete evt.event;
         delete evt.commandId;
@@ -28,12 +30,12 @@ var sagaHandler = sagaHandlerBase.extend({
     loadSaga: function(id, callback) {
         this.saga = saga;
 
-        callback(null, this.saga, this.stream);
+        callback(null, this.saga);
     },
 
-    commit: function(uncommittedEvents, stream, callback) {
-        stream.uncommittedEvents = uncommittedEvents;
-        stream.emit('done', uncommittedEvents);
+    commit: function(saga, callback) {
+        this.stream.data = saga.toJSON();
+        this.stream.emit('done', this.stream.data);
     }
 });
 
@@ -51,10 +53,12 @@ describe('SagaHandlerBase', function() {
             }
         };
         
-        it('it should be passing event to saga', function(done) {
+        it('it should have data of saga', function(done) {
             // then
-            sagaHandler.stream.once('done', function(uncommittedEvents) {
-                expect(uncommittedEvents[0].payload.setMe).to.eql('bimbimbim');
+            sagaHandler.stream.once('done', function(data) {
+                expect(data.id).to.eql('id_1');
+                expect(data.a).to.eql('b');
+                expect(data.c).to.eql('d');
                 done();
             });
 
