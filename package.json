@@ -21,7 +21,7 @@
   "devDependencies": {
     "mocha": ">= 1.0.1",
     "expect.js": ">= 0.1.2",
-    "rule-validator": ">= 0.1.0"
+    "rule-validator": ">= 0.1.1"
   },
   "description": "Node-cqrs-domain is a node.js module based on nodeEventStore. It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.",
   "keywords"    : [
