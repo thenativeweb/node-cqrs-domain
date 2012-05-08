@@ -35,11 +35,11 @@ var commandHandler = commandHandlerBase.extend({
         callback(null, this.aggregate, this.stream);
     },
 
-    commit: function(cmdId, uncommittedEvents, stream, callback) {
+    commit: function(cmdId, aggregate, stream, callback) {
         var self = this;
 
-        stream.uncommittedEvents = uncommittedEvents;
-        stream.emit('done', uncommittedEvents);
+        stream.uncommittedEvents = aggregate.uncommittedEvents;
+        stream.emit('done', aggregate.uncommittedEvents);
     }
 });
 
