@@ -20,6 +20,12 @@ module.exports = base.extend({
         this.checkBusinessRules(callback);
     },
 
+    fooIt: function(data, callback) {
+        this.apply(this.toEvent('fooIted', data));
+
+        this.checkBusinessRules(callback);
+    },
+
     dummyChanged: function(data) {
         this.set(data);
     },
@@ -30,6 +36,10 @@ module.exports = base.extend({
 
     dummyDestroyed: function(data) {
         this.set('destroyed', true);
+    },
+
+    fooIted: function(data) {
+        this.set('foo', true);
     }
 
 });

@@ -128,6 +128,79 @@ describe('Domain', function() {
 
             });
 
+            describe('having a command handler that sends commands to other command handlers', function() {
+
+                var dummyEmitter = new (require('events').EventEmitter)();
+
+                before(function(done) {
+
+                    domain.on('event', function(evt) {
+                        dummyEmitter.emit('published', evt);
+                    });
+                    domain.initialize({
+                        commandHandlersPath: __dirname + '/commandHandlers',
+                        aggregatesPath: __dirname + '/aggregates',
+                        sagaHandlersPath: __dirname + '/sagaHandlers',
+                        sagasPath: __dirname + '/sagas',
+                        publishingInterval: 20
+                    }, done);
+
+                });
+
+                it('it should acknowledge the command', function(done) {
+
+                    var cmd = {
+                        command: 'fooIt',
+                        id: '82517',
+                        payload: {
+                            haha: 'hihi'
+                        }
+                    };
+                    domain.handle(cmd, function(err) {
+                        expect(err).not.to.be.ok();
+                        done();
+                    });
+
+                });
+
+                it('it should publish an event', function(done) {
+
+                    var cmd = {
+                        command: 'fooIt',
+                        id: '82517',
+                        payload: {
+                            haha: 'hihi'
+                        }
+                    };
+
+                    var fooItedReceived = false
+                      , fooCretedReceived = false;
+
+                    function finish(evt) {
+                        if (fooItedReceived && fooCretedReceived) {
+                            return;
+                        }
+                        if (evt.event === 'fooIted') {
+                            fooItedReceived = true;
+                        } else if (evt.event === 'fooCreated') {
+                            fooCretedReceived = true;
+                        }
+
+                        if (fooItedReceived && fooCretedReceived) {
+                            done();
+                        }
+                    }
+
+                    dummyEmitter.on('published', function(evt) {
+                        finish(evt);
+                    });
+
+                    domain.handle(cmd, function(err) {});
+
+                });
+
+            });
+
         });
             
     });

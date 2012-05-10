@@ -16,7 +16,8 @@
     "eventemitter2": ">= 0.4.8",
     "node-queue": ">= 0.1.1",
     "eventstore": ">= 0.6.0",
-    "viewmodel": ">= 0.1.1"
+    "viewmodel": ">= 0.1.1",
+    "nodeEventedCommand": ">= 0.1.1"
   },
   "devDependencies": {
     "mocha": ">= 1.0.1",
