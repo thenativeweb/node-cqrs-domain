@@ -1,7 +1,23 @@
 var expect = require('expect.js')
   , EventEmitter = require('events').EventEmitter
   , commandHandlerBase = require('../index').commandHandlerBase
-  , aggregateBase = require('../index').aggregateBase;
+  , aggregateBase = require('../index').aggregateBase
+  , ruleBase = require('rule-validator');
+
+var valRules = ruleBase.extend(
+    {
+        doSomethingCommand: {
+            setMePass: {
+                type: 'string',
+                minLength: 1
+            },
+            setMeFails: {
+                type: 'string',
+                minLength: 100
+            }
+        }
+    }
+);
 
 var stream = new EventEmitter();
 
@@ -29,6 +45,8 @@ var commandHandler = commandHandlerBase.extend({
 
     stream: stream,
 
+    validationRules: valRules,
+
     loadAggregate: function(id, callback) {
         this.aggregate = aggregate;
 
@@ -45,6 +63,24 @@ var commandHandler = commandHandlerBase.extend({
 
 
 describe('CommandHandlerBase', function() {
+
+    describe('command validation', function() {
+        
+        it('it should pass given valid data', function(done) {
+            commandHandler.validate('doSomethingCommand', { setMePass: 'ok' }, function(err) {
+                expect(err).not.to.be.ok();
+                done();
+            });
+        });
+
+        it('it should fail given invalid data', function(done) {
+            commandHandler.validate('doSomethingCommand', { setMeFails: 'nok' }, function(err) {
+                expect(err).to.be.ok();
+                done();
+            });
+        });
+
+    });
 
     describe('calling handle function', function() {
 

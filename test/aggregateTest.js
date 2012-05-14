@@ -27,8 +27,6 @@ var Aggregate = aggregateBase.extend({
         this.set(data);
     }, 
 
-    validationRules: valRules,
-
     businessRules: [
         function(changed, previous, callback) {
             if (changed.a > changed.b) {
@@ -57,24 +55,6 @@ var aggregate = new Aggregate('id_1');
 aggregate.set({revision: 0});
 
 describe('Aggregation Base', function() {
-
-    describe('command validation', function() {
-        
-        it('it should pass given valid data', function(done) {
-            aggregate.validate('doSomethingCommand', { setMePass: 'ok' }, function(err) {
-                expect(err).not.to.be.ok();
-                done();
-            });
-        });
-
-        it('it should fail given invalid data', function(done) {
-            aggregate.validate('doSomethingCommand', { setMeFails: 'nok' }, function(err) {
-                expect(err).to.be.ok();
-                done();
-            });
-        });
-
-    });
 
     describe('business rules validation', function() {
         
