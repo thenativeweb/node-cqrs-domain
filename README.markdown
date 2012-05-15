@@ -29,6 +29,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
     });
 
+    domain.handle({ id: 'msgId', command: 'changeDummy', payload: { id: '23445' } }, function(err) {
+
+    });
+
 ## Define aggregates...
 
     var base = require('cqrs-domain').aggregateBase;
