@@ -41,6 +41,6 @@
     "url": "git@github.com:adrai/node-cqrs-domain.git"
   },
   "scripts" : { 
-    "test" : "mocha"
+    "test" : "mocha && mocha test/integration/domainTest.js"
   } 
 }
