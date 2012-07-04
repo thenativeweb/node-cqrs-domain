@@ -28,21 +28,21 @@ var Aggregate = aggregateBase.extend({
     }, 
 
     businessRules: [
-        function(changed, previous, callback) {
+        function(changed, previous, events, callback) {
             if (changed.a > changed.b) {
                 callback('b must be bigger than a!');
             } else {
                 callback(null);
             }
         },
-        function(changed, previous, callback) {
+        function(changed, previous, events, callback) {
             if (changed.d > changed.c) {
                 callback('c must be bigger than d!');
             } else {
                 callback(null);
             }
         },
-        function(changed, previous, callback) {
+        function(changed, previous, events, callback) {
             if (changed.a < previous.a) {
                 callback('a must be bigger than a before!');
             } else {
