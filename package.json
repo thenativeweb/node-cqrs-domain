@@ -1,7 +1,7 @@
 {
   "author": "adrai",
   "name": "cqrs-domain",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "private": false,
   "main": "index.js",
   "engines": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "async": ">= 0.1.18",
-    "lodash": ">= 0.4.2",
+    "lodash": ">= 0.5.x",
     "eventemitter2": ">= 0.4.8",
     "node-queue": ">= 0.2.2",
     "eventstore": ">= 0.6.0",
@@ -40,6 +40,15 @@
     "type": "git",
     "url": "git@github.com:adrai/node-cqrs-domain.git"
   },
+  "bugs": {
+    "url": "https://github.com/adrai/node-cqrs-domain/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/adrai/node-cqrs-domain/master/licence"
+    }
+  ],
   "scripts" : { 
     "test" : "mocha && mocha test/integration/domainTest.js"
   } 
