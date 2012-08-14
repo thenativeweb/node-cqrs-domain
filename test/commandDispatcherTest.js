@@ -40,6 +40,7 @@ describe('commandDispatcher', function() {
                 // else you would call the dequeue function more than once 
                 // as it is bound in initalize function
                 eventEmitter.removeAllListeners('handled:*');
+                eventEmitter.registered = {};
             });
 
             it('it should connect', function(done) {
@@ -56,7 +57,9 @@ describe('commandDispatcher', function() {
             var emitted = false;
 
             beforeEach(function(done) {
+                eventEmitter.registered = {};
                 eventEmitter.once('handle:changeDummy', function() { emitted = true; });
+                eventEmitter.register('handle:changeDummy');
 
                 // remove listeners as you connect in a second test again 
                 // else you would call the dequeue function more than once 
@@ -105,6 +108,10 @@ describe('commandDispatcher', function() {
 
             describe('having no commandhandler', function() {
 
+                before(function() {
+                    eventEmitter.registered = {};
+                });
+
                 it('it should callback with error', function(done) {
                     commandDispatcher.dispatch(command, function(err) {
                         expect(err).to.be.ok();
@@ -128,6 +135,7 @@ describe('commandDispatcher', function() {
 
                 beforeEach(function() {
                     eventEmitter.once('handle:changeDummy', function() {});
+                    eventEmitter.register('handle:changeDummy');
                 });
 
                 it('it should callback with success', function(done) {
