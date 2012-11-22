@@ -1,7 +1,7 @@
 {
   "author": "adrai",
   "name": "cqrs-domain",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": false,
   "main": "index.js",
   "engines": {
@@ -12,11 +12,11 @@
   },
   "dependencies": {
     "async": ">= 0.1.18",
-    "lodash": ">= 0.5.x",
+    "lodash": ">= 0.10.x",
     "eventemitter2": ">= 0.4.8",
     "node-queue": ">= 0.2.3",
     "eventstore": ">= 0.6.0",
-    "viewmodel": ">= 0.4.5",
+    "viewmodel": ">= 0.4.9",
     "nodeEventedCommand": ">= 0.1.2",
     "retry": ">= 0.6.0"
   },
