@@ -24,6 +24,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         sagaHandlersPath: __dirname + '/sagaHandlers',
         sagasPath: __dirname + '/sagas',
         publishingInterval: 20,
+        forkEventDispatching: true,
         snapshotThreshold: 10
     }, function(err) {
 
