@@ -1,7 +1,7 @@
 {
   "author": "adrai",
   "name": "cqrs-domain",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "private": false,
   "main": "index.js",
   "engines": {
