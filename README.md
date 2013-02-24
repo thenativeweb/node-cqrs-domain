@@ -74,9 +74,17 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
+# Release Notes
+
+## v0.3.8
+
+- updated eventstore package
+- optimized initialization
+
+
 # License
 
-Copyright (c) 2012 Adriano Raiano
+Copyright (c) 2013 Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
