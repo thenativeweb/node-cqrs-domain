@@ -76,6 +76,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.4.0
+
+- asynchronous api for saga
+
 ## v0.3.9
 
 - optimized performance a little

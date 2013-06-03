@@ -8,7 +8,7 @@ var stream = new EventEmitter();
 var commandEmitter = new EventEmitter();
 
 var Saga = sagaBase.extend({
-    somethingDoneEvent: function(evt) {
+    somethingDoneEvent: function(evt, callback) {
         this.set('a', 'b');
         this.set({ c: 'd' });
         evt.command = 'blaCmd';
@@ -16,6 +16,7 @@ var Saga = sagaBase.extend({
         delete evt.commandId;
         this.sendCommand(evt);
         commandEmitter.emit('done');
+        callback();
     }
 });
 var saga = new Saga('id_1');
