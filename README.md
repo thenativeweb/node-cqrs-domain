@@ -76,6 +76,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.4.1
+
+- added optional snapshotThreshold on aggregate
+
 ## v0.4.0
 
 - asynchronous api for saga

@@ -2,6 +2,10 @@ var base = require('../../../index').aggregateBase;
 
 module.exports = base.extend({
 
+    // snapshotThreshold: 20, 
+    // or
+    // snapshotThreshold: function() { return 12 + 10; },
+
     changeDummy: function(data, callback) {
         this.apply(this.toEvent('dummyChanged', data));
 
