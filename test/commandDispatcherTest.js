@@ -89,91 +89,67 @@ describe('commandDispatcher', function() {
 
     describe('being initialized', function() {
 
-        var command;
+        describe('defaultly', function() {
 
-        before(function(done) {
-            commandDispatcher.initialize(done);
-        });
+            var command;
 
-        beforeEach(function()
-        {
-            command = {
-                id: 'cmdid', 
-                command: 'changeDummy', 
-                payload: { id: '1' } 
-            };
-        });
-
-        describe('calling dispatch', function() {
-
-            describe('having no commandhandler', function() {
-
-                before(function() {
-                    eventEmitter.registered = {};
-                });
-
-                it('it should callback with error', function(done) {
-                    commandDispatcher.dispatch(command, function(err) {
-                        expect(err).to.be.ok();
-                        done();
-                    });
-                });
-
-                it('it should not add a command to commandQueue', function(done) {
-                    commandDispatcher.dispatch(command, function(err) {
-                        commandQueue.getAll(function(err, items) {
-                            expect(items).to.be.an('array');
-                            expect(items).to.have.length(0);
-                            done();
-                        });
-                    });
-                });
-
+            before(function(done) {
+                commandDispatcher.initialize(done);
             });
-            
-            describe('having a commandhandler', function() {
 
-                beforeEach(function() {
-                    eventEmitter.once('handle:changeDummy', function() {});
-                    eventEmitter.register('handle:changeDummy');
-                });
+            beforeEach(function()
+            {
+                command = {
+                    id: 'cmdid',
+                    command: 'changeDummy',
+                    payload: { id: '1' }
+                };
+            });
 
-                it('it should callback with success', function(done) {
-                    commandDispatcher.dispatch(command, function(err) {
-                        expect(err).not.to.be.ok();
-                        done();
+            describe('calling dispatch', function() {
+
+                describe('having no commandhandler', function() {
+
+                    before(function() {
+                        eventEmitter.registered = {};
                     });
-                });
 
-                it('the commandQueueStore should contain an entry', function(done) {
-                    commandDispatcher.dispatch(command, function(err) {
-                        commandQueue.getAll(function(err, items) { 
-                            expect(items).to.be.an('array');
-                            expect(items).to.have.length(1);
+                    it('it should callback with error', function(done) {
+                        commandDispatcher.dispatch(command, function(err) {
+                            expect(err).to.be.ok();
                             done();
                         });
                     });
-                });
 
-                describe('having no payload id', function() {
-
-                    beforeEach(function() {
-                        delete command.payload.id;
-                    });
-
-                    it('it should create a new id', function(done) {
+                    it('it should not add a command to commandQueue', function(done) {
                         commandDispatcher.dispatch(command, function(err) {
                             commandQueue.getAll(function(err, items) {
-                                expect(items[0]).to.have.property('id');
+                                expect(items).to.be.an('array');
+                                expect(items).to.have.length(0);
                                 done();
                             });
                         });
+                    });
 
+                });
+                
+                describe('having a commandhandler', function() {
+
+                    beforeEach(function() {
+                        eventEmitter.once('handle:changeDummy', function() {});
+                        eventEmitter.register('handle:changeDummy');
+                    });
+
+                    it('it should callback with success', function(done) {
+                        commandDispatcher.dispatch(command, function(err) {
+                            expect(err).not.to.be.ok();
+                            done();
+                        });
                     });
 
                     it('the commandQueueStore should contain an entry', function(done) {
                         commandDispatcher.dispatch(command, function(err) {
-                            commandQueue.getAll(function(err, items) { 
+                            commandQueue.getAll(function(err, items) {
                                 expect(items).to.be.an('array');
                                 expect(items).to.have.length(1);
                                 done();
@@ -181,16 +157,80 @@ describe('commandDispatcher', function() {
                         });
                     });
 
+                    describe('having no payload id', function() {
+
+                        beforeEach(function() {
+                            delete command.payload.id;
+                        });
+
+                        it('it should create a new id', function(done) {
+                            commandDispatcher.dispatch(command, function(err) {
+                                commandQueue.getAll(function(err, items) {
+                                    expect(items[0]).to.have.property('id');
+                                    done();
+                                });
+                            });
+
+                        });
+
+                        it('the commandQueueStore should contain an entry', function(done) {
+                            commandDispatcher.dispatch(command, function(err) {
+                                commandQueue.getAll(function(err, items) {
+                                    expect(items).to.be.an('array');
+                                    expect(items).to.have.length(1);
+                                    done();
+                                });
+                            });
+                        });
+
+                    });
+
+                    describe('having a command with already blocked aggregate', function() {
+
+                        it('it should callback with error', function(done) {
+                            commandDispatcher.dispatch(command, function(err) {
+                                commandDispatcher.dispatch(command, function(err) {
+                                    expect(err).to.be.ok();
+                                    done();
+                                });
+                            });
+                        });
+
+                    });
+
                 });
 
-                describe('having a command with already blocked aggregate', function() {
+            });
 
-                    it('it should callback with error', function(done) {
-                        commandDispatcher.dispatch(command, function(err) {
-                            commandDispatcher.dispatch(command, function(err) {
-                                expect(err).to.be.ok();
-                                done();
-                            });
+            describe('noting handled:* event being raised', function() {
+
+                describe('on existing entry', function() {
+
+                    before(function(done) {
+                        commandQueue.push('cmdid', { id: 'cmdid', command: 'changeDummy' }, done);
+                    });
+
+                    it('it should remove the entry', function(done) {
+                        eventEmitter.emit('handled:changeDummy', 'cmdid', { id: 'cmdid', command: 'changeDummy'} );
+
+                        commandQueue.getAll(function(err, entries) {
+                            expect(entries).to.be.an('array');
+                            expect(entries).to.have.length(0);
+                            done();
+                        });
+                    });
+
+                });
+
+                describe('on non existing entry', function() {
+
+                    it('it should not create an entry', function(done) {
+                        eventEmitter.emit('handled:changeDummy', 'cmdid', { id: 'cmdid', command: 'changeDummy'} );
+
+                        commandQueue.getAll(function(err, entries) {
+                            expect(entries).to.be.an('array');
+                            expect(entries).to.have.length(0);
+                            done();
                         });
                     });
 
@@ -200,36 +240,45 @@ describe('commandDispatcher', function() {
 
         });
 
-        describe('noting handled:* event being raised', function() {
+        describe('with forcedQueuing', function() {
 
-            describe('on existing entry', function() {
+            var command;
 
-                before(function(done) {
-                    commandQueue.push('cmdid', { id: 'cmdid', command: 'changeDummy' }, done);
-                });
-
-                it('it should remove the entry', function(done) {
-                    eventEmitter.emit('handled:changeDummy', 'cmdid', { id: 'cmdid', command: 'changeDummy'} );
-
-                    commandQueue.getAll(function(err, entries) {
-                        expect(entries).to.be.an('array');
-                        expect(entries).to.have.length(0);
-                        done();
-                    });
-                });
-
+            before(function(done) {
+                commandDispatcher.initialize({ forcedQueuing: true }, done);
             });
 
-            describe('on non existing entry', function() {
+            beforeEach(function()
+            {
+                command = {
+                    id: 'cmdid',
+                    command: 'changeDummy',
+                    payload: { id: '1' }
+                };
+            });
 
-                it('it should not create an entry', function(done) {
-                    eventEmitter.emit('handled:changeDummy', 'cmdid', { id: 'cmdid', command: 'changeDummy'} );
+            describe('calling dispatch', function() {
 
-                    commandQueue.getAll(function(err, entries) {
-                        expect(entries).to.be.an('array');
-                        expect(entries).to.have.length(0);
-                        done();
+                describe('having a commandhandler', function() {
+
+                    beforeEach(function() {
+                        eventEmitter.once('handle:changeDummy', function() {});
+                        eventEmitter.register('handle:changeDummy');
                     });
+
+                    describe('having a command with already blocked aggregate', function() {
+
+                        it('it should callback without error', function(done) {
+                            commandDispatcher.dispatch(command, function(err) {
+                                commandDispatcher.dispatch(command, function(err) {
+                                    expect(err).not.to.be.ok();
+                                    done();
+                                });
+                            });
+                        });
+
+                    });
+
                 });
 
             });

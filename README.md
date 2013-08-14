@@ -25,7 +25,8 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         sagasPath: __dirname + '/sagas',
         publishingInterval: 20,
         forkEventDispatching: true,
-        snapshotThreshold: 10
+        snapshotThreshold: 10,
+        forcedQueuing: false
     }, function(err) {
 
     });
@@ -75,6 +76,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
 # Release Notes
+
+## v0.4.2
+
+- added forcedQueuing flag
 
 ## v0.4.1
 
