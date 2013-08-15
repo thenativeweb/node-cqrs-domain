@@ -77,6 +77,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.4.3
+
+- strip .js file extensions to enable loading of .coffee scripts too
+
 ## v0.4.2
 
 - added forcedQueuing flag
