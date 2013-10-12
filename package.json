@@ -1,7 +1,7 @@
 {
   "author": "adrai",
   "name": "cqrs-domain",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "private": false,
   "main": "index.js",
   "engines": {
@@ -18,15 +18,16 @@
     "eventstore": ">= 0.6.2",
     "viewmodel": ">= 0.4.10",
     "nodeEventedCommand": ">= 0.1.2",
-    "retry": ">= 0.6.0"
+    "retry": ">= 0.6.0",
+    "node-uuid": ">= 1.4.1"
   },
   "devDependencies": {
     "mocha": ">= 1.0.1",
     "expect.js": ">= 0.1.2",
-    "rule-validator": ">= 0.1.1"
+    "rule-validator": ">= 0.2.0"
   },
   "description": "Node-cqrs-domain is a node.js module based on nodeEventStore. It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.",
-  "keywords"    : [
+  "keywords": [
     "cqrs",
     "eventsourcing",
     "ddd",
@@ -50,7 +51,7 @@
       "url": "https://raw.github.com/adrai/node-cqrs-domain/master/licence"
     }
   ],
-  "scripts" : { 
-    "test" : "mocha && mocha test/integration/domainTest.js"
-  } 
+  "scripts": {
+    "test": "mocha && mocha test/integration/domainTest.js"
+  }
 }

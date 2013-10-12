@@ -26,7 +26,8 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         publishingInterval: 20,
         forkEventDispatching: true,
         snapshotThreshold: 10,
-        forcedQueuing: false
+        forcedQueuing: false,
+        disableQueuing: false
     }, function(err) {
 
     });
@@ -76,6 +77,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
 # Release Notes
+
+## v0.4.4
+
+- added disableQueuing flag
 
 ## v0.4.3
 
