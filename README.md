@@ -78,6 +78,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.5.0
+
+- a complete change of validation rules (see new [rule-validator](https://github.com/adrai/rule-validator))
+
 ## v0.4.4
 
 - added disableQueuing flag
