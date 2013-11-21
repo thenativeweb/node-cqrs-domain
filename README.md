@@ -78,6 +78,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.5.3
+
+- fix for async business rules (issue [#13](https://github.com/adrai/node-cqrs-domain/issues/13))
+
 ## v0.5.2
 
 - fix commandDispatcher if no commandqueue is used
