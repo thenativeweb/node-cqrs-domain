@@ -20,8 +20,7 @@ describe('Domain', function() {
                         commandHandlersPath: __dirname + '/commandHandlers',
                         aggregatesPath: __dirname + '/aggregates',
                         sagaHandlersPath: __dirname + '/sagaHandlers',
-                        sagasPath: __dirname + '/sagas',
-                        publishingInterval: 20
+                        sagasPath: __dirname + '/sagas'
                     }, done);
 
                 });

@@ -23,11 +23,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         aggregatesPath: __dirname + '/aggregates',
         sagaHandlersPath: __dirname + '/sagaHandlers',
         sagasPath: __dirname + '/sagas',
-        publishingInterval: 20,
-        forkEventDispatching: true,
         snapshotThreshold: 10,
         forcedQueuing: false,
-        disableQueuing: false
+        disableQueuing: false,
+        handleUpdispatchedEvents: true
     }, function(err) {
 
     });
@@ -77,6 +76,12 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
 # Release Notes
+
+## v0.6.0
+
+- don't publish in eventstore but publish in domain
+- removed flags: publishingInterval, forkEventDispatching
+- added handleUpdispatchedEvents flag
 
 ## v0.5.3
 
