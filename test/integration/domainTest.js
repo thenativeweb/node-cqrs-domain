@@ -20,7 +20,8 @@ describe('Domain', function() {
                         commandHandlersPath: __dirname + '/commandHandlers',
                         aggregatesPath: __dirname + '/aggregates',
                         sagaHandlersPath: __dirname + '/sagaHandlers',
-                        sagasPath: __dirname + '/sagas'
+                        sagasPath: __dirname + '/sagas',
+                        disableQueuing: true
                     }, done);
 
                 });
@@ -120,6 +121,53 @@ describe('Domain', function() {
                         });
 
                         domain.handle(cmd, function(err) {});
+
+                    });
+
+                });
+
+                describe('when sending multiple commands together', function() {
+
+                    var cmd1 = {
+                        command: 'changeDummy',
+                        id: '123455',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    var cmd2 = {
+                        command: 'changeDummy',
+                        id: '23455789',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    var cmd3 = {
+                        command: 'changeDummy',
+                        id: '2312345789',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    it('it should set revision correctly', function(done) {
+
+                        var count = 0;
+                        var handle;
+                        dummyEmitter.on('published', handle = function(evt) {
+                            count++;
+                            if (count === 3) {
+                                expect(evt.head.revision).to.eql(3);
+                                dummyEmitter.removeListener('published', handle);
+                                done();
+                            }
+                        });
+
+                        domain.handle(cmd1, function(err) {});
+                        domain.handle(cmd2, function(err) {});
+                        domain.handle(cmd3, function(err) {});
 
                     });
 

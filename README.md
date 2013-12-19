@@ -77,6 +77,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.6.1
+
+- buffer commands by aggregate id
+
 ## v0.6.0
 
 - don't publish in eventstore but publish in domain
