@@ -26,7 +26,9 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         snapshotThreshold: 10,
         forcedQueuing: false,
         disableQueuing: false,
-        handleUpdispatchedEvents: true
+        handleUpdispatchedEvents: true//,
+        // retryOnConcurrencyTimeout: 800,
+        // commandLock: { type: 'inMemory', collectionName: 'commandlock' }
     }, function(err) {
 
     });
@@ -76,6 +78,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
 # Release Notes
+
+## v0.7.0
+
+- introduced commandLock for distributed domain (handling same aggregate instance on multiple machines)
 
 ## v0.6.1
 
