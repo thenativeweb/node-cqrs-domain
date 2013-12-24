@@ -79,6 +79,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.1
+
+- load sagas always from db
+
 ## v0.7.0
 
 - introduced commandLock for distributed domain (handling same aggregate instance on multiple machines)
