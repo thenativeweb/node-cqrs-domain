@@ -79,6 +79,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.2
+
+- update dependencies
+
 ## v0.7.1
 
 - load sagas always from db
