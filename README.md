@@ -26,7 +26,9 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         snapshotThreshold: 10,
         forcedQueuing: false,
         disableQueuing: false,
-        handleUpdispatchedEvents: true
+        handleUpdispatchedEvents: true//,
+        // retryOnConcurrencyTimeout: 800,
+        // commandLock: { type: 'inMemory', collectionName: 'commandlock' }
     }, function(err) {
 
     });
@@ -77,9 +79,26 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
-## v0.6.1
+## v0.7.3
 
 - updated eventstore
+
+## v0.7.2
+
+- update dependencies
+
+## v0.7.1
+
+- load sagas always from db
+
+## v0.7.0
+
+- introduced commandLock for distributed domain (handling same aggregate instance on multiple machines)
+
+## v0.6.1
+
+- buffer commands by aggregate id
+>>>>>>> 2c334aca7fffdae5fd1ff21fe0044c1a51100356
 
 ## v0.6.0
 

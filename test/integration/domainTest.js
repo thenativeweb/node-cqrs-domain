@@ -1,29 +1,31 @@
-var expect = require('expect.js')
-  , domain = require('../../index').domain;
+var expect = require('expect.js'),
+    domain = require('../../index').domain;
 
 describe('Domain', function() {
+
+    var dummyEmitter = new (require('events').EventEmitter)();
+
+    before(function(done) {
+
+        domain.on('event', function(evt) {
+            dummyEmitter.emit('published', evt);
+        });
+        domain.initialize({
+            commandHandlersPath: __dirname + '/commandHandlers',
+            aggregatesPath: __dirname + '/aggregates',
+            sagaHandlersPath: __dirname + '/sagaHandlers',
+            sagasPath: __dirname + '/sagas',
+            commandLock: { type: 'inMemory', collectionName: 'commandlock' },
+            disableQueuing: true
+        }, done);
+
+    });
 
     describe('noting a command', function() {
 
         describe('having well-formed data', function() {
 
             describe('having any command handlers', function() {
-
-                var dummyEmitter = new (require('events').EventEmitter)();
-
-                before(function(done) {
-
-                    domain.on('event', function(evt) {
-                        dummyEmitter.emit('published', evt);
-                    });
-                    domain.initialize({
-                        commandHandlersPath: __dirname + '/commandHandlers',
-                        aggregatesPath: __dirname + '/aggregates',
-                        sagaHandlersPath: __dirname + '/sagaHandlers',
-                        sagasPath: __dirname + '/sagas'
-                    }, done);
-
-                });
 
                 describe('having bad data', function() {
 
@@ -125,26 +127,56 @@ describe('Domain', function() {
 
                 });
 
+                describe('when sending multiple commands together', function() {
+
+                    var cmd1 = {
+                        command: 'changeDummy',
+                        id: '123455',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    var cmd2 = {
+                        command: 'changeDummy',
+                        id: '23455789',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    var cmd3 = {
+                        command: 'changeDummy',
+                        id: '2312345789',
+                        payload: {
+                            id: '12382517'
+                        }
+                    };
+
+                    it('it should set revision correctly', function(done) {
+
+                        var count = 0;
+                        var handle;
+                        dummyEmitter.on('published', handle = function(evt) {
+                            count++;
+                            if (count === 3) {
+                                expect(evt.head.revision).to.eql(3);
+                                dummyEmitter.removeListener('published', handle);
+                                done();
+                            }
+                        });
+
+                        domain.handle(cmd1, function(err) {});
+                        domain.handle(cmd2, function(err) {});
+                        domain.handle(cmd3, function(err) {});
+
+                    });
+
+                });
+
             });
 
             describe('having a command handler that sends commands to other command handlers', function() {
-
-                var dummyEmitter = new (require('events').EventEmitter)();
-
-                before(function(done) {
-
-                    domain.on('event', function(evt) {
-                        dummyEmitter.emit('published', evt);
-                    });
-                    domain.initialize({
-                        commandHandlersPath: __dirname + '/commandHandlers',
-                        aggregatesPath: __dirname + '/aggregates',
-                        sagaHandlersPath: __dirname + '/sagaHandlers',
-                        sagasPath: __dirname + '/sagas',
-                        publishingInterval: 20
-                    }, done);
-
-                });
 
                 it('it should acknowledge the command', function(done) {
 
@@ -155,9 +187,15 @@ describe('Domain', function() {
                             haha: 'hihi'
                         }
                     };
-                    domain.handle(cmd, function(err) {
-                        expect(err).not.to.be.ok();
+
+                    var called = false;
+                    dummyEmitter.once('published', function(evt) {
+                        expect(called).to.be.ok();
                         done();
+                    });
+                    domain.handle(cmd, function(err) {
+                        called = true;
+                        expect(err).not.to.be.ok();
                     });
 
                 });
@@ -172,8 +210,8 @@ describe('Domain', function() {
                         }
                     };
 
-                    var fooItedReceived = false
-                      , fooCretedReceived = false;
+                    var fooItedReceived = false,
+                        fooCretedReceived = false;
 
                     function finish(evt) {
                         if (fooItedReceived && fooCretedReceived) {
@@ -200,30 +238,74 @@ describe('Domain', function() {
 
             });
 
+            describe('simulating mutliple process handling the same aggregate instance', function() {
+
+                var cmdHandle = require('./commandHandlers/dummyCommandHandler'),
+                    orgHandle;
+
+                before(function() {
+                    orgHandle = cmdHandle.handle;
+                    cmdHandle.handle = cmdHandle._handle;
+                });
+
+                after(function() {
+                    cmdHandle.handle = orgHandle;
+                });
+
+                describe('sending multiple commands together', function() {
+
+                    var cmd1 = {
+                        command: 'changeDummy',
+                        id: '1234552',
+                        payload: {
+                            id: '123825172'
+                        }
+                    };
+
+                    var cmd2 = {
+                        command: 'changeDummy',
+                        id: '234557892',
+                        payload: {
+                            id: '123825172'
+                        }
+                    };
+
+                    var cmd3 = {
+                        command: 'changeDummy',
+                        id: '23123457892',
+                        payload: {
+                            id: '123825172'
+                        }
+                    };
+
+                    it('it should set revision correctly', function(done) {
+
+                        var count = 0;
+                        var handle;
+                        dummyEmitter.on('published', handle = function(evt) {
+                            count++;
+                            if (count === 3) {
+                                expect(evt.head.revision).to.eql(3);
+                                dummyEmitter.removeListener('published', handle);
+                                done();
+                            }
+                        });
+
+                        domain.handle(cmd1, function(err) {});
+                        domain.handle(cmd2, function(err) {});
+                        domain.handle(cmd3, function(err) {});
+
+                    });
+
+                });
+
+            });
+
         });
             
     });
 
     describe('having any saga handlers', function() {
-
-        var dummyEmitter2 = new (require('events').EventEmitter)();
-
-        before(function(done) {
-
-            domain.on('event', function(evt) {
-                if (evt.event === 'dummyDestroyed') {
-                    dummyEmitter2.emit('published', evt);
-                }
-            });
-            domain.initialize({
-                commandHandlersPath: __dirname + '/commandHandlers',
-                aggregatesPath: __dirname + '/aggregates',
-                sagaHandlersPath: __dirname + '/sagaHandlers',
-                sagasPath: __dirname + '/sagas',
-                publishingInterval: 20
-            }, done);
-
-        });
 
         describe('noting an expected event', function() {
 
@@ -231,12 +313,13 @@ describe('Domain', function() {
 
                 var cmd = {
                     command: 'cancelDummy',
-                    id: '82517'
+                    id: '825171111'
                 };
 
-                dummyEmitter2.once('published', function(evt) {
-                    expect(evt.event).to.eql('dummyDestroyed');
-                    done();
+                dummyEmitter.on('published', function(evt) {
+                    if (evt.event === 'dummyDestroyed') {
+                        done();
+                    }
                 });
 
                 domain.handle(cmd, function(err) {});
