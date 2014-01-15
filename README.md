@@ -26,7 +26,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
         snapshotThreshold: 10,
         forcedQueuing: false,
         disableQueuing: false,
-        handleUpdispatchedEvents: true//,
+        handleUndispatchedEvents: true//,
         // retryOnConcurrencyTimeout: 800,
         // commandLock: { type: 'inMemory', collectionName: 'commandlock' }
     }, function(err) {
@@ -79,6 +79,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.4
+
+- fixed naming of handleUndispatchedEvents option
+
 ## v0.7.3
 
 - updated eventstore
@@ -98,7 +102,6 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 ## v0.6.1
 
 - buffer commands by aggregate id
->>>>>>> 2c334aca7fffdae5fd1ff21fe0044c1a51100356
 
 ## v0.6.0
 
