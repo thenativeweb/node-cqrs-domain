@@ -77,6 +77,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.6.1
+
+- updated eventstore
+
 ## v0.6.0
 
 - don't publish in eventstore but publish in domain
@@ -127,7 +131,7 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # License
 
-Copyright (c) 2013 Adriano Raiano
+Copyright (c) 2014 Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
