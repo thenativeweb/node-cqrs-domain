@@ -25,7 +25,7 @@ var Aggregate = aggregateBase.extend({
 
     SomethingDoneEvent: function(data) {
         this.set(data);
-    }, 
+    },
 
     businessRules: [
         function(changed, previous, events, callback) {
@@ -35,7 +35,11 @@ var Aggregate = aggregateBase.extend({
                 callback(null);
             }
         },
-        function(changed, previous, events, callback) {
+        function(changed, previous, events, version, callback) {
+            // if (version === 1) {
+            //     // special handling...
+            // }
+
             if (changed.d > changed.c) {
                 callback('c must be bigger than d!');
             } else {

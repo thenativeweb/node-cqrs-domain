@@ -43,6 +43,23 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
     module.exports = base.extend({
 
+        // snapshotThreshold: 20, 
+        // or
+        // snapshotThreshold: function() { return 12 + 10; },
+        // 
+        // used to version the snap shots
+        // version: 3,
+        // 
+        // laodSnapshot: function(data, version) {
+        //     if (version === 1) {
+        //         this.set(snap.data);
+        //     } else {
+        //         this.set(snap.data);
+        //     }
+        // },
+
+        // commands
+
         changeDummy: function(data, callback) {
             this.apply(this.toEvent('dummyChanged', data));
 
@@ -61,6 +78,23 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
             this.checkBusinessRules(callback);
         },
 
+        fooIt: function(data, callback) {
+            this.apply(this.toEvent('fooIted', data));
+
+            this.checkBusinessRules(callback);
+        },
+
+        versionedCmd: function(data, callback) {
+            this.apply(this.toEvent('versionedEvt', data), callback);
+        },
+
+        versionedCmd_1: function(data, callback) {
+            this.apply(this.toEvent('versionedEvt', data, 1), callback);
+        },
+
+
+        // events
+
         dummyChanged: function(data) {
             this.set(data);
         },
@@ -71,6 +105,18 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
         dummyDestroyed: function(data) {
             this.set('destroyed', true);
+        },
+
+        fooIted: function(data) {
+            this.set('foo', true);
+        },
+
+        versionedEvt: function(data) {
+            this.set(data);
+        },
+
+        versionedEvt_1: function(data) {
+            this.set(data);
         }
 
     });
@@ -78,6 +124,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for detailed information...
 
 # Release Notes
+
+## v0.7.5
+
+- introduce versioned messages and snapshots
 
 ## v0.7.4
 

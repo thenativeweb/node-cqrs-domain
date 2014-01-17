@@ -176,6 +176,67 @@ describe('Domain', function() {
 
             });
 
+            describe('working with versioned messages', function() {
+
+                it('it should work as expected', function(done) {
+
+                    var cmd = {
+                        head: {
+                            version: 1
+                        },
+                        command: 'versionedCmd',
+                        id: '9991111828283',
+                        payload: {
+                            id: '19283464819238',
+                            haha: 'versioned'
+                        }
+                    };
+
+                    var called = false;
+                    dummyEmitter.once('published', function(evt) {
+                        expect(called).to.be.ok();
+                        expect(evt.head.version).to.be(1);
+
+                        done();
+                    });
+                    domain.handle(cmd, function(err) {
+                        called = true;
+                        expect(err).not.to.be.ok();
+                    });
+
+                });
+
+                describe('not setting the version', function() {
+
+                    it('it should work as expected', function(done) {
+
+                        var cmd = {
+                            command: 'versionedCmd',
+                            id: '9991111828283',
+                            payload: {
+                                id: '19283464819238',
+                                haha: 'versioned'
+                            }
+                        };
+
+                        var called = false;
+                        dummyEmitter.once('published', function(evt) {
+                            expect(called).to.be.ok();
+                            expect(evt.head.version).to.be(undefined);
+
+                            done();
+                        });
+                        domain.handle(cmd, function(err) {
+                            called = true;
+                            expect(err).not.to.be.ok();
+                        });
+
+                    });
+
+                });
+
+            });
+
             describe('having a command handler that sends commands to other command handlers', function() {
 
                 it('it should acknowledge the command', function(done) {

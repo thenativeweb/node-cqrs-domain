@@ -15,6 +15,28 @@ var valRules = ruleBase.extend(
                 type: 'string',
                 minLength: 100
             }
+        },
+
+        versionedCmd: {
+            setMePass: {
+                type: 'string',
+                minLength: 1
+            },
+            setMeFails: {
+                type: 'string',
+                minLength: 100
+            }
+        },
+
+        versionedCmd_1: {
+            setMePass: {
+                type: 'string',
+                minLength: 1
+            },
+            setMeFails: {
+                type: 'string',
+                minLength: 100
+            }
         }
     }
 );
@@ -24,14 +46,30 @@ var stream = new EventEmitter();
 var Aggregate = aggregateBase.extend({
 
     doSomethingCommand: function(data, callback) {
-        this.apply(this.toEvent('SomethingDoneEvent', data), callback);
+        this.apply(this.toEvent('somethingDoneEvent', data), callback);
     },
 
-    SomethingDoneEvent: function(data) {
+    somethingDoneEvent: function(data) {
         this.set(data);
-    }, 
+    },
 
-    validate: function(ruleName, data, callback) {
+    versionedCmd: function(data, callback) {
+        this.apply(this.toEvent('versionedEvt', data), callback);
+    },
+
+    versionedCmd_1: function(data, callback) {
+        this.apply(this.toEvent('versionedEvt', data, 2), callback);
+    },
+
+    versionedEvt: function(data) {
+        this.set(data);
+    },
+
+    versionedEvt_2: function(data) {
+        this.set(data);
+    },
+
+    validate: function(cmd, callback) {
        callback();
     }
 });
@@ -40,7 +78,7 @@ aggregate.set({revision: 0});
 
 
 var commandHandler = commandHandlerBase.extend({
-    commands: ['doSomethingCommand'],
+    commands: ['doSomethingCommand', 'versionedCmd'],
     aggregate: 'overridden load!',
 
     stream: stream,
@@ -67,14 +105,50 @@ describe('CommandHandlerBase', function() {
     describe('command validation', function() {
         
         it('it should pass given valid data', function(done) {
-            commandHandler.validate('doSomethingCommand', { setMePass: 'ok' }, function(err) {
+            commandHandler.validate({ command: 'doSomethingCommand', payload: { setMePass: 'ok' } }, function(err) {
                 expect(err).not.to.be.ok();
                 done();
             });
         });
 
         it('it should fail given invalid data', function(done) {
-            commandHandler.validate('doSomethingCommand', { setMeFails: 'nok' }, function(err) {
+            commandHandler.validate({ command: 'doSomethingCommand', payload: { setMeFails: 'nok' } }, function(err) {
+                expect(err).to.be.ok();
+                done();
+            });
+        });
+
+    });
+
+    describe('command validation for versioned commands', function() {
+        
+        it('it should pass given valid data', function(done) {
+            commandHandler.validate({ command: 'versionedCmd', head: { version: 1 }, payload: { setMePass: 'ok' } }, function(err) {
+                expect(err).not.to.be.ok();
+                done();
+            });
+        });
+
+        it('it should fail given invalid data', function(done) {
+            commandHandler.validate({ command: 'versionedCmd', head: { version: 1 }, payload: { setMeFails: 'nok' } }, function(err) {
+                expect(err).to.be.ok();
+                done();
+            });
+        });
+
+    });
+
+    describe('command validation for versioned commands without passing a version', function() {
+        
+        it('it should pass given valid data', function(done) {
+            commandHandler.validate({ command: 'versionedCmd', payload: { setMePass: 'ok' } }, function(err) {
+                expect(err).not.to.be.ok();
+                done();
+            });
+        });
+
+        it('it should fail given invalid data', function(done) {
+            commandHandler.validate({ command: 'versionedCmd', payload: { setMeFails: 'nok' } }, function(err) {
                 expect(err).to.be.ok();
                 done();
             });
