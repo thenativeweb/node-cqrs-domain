@@ -125,6 +125,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.7
+
+- optimization for npm module naming
+
 ## v0.7.6
 
 - updated eventstore
