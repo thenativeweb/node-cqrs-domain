@@ -125,6 +125,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.8
+
+- added optional callback on commandhandler defaultHandle
+
 ## v0.7.7
 
 - optimization for npm module naming
