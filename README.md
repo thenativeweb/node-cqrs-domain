@@ -125,6 +125,10 @@ See [tests](https://github.com/adrai/node-cqrs-domain/tree/master/test) for deta
 
 # Release Notes
 
+## v0.7.9
+
+- send commandRejected event with better reason
+
 ## v0.7.8
 
 - added optional callback on commandhandler defaultHandle

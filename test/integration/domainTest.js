@@ -118,6 +118,9 @@ describe('Domain', function() {
                         dummyEmitter.once('published', function(evt) {
                             expect(evt.event).to.eql('commandRejected');
                             expect(evt.commandId).to.eql(cmd.id);
+                            expect(evt.payload.reason.name).to.eql('AggregateDestroyed');
+                            expect(evt.payload.reason.aggregateRevision).to.eql(1);
+                            expect(evt.payload.reason.aggregateId).to.eql('82517');
                             done();
                         });
 
