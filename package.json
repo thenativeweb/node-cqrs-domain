@@ -14,7 +14,7 @@
     "async": ">= 0.2.9",
     "lodash": ">= 2.4.1",
     "eventemitter2": ">= 0.4.13",
-    "node-queue": "adrai/node-queue",
+    "node-queue": "1.0.x",
     "eventstore": ">= 0.7.4",
     "viewmodel": ">= 0.5.3",
     "nodeEventedCommand": ">= 0.1.2",

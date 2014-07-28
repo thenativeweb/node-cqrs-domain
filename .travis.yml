@@ -1,4 +1,4 @@
-before_script: "npm install --dev"
+# before_script: "npm install --dev"
 
 language: node_js
 node_js:
