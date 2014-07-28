@@ -18,7 +18,7 @@ function cleanQueue(done) {
 describe('commandDispatcher', function() {
 
     before(function(done) {
-        queue.connect(function(err, cmdQueue) {
+        queue.createQueue(function(err, cmdQueue) {
             commandQueue = cmdQueue;
             done();
         });
