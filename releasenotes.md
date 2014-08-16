@@ -1,3 +1,7 @@
+## v0.8.2
+
+- do not use newer eventstore version
+
 ## v0.8.1
 
 - do not use newer viewmodel version
