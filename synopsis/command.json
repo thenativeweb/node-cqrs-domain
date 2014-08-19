@@ -1,0 +1,54 @@
+{
+  "title": "command",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": ["name"]
+    },
+    "aggregate": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": ["name"]
+    },
+    "name": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+      },
+      "required": []
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": ["id", "context", "aggregate", "name"]
+}

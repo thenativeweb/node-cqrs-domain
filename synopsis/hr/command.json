@@ -1,0 +1,19 @@
+{
+  "title": "command_hr",
+  "allOf": [
+    { "$ref": "#/command" },
+    {
+      "properties": {
+        "context": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "hr"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

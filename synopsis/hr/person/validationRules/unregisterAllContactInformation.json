@@ -1,0 +1,14 @@
+{
+  "title": "unregisterAllContactInformation",
+  "allOf": [
+    { "$ref": "#/command_hr_person" },
+    {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "unregisterAllContactInformation"
+        }
+      }
+    }
+  ]
+}

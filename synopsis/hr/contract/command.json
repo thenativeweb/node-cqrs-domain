@@ -1,0 +1,19 @@
+{
+  "title": "command_hr_contract",
+  "allOf": [
+    { "$ref": "#/command_hr" },
+    {
+      "properties": {
+        "aggregate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "contract"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

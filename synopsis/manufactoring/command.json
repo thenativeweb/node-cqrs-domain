@@ -1,0 +1,19 @@
+{
+  "title": "command_manufactoring",
+  "allOf": [
+    { "$ref": "#/command" },
+    {
+      "properties": {
+        "context": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "manufactoring"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
