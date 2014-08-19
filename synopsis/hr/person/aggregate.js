@@ -1,7 +1,10 @@
 module.exports = require('cqrs-domain').defineAggregate({
 	name: 'person', // optional, default is last part of path name
-  version: 3, // optional, default 1
+  version: 3//, // optional, default 1
   // versionPath: 'version', // can be defined globally, but can be overwritten here...
+  // snapshotThreshold: 20 // can be defined globally, but can be overwritten here...
+  // or
+  // snapshotThreshold: function() { return 12 + 10; },
 },
 // optionally, define some initialization data...
 {
