@@ -4,7 +4,7 @@ var domain = require('cqrs-domain')({
   domainPath: __dirname + '/',
   eventStore: {                                 // optional
     type: 'mongodb',                            // example with mongodb
-    dbName: 'domain',														// optional
+    dbName: 'domain',                           // optional
     eventsCollectionName: 'events',             // optional
     snapshotsCollectionName: 'snapshots',       // optional
     host: 'localhost',                          // optional
@@ -16,7 +16,7 @@ var domain = require('cqrs-domain')({
   aggregateLock: {                              // optional (used for distributed domain
                                                 // [handling same aggregate instance on multiple machines])
     type: 'mongodb',                            // example with mongodb
-    dbName: 'domain',														// optional
+    dbName: 'domain',                           // optional
     collectionName: 'aggregatelock',            // optional
     host: 'localhost',                          // optional
     port: 27017,                                // optional
