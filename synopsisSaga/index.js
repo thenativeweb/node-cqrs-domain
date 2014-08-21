@@ -1,5 +1,3 @@
-// http://jsonary.com/documentation/json-schema/
-
 var processManagement = require('cqrs-saga')({
   sagaPath: __dirname + '/',
 });
