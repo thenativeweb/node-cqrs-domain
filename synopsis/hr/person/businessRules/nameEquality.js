@@ -1,3 +1,4 @@
+// if exports is an array, it will be the same like loading multiple files...
 module.exports = require('cqrs-domain').defineBusinessRule({
   name: 'nameEquality', // optional, default is file name without extenstion
   description: 'firstname should never be equal lastname',

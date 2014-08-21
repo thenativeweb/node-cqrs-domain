@@ -1,3 +1,4 @@
+// if exports is an array, it will be the same like loading multiple files...
 module.exports = require('cqrs-domain').defineEvent({
   name: 'enteredNewPerson', // optional, default is file name without extenstion and without _vx
   version: 3, // optional, default 1

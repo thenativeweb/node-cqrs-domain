@@ -1,5 +1,6 @@
 var _ = require('lodash');
 
+// if exports is an array, it will be the same like loading multiple files...
 module.exports = require('cqrs-domain').defineCommand({
   name: 'unregisterAllContactInformation', // optional, default is file name without extenstion and without _vx
   version: 1//, // optional, default 1

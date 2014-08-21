@@ -1,3 +1,4 @@
+// if exports is an array, it will be the same like loading multiple files...
 module.exports = require('cqrs-domain').defineBusinessRule({
   name: 'atLeast1EMail', // optional, default is file name without extenstion
   description: 'at least one email adress should be set', // optional
