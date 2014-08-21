@@ -76,4 +76,6 @@ domain.init(function(err) {
 
 // ...
 
-domain.handle({ id: 'msgId', command: 'createDummy', payload: { id: '23445' } });
+domain.handle({ id: 'msgId', command: 'createDummy', payload: { id: '23445' } }, function (err) {
+  // command is queued, but just in memory....
+});
