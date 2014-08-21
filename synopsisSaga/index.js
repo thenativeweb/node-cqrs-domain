@@ -41,6 +41,6 @@ processManagement.init(function(err) {
 
 // ...
 
-processManagement.handle({ id: 'msgId', event: 'dummyCreated', payload: { id: '23445' } }, function (err) {
-  // event is queued, but just in memory....
+processManagement.handle({ id: 'msgId', event: 'dummyCreated', payload: { id: '23445' } }, function (err, cmds) { // optional callback
+  // event is handled, cmds is result
 });
