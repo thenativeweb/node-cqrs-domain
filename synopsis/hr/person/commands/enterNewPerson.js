@@ -5,10 +5,10 @@ module.exports = require('cqrs-domain').defineCommand({
   // versionPath: 'version', // can be defined globally, but can be overwritten here...
   payload: 'payload' // if not defined it will pass the whole command...
 }, function (data, aggregate) {
-  aggregate.apply(aggregate.toEvent('enteredNewPerson', data));
+  aggregate.apply('enteredNewPerson', data);
   // or
-  // aggregate.apply(aggregate.toEvent({
+  // aggregate.apply({
   //   event: 'enteredNewPerson',
   //   payload: data
-  // }));
+  // });
 });

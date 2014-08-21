@@ -10,31 +10,31 @@ module.exports = require('cqrs-domain').defineCommand({
 
   if (cmd.payload.indexOf('phoneNumbers') >= 0)  {
     _.each(aggregate.get('phoneNumbers'), function(number) {
-      aggregate.apply(aggregate.toEvent('unregisteredPhoneNumber', {
+      aggregate.apply('unregisteredPhoneNumber', {
         number: number
-      }));
+      });
       // or
-      // aggregate.apply(aggregate.toEvent({
+      // aggregate.apply({
       //   event: 'unregisteredPhoneNumber',
       //   payload: {
       //     number: number
       //   }
-      // }));
+      // });
     });
   }
 
   if (cmd.payload.indexOf('emails') >= 0) {
     _.each(aggregate.get('emails'), function(mail) {
-      aggregate.apply(aggregate.toEvent('unregisteredEMailAddress', {
+      aggregate.apply('unregisteredEMailAddress', {
         mail: mail
-      }));
+      });
       // or
-      // aggregate.apply(aggregate.toEvent({
+      // aggregate.apply({
       //   event: 'unregisteredEMailAddress',
       //   payload: {
       //     mail: mail
       //   }
-      // }));
+      // });
     });
   }
 });

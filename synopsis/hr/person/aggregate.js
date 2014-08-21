@@ -33,3 +33,4 @@ module.exports = require('cqrs-domain').defineAggregate({
   aggregate.set('firstname', names[0]);
   aggregate.set('lastname', names[1]);
 });
+// info to me: when loaded a snapshot create a new snapshot with same revision with newer version

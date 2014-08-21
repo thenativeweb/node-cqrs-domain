@@ -9,28 +9,28 @@ module.exports = require('cqrs-domain').defineCommand({
 }, function (cmd, aggregate) {
 
   _.each(aggregate.get('phoneNumbers'), function(number) {
-    aggregate.apply(aggregate.toEvent('unregisteredPhoneNumber', {
+    aggregate.apply('unregisteredPhoneNumber', {
       number: number
-    }));
+    });
     // or
-    // aggregate.apply(aggregate.toEvent({
+    // aggregate.apply({
     //   event: 'unregisteredPhoneNumber',
     //   payload: {
     //     number: number
     //   }
-    // }));
+    // });
   });
 
   _.each(aggregate.get('emails'), function(mail) {
-    aggregate.apply(aggregate.toEvent('unregisteredEMailAddress', {
+    aggregate.apply('unregisteredEMailAddress', {
       mail: mail
-    }));
+    });
     // or
     // aggregate.apply(aggregate.toEvent({
     //   event: 'unregisteredEMailAddress',
     //   payload: {
     //     mail: mail
     //   }
-    // }));
+    // });
   });
 });
