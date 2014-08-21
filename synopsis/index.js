@@ -37,10 +37,6 @@ domain.aggregateLock.on('disconnect', function () {});
 domain.on('connect', function () {});
 domain.on('disconnect', function () {});
 
-domain.on('event', function(evt) {
-  // send to bus
-});
-
 domain.defineCommand({
   id: 'id',
   name: 'name',
@@ -66,12 +62,18 @@ domain.defineEvent({
   meta: 'meta'                    // optional (will be passed directly to corresponding event(s))
 });
 
+domain.onEvent(function(evt) {
+  // bus.emit('event', evt);
+});
+// or
+// domain.onEvent(function(evt, callback) {
+//   // bus.sendAndWaitForAck('event', evt, callback);
+// });
+
 domain.init(function(err) {
   // callback optional
 });
 
 // ...
 
-domain.handle({ id: 'msgId', command: 'createDummy', payload: { id: '23445' } }, function(err) {
-  // saved in command queue...
-});
+domain.handle({ id: 'msgId', command: 'createDummy', payload: { id: '23445' } });
