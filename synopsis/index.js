@@ -59,7 +59,7 @@ domain.defineEvent({
   payload: 'payload',             // optional
   revision: 'revision',           // optional
   version: 'version',             // optional
-  meta: 'meta'                    // optional (will be passed directly to corresponding event(s))
+  meta: 'meta'                    // optional (will be passed directly from corresponding command)
 });
 
 domain.onEvent(function(evt) {

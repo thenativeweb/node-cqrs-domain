@@ -4,27 +4,27 @@ var processManagement = require('cqrs-saga')({
 
 processManagement.defineCommand({
   id: 'id',
-  name: 'name',
+  name: 'name',                   // optional
   context: 'context.name',        // optional
   aggregate: 'aggregate.name',    // optional
-  aggregateId: 'aggregate.id',
+  aggregateId: 'aggregate.id',    // optional
   payload: 'payload',             // optional
   revision: 'revision',           // optional
   version: 'version',             // optional
-  meta: 'meta'                    // optional (will be passed directly to corresponding event(s))
+  meta: 'meta'                    // optional
 });
 
 processManagement.defineEvent({
-  id: 'id',
-  correlationId: 'correlationId',
-  name: 'name',
+  id: 'id',                       // optional
+  correlationId: 'correlationId', // optional
+  name: 'name',                   // optional
   context: 'context.name',        // optional
   aggregate: 'aggregate.name',    // optional
-  aggregateId: 'aggregate.id',
+  aggregateId: 'aggregate.id',    // optional
   payload: 'payload',             // optional
   revision: 'revision',           // optional
   version: 'version',             // optional
-  meta: 'meta'                    // optional (will be passed directly to corresponding event(s))
+  meta: 'meta'                    // optional
 });
 
 processManagement.onCommand(function(cmd) {
