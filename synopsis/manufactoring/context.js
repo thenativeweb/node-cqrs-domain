@@ -1,3 +1,3 @@
 module.exports = require('cqrs-domain').defineContext({
-  name: 'context'
+  name: 'manufactoring'
 });
