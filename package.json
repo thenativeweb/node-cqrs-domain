@@ -11,22 +11,19 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "async": ">= 0.2.9",
-    "lodash": ">= 2.4.1",
-    "eventemitter2": ">= 0.4.13",
-    "node-queue": "1.0.x",
-    "eventstore": "< 1.0.0",
-    "viewmodel": "< 1.0.0",
-    "nodeEventedCommand": ">= 0.1.2",
-    "retry": ">= 0.6.0",
-    "node-uuid": ">= 1.4.1"
+    "async": "0.9.0",
+    "debug": "1.0.4",
+    "dotty": "0.0.2",
+    "eventstore": "1.0.1",
+    "lodash": "2.4.1",
+    "node-uuid": "1.4.1",
+    "tolerance": "1.0.0"
   },
   "devDependencies": {
     "mocha": ">= 1.0.1",
-    "expect.js": ">= 0.1.2",
-    "rule-validator": ">= 0.3.1"
+    "expect.js": ">= 0.1.2"
   },
-  "description": "Node-cqrs-domain is a node.js module based on nodeEventStore. It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.",
+  "description": "Node-cqrs-domain is a node.js module based on node-eventstore. It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.",
   "keywords": [
     "cqrs",
     "eventsourcing",
@@ -52,6 +49,6 @@
     }
   ],
   "scripts": {
-    "test": "mocha && mocha test/integration/domainTest.js"
+    "test": "mocha"
   }
 }

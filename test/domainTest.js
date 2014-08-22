@@ -1,0 +1,37 @@
+var expect = require('expect.js'),
+  api = require('../');
+
+describe('domain', function () {
+
+  it('it should be a function', function () {
+
+    expect(api).to.be.a('function');
+
+  });
+
+  describe('calling that function', function () {
+
+    describe('without options', function () {
+
+      it('it should return as expected', function () {
+
+        var domain = api();
+        expect(domain).to.be.a('object');
+        expect(domain.on).to.be.a('function');
+        expect(domain.eventStore).to.be.an('object');
+        expect(domain.eventStore.on).to.be.a('function');
+        expect(domain.aggregateLock).to.be.an('object');
+        expect(domain.aggregateLock.on).to.be.a('function');
+        expect(domain.defineCommand).to.be.a('function');
+        expect(domain.defineEvent).to.be.a('function');
+        expect(domain.onEvent).to.be.a('function');
+        expect(domain.init).to.be.a('function');
+        expect(domain.handle).to.be.a('function');
+
+      });
+
+    });
+
+  });
+
+});
