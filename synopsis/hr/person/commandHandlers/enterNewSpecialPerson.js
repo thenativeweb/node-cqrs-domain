@@ -1,7 +1,8 @@
 // Is your use case not solvable without a custom command handling? Sagas? Micro-Services?
 
 // if exports is an array, it will be the same like loading multiple files...
-module.exports = require('cqrs-domain').defineCommandHandle({
+//module.exports = require('cqrs-domain').defineCommandHandler({
+module.exports = require('../../../../').defineCommandHandler({
   name: 'enterNewSpecialPerson'//,  // optional, default is file name without extenstion and without _vx
   // version: 1, // optional, default 1
   // versionPath: 'version', // can be defined globally, but can be overwritten here...
