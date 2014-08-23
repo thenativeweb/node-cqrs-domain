@@ -6,8 +6,8 @@ function domain (options) {
   return new Domain(options);
 }
 
-domain.defineContext = function () { return 'context'; };
-domain.defineAggregate = function () { return 'aggregate'; };
-domain.defineCommand = function () { return 'command'; };
+domain.defineContext = function () { return 'contextContent'; };
+domain.defineAggregate = function () { return 'aggregateContent'; };
+domain.defineCommand = function () { return 'commandContent'; };
 
 module.exports = domain;
