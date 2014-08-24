@@ -11,27 +11,27 @@ module.exports = require('../../../').defineAggregate({
 // optionally, define some initialization data...
 {
   emails: [],
-  phoneNumbers: [],
+  phoneNumbers: []
 })
-//// always convert directly to newest version...
-//.defineSnapshotConversion({
-//  version: 2
-//}, function (data, aggregate) {
-//  aggregate.set('emails', data.emails);
-//  aggregate.set('phoneNumbers', data.phoneNumbers);
-//
-//  aggregate.set('firstname', data.firstName);
-//  aggregate.set('lastname', data.lastName);
-//})
-//// always convert directly to newest version...
-//.defineSnapshotConversion({
-//  version: 1
-//}, function (data, aggregate) {
-//  aggregate.set('emails', data.emails);
-//  aggregate.set('phoneNumbers', data.phoneNumbers);
-//
-//  var names = data.name.split(' ');
-//  aggregate.set('firstname', names[0]);
-//  aggregate.set('lastname', names[1]);
-//});
-//// info to me: when loaded a snapshot create a new snapshot with same revision with newer version
+// always convert directly to newest version...
+.defineSnapshotConversion({
+  version: 2
+}, function (data, aggregate) {
+  aggregate.set('emails', data.emails);
+  aggregate.set('phoneNumbers', data.phoneNumbers);
+
+  aggregate.set('firstname', data.firstName);
+  aggregate.set('lastname', data.lastName);
+})
+// always convert directly to newest version...
+.defineSnapshotConversion({
+  version: 1
+}, function (data, aggregate) {
+  aggregate.set('emails', data.emails);
+  aggregate.set('phoneNumbers', data.phoneNumbers);
+
+  var names = data.name.split(' ');
+  aggregate.set('firstname', names[0]);
+  aggregate.set('lastname', names[1]);
+});
+// info to me: when loaded a snapshot create a new snapshot with same revision with newer version

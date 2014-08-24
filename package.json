@@ -17,7 +17,8 @@
     "eventstore": "1.0.1",
     "lodash": "2.4.1",
     "node-uuid": "1.4.1",
-    "tolerance": "1.0.0"
+    "tolerance": "1.0.0",
+    "tv4": "1.1.0"
   },
   "devDependencies": {
     "mocha": ">= 1.0.1",

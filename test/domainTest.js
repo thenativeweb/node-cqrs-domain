@@ -24,9 +24,19 @@ describe('domain', function () {
 
     describe('without options', function () {
 
+      it('it should throw an error', function () {
+
+        expect(api).to.throwError('/domainPath/');
+
+      });
+
+    });
+
+    describe('with all mandatory options', function () {
+
       it('it should return as expected', function () {
 
-        var domain = api();
+        var domain = api({ domainPath: __dirname });
         expect(domain).to.be.a('object');
         expect(domain.on).to.be.a('function');
         expect(domain.eventStore).to.be.an('object');
