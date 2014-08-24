@@ -9,6 +9,17 @@ describe('domain', function () {
 
   });
 
+  it('it should have the correct api', function () {
+
+    expect(api.defineContext).to.be.a('function');
+    expect(api.defineAggregate).to.be.a('function');
+    expect(api.defineCommand).to.be.a('function');
+    expect(api.defineEvent).to.be.a('function');
+    expect(api.defineBusinessRule).to.be.a('function');
+    expect(api.defineCommandHandler).to.be.a('function');
+
+  });
+
   describe('calling that function', function () {
 
     describe('without options', function () {
