@@ -16,13 +16,12 @@ module.exports = require('../../../../').defineCommandHandler({
     }
 
     // check if destroyed, check revision, validate command
-    commandHandler.verify(aggregate, cmd, function (err) {
-      if (err) {
-        return callback(err);
-      }
+    var err = commandHandler.verify(aggregate, cmd);
+    if (err) {
+      return callback(err);
+    }
 
-      // call api or emit a command or whatever...
-      // and at the end perhaps you call: commandHandler.handle(cmd, callback);
-    });
+    // call api or emit a command or whatever...
+    // and at the end perhaps you call: commandHandler.handle(cmd, callback);
   });
 });

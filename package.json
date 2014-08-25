@@ -15,6 +15,7 @@
     "debug": "1.0.4",
     "dotty": "0.0.2",
     "eventstore": "1.0.1",
+    "jsondate": "0.0.1",
     "lodash": "2.4.1",
     "node-uuid": "1.4.1",
     "tolerance": "1.0.0",
