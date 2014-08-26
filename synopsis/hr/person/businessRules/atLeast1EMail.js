@@ -4,7 +4,7 @@ module.exports = require('../../../../').defineBusinessRule({
   name: 'atLeast1EMail', // optional, default is file name without extenstion
   description: 'at least one email adress should be set', // optional
   priority: 1 // optional, default Infinity, all business rules will be sorted by this value
-}, function (changed, previous, events) {
+}, function (changed, previous, events, command) {
 	if (changed.get('emails').length === 0) {
 		// throw new Error('an email address is needed');
 		// or

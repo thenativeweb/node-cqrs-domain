@@ -3,7 +3,7 @@ module.exports = require('cqrs-domain').defineBusinessRule({
   name: 'nameEquality', // optional, default is file name without extenstion
   description: 'firstname should never be equal lastname',
   // priority: 1 // optional, default Infinity, all business rules will be sorted by this value
-}, function (changed, previous, events, callback) {
+}, function (changed, previous, events, command, callback) {
   if (changed.get('firstname') === changed.get('lastname')) {
     return callback('names not valid');
     // or
