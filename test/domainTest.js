@@ -45,6 +45,7 @@ describe('domain', function () {
         expect(domain.aggregateLock.on).to.be.a('function');
         expect(domain.defineCommand).to.be.a('function');
         expect(domain.defineEvent).to.be.a('function');
+        expect(domain.idGenerator).to.be.a('function');
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
