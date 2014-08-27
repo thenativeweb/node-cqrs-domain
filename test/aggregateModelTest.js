@@ -11,42 +11,30 @@ describe('aggregate model', function () {
         
         expect(function () {
           new AggregateModel();
-        }).to.throwError(/name/);
+        }).to.throwError(/id/);
         
       });
       
     });
 
-    describe('only with an aggregate name', function () {
+    describe('with an id as number', function () {
 
       it('it should throw an error', function () {
 
         expect(function () {
-          new AggregateModel('myAgg');
+          new AggregateModel(1234);
         }).to.throwError(/id/);
 
       });
 
     });
-
-    describe('only with an aggregate name and id', function () {
-
-      it('it should throw an error', function () {
-
-        expect(function () {
-          new AggregateModel('myAgg', '12345');
-        }).to.throwError(/version/);
-
-      });
-
-    });
-
-    describe('with all required arguments', function () {
+    
+    describe('with an id as string', function () {
 
       it('it should not throw an error', function () {
 
         expect(function () {
-          new AggregateModel('myAgg', '12345', 0);
+          new AggregateModel('12345');
         }).not.to.throwError();
 
       });
