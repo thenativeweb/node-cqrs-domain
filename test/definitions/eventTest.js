@@ -130,7 +130,7 @@ describe('event definition', function () {
         
       });
 
-      describe('with default payload', function () {
+      describe('with custom payload', function () {
 
         it('it should work as expected', function (done) {
           var evtObj = { my: 'event', with: { deep: 'value' } };
