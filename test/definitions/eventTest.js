@@ -69,6 +69,7 @@ describe('event definition', function () {
         expect(evt.defineCommand).to.be.a('function');
         expect(evt.defineEvent).to.be.a('function');
         expect(evt.defineOptions).to.be.a('function');
+        
         expect(evt.apply).to.be.a('function');
         
       });
@@ -101,6 +102,7 @@ describe('event definition', function () {
         expect(evt.defineCommand).to.be.a('function');
         expect(evt.defineEvent).to.be.a('function');
         expect(evt.defineOptions).to.be.a('function');
+        
         expect(evt.apply).to.be.a('function');
 
       });
