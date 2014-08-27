@@ -110,7 +110,7 @@ describe('event definition', function () {
 
         it('it should work as expected', function (done) {
           var evtObj = { my: 'event', with: { deep: 'value' } };
-          var aggregateObj = {};
+          var aggregateObj = { get: function () {}, has: function () {} };
 
           var evtFn = function (evt, aggregateModel) {
             expect(evt).to.eql(evtObj);
