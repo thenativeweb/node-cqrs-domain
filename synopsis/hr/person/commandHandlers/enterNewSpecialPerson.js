@@ -15,7 +15,7 @@ module.exports = require('../../../../').defineCommandHandler({
     }
 
     // check if destroyed, check revision, validate command
-    var err = commandHandler.verify(aggregate, cmd);
+    var err = commandHandler.verifyAggregate(aggregate, cmd);
     if (err) {
       return callback(err);
     }
