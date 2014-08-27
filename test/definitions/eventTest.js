@@ -1,7 +1,8 @@
 var expect = require('expect.js'),
   _ = require('lodash'),
   DefinitionBase = require('../../lib/definitionBase'),
-  Event = require('../../lib/definitions/event');
+  Event = require('../../lib/definitions/event'),
+  api = require('../../');
 
 describe('event definition', function () {
 
@@ -12,7 +13,7 @@ describe('event definition', function () {
       it('it should throw an error', function () {
 
         expect(function () {
-          new Event();
+          api.defineEvent();
         }).to.throwError(/function/);
 
       });
@@ -24,7 +25,7 @@ describe('event definition', function () {
       it('it should throw an error', function () {
 
         expect(function () {
-          new Event(null);
+          api.defineEvent(null);
         }).to.throwError(/function/);
 
       });
@@ -36,7 +37,7 @@ describe('event definition', function () {
       it('it should throw an error', function () {
 
         expect(function () {
-          new Event(null, 'not a function');
+          api.defineEvent(null, 'not a function');
         }).to.throwError(/function/);
 
       });
@@ -48,7 +49,7 @@ describe('event definition', function () {
       it('it should not throw an error', function () {
 
         expect(function () {
-          new Event(null, function () {});
+          api.defineEvent(null, function () {});
         }).not.to.throwError();
 
       });
@@ -56,8 +57,9 @@ describe('event definition', function () {
       it('it should return a correct object', function () {
 
         var evtFn = function () {};
-        var evt = new Event(null, evtFn);
+        var evt = api.defineEvent(null, evtFn);
         expect(evt).to.be.a(DefinitionBase);
+        expect(evt).to.be.an(Event);
         expect(evt.evtFn).to.eql(evtFn);
         expect(evt.version).to.eql(0);
         expect(evt.payload).to.eql('');
@@ -78,7 +80,7 @@ describe('event definition', function () {
       it('it should not throw an error', function () {
 
         expect(function () {
-          new Event({ version: 3, payload: 'some.path' }, function () {});
+          api.defineEvent({ version: 3, payload: 'some.path' }, function () {});
         }).not.to.throwError();
 
       });
@@ -86,8 +88,9 @@ describe('event definition', function () {
       it('it should return a correct object', function () {
 
         var evtFn = function () {};
-        var evt = new Event({ version: 3, payload: 'some.path' }, evtFn);
+        var evt = api.defineEvent({ version: 3, payload: 'some.path' }, evtFn);
         expect(evt).to.be.a(DefinitionBase);
+        expect(evt).to.be.an(Event);
         expect(evt.evtFn).to.eql(evtFn);
         expect(evt.version).to.eql(3);
         expect(evt.payload).to.eql('some.path');
@@ -118,7 +121,7 @@ describe('event definition', function () {
             done();
           };
 
-          var evt = new Event({}, evtFn);
+          var evt = api.defineEvent({}, evtFn);
 
           evt.apply(evtObj, aggregateObj);
         });
@@ -137,7 +140,7 @@ describe('event definition', function () {
             done();
           };
 
-          var evt = new Event({ payload: 'with' }, evtFn);
+          var evt = api.defineEvent({ payload: 'with' }, evtFn);
 
           evt.apply(evtObj, aggregateObj);
         });
