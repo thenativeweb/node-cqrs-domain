@@ -59,7 +59,7 @@ describe('command definition', function () {
         var cmdFn = function () {};
         var cmd = api.defineCommand(null, cmdFn);
         expect(cmd).to.be.a(DefinitionBase);
-        expect(cmd).to.be.an(Command);
+        expect(cmd).to.be.a(Command);
         expect(cmd.cmdFn).to.eql(cmdFn);
         expect(cmd.version).to.eql(0);
         expect(cmd.payload).to.eql('');
@@ -93,7 +93,7 @@ describe('command definition', function () {
         var cmdFn = function () {};
         var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
         expect(cmd).to.be.a(DefinitionBase);
-        expect(cmd).to.be.an(Command);
+        expect(cmd).to.be.a(Command);
         expect(cmd.cmdFn).to.eql(cmdFn);
         expect(cmd.version).to.eql(3);
         expect(cmd.payload).to.eql('some.path');

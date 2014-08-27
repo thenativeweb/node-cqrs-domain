@@ -21,7 +21,7 @@ describe('context definition', function () {
 
       var ctx = api.defineContext();
       expect(ctx).to.be.a(DefinitionBase);
-      expect(ctx).to.be.an(Context);
+      expect(ctx).to.be.a(Context);
       expect(ctx.definitions).to.be.an('object');
       expect(ctx.definitions.command).to.be.an('object');
       expect(ctx.definitions.event).to.be.an('object');

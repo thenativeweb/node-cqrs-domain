@@ -60,7 +60,7 @@ describe('business rule definition', function () {
         var brFn = function () {};
         var br = api.defineBusinessRule(null, brFn);
         expect(br).to.be.a(DefinitionBase);
-        expect(br).to.be.an(BusinessRule);
+        expect(br).to.be.a(BusinessRule);
         expect(br.businessRuleFn).to.eql(brFn);
         expect(br.description).to.eql(undefined);
         expect(br.priority).to.eql(Infinity);
@@ -92,7 +92,7 @@ describe('business rule definition', function () {
         var brFn = function () {};
         var br = api.defineBusinessRule({ priority: 3, description: 'bla bla bla' }, brFn);
         expect(br).to.be.a(DefinitionBase);
-        expect(br).to.be.an(BusinessRule);
+        expect(br).to.be.a(BusinessRule);
         expect(br.businessRuleFn).to.eql(brFn);
         expect(br.description).to.eql('bla bla bla');
         expect(br.priority).to.eql(3);
