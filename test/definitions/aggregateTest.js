@@ -2,6 +2,8 @@ var expect = require('expect.js'),
   _ = require('lodash'),
   DefinitionBase = require('../../lib/definitionBase'),
   Aggregate = require('../../lib/definitions/aggregate'),
+  DefaultCommandHandler = require('../../lib/defaultCommandHandler'),
+  AggregateModel = require('../../lib/aggregateModel'),
   api = require('../../');
 
 describe('aggregate definition', function () {
@@ -149,6 +151,519 @@ describe('aggregate definition', function () {
 
       });
 
+    });
+    
+    describe('calling defineContext', function () {
+      
+      describe('with a wrong object', function () {
+        
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.defineContext();
+          }).to.throwError(/context/);
+          
+        });
+        
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineContext({ name: 'contextName' });
+          
+          expect(aggr.context.name).to.eql('contextName');
+
+        });
+
+      });
+      
+    });
+
+    describe('calling addCommand', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.addCommand();
+          }).to.throwError(/command/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addCommand({ name: 'myCommand' });
+
+          expect(aggr.commands.length).to.eql(1);
+          expect(aggr.commands[0].name).to.eql('myCommand');
+
+        });
+
+      });
+
+    });
+
+    describe('calling addEvent', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.addEvent();
+          }).to.throwError(/event/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addEvent({ name: 'myEvent' });
+
+          expect(aggr.events.length).to.eql(1);
+          expect(aggr.events[0].name).to.eql('myEvent');
+
+        });
+
+      });
+
+    });
+
+    describe('calling addBusinessRule', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.addBusinessRule();
+          }).to.throwError(/businessRule/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addBusinessRule({ name: 'myRule' });
+
+          expect(aggr.businessRules.length).to.eql(1);
+          expect(aggr.businessRules[0].name).to.eql('myRule');
+
+        });
+
+      });
+
+      describe('working with priority', function () {
+
+        it('it should order it correctly', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addBusinessRule({ name: 'myRule2', priority: 3 });
+          aggr.addBusinessRule({ name: 'myRule4', priority: Infinity });
+          aggr.addBusinessRule({ name: 'myRule1', priority: 1 });
+          aggr.addBusinessRule({ name: 'myRule3', priority: 5 });
+
+          expect(aggr.businessRules.length).to.eql(4);
+          expect(aggr.businessRules[0].name).to.eql('myRule1');
+          expect(aggr.businessRules[1].name).to.eql('myRule2');
+          expect(aggr.businessRules[2].name).to.eql('myRule3');
+          expect(aggr.businessRules[3].name).to.eql('myRule4');
+
+        });
+
+      });
+
+    });
+
+    describe('calling addCommandHandler', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.addCommandHandler();
+          }).to.throwError(/commandHandler/);
+
+          expect(function () {
+            aggr.addCommandHandler({ name: 'myCmdHndlName' });
+          }).to.throwError(/commandHandler/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          var cmdHndl = {
+            name: 'myCommandHandler',
+            useAggregate: function(agg) {
+              expect(agg).to.eql(aggr);
+            }
+          };
+          
+          aggr.addCommandHandler(cmdHndl);
+
+          expect(aggr.commandHandlers.length).to.eql(1);
+          expect(aggr.commandHandlers[0]).to.eql(cmdHndl);
+
+        });
+
+      });
+
+    });
+    
+    describe('having added some commands', function () {
+      
+      var aggr;
+      
+      beforeEach(function () {
+        aggr = api.defineAggregate();
+        aggr.addCommand({ name: 'cmd1', version: 0 });
+        aggr.addCommand({ name: 'cmd2', version: 0 });
+        aggr.addCommand({ name: 'cmd2', version: 1 });
+        aggr.addCommand({ name: 'cmd2', version: 2 });
+        aggr.addCommand({ name: 'cmd3', version: 0 });
+      });
+      
+      describe('calling getCommands', function () {
+        
+        it('it should return all commands', function () {
+          
+          var cmds = aggr.getCommands();
+          expect(cmds.length).to.eql(5);
+          expect(cmds[0].name).to.eql('cmd1');
+          expect(cmds[0].version).to.eql(0);
+          expect(cmds[1].name).to.eql('cmd2');
+          expect(cmds[1].version).to.eql(0);
+          expect(cmds[2].name).to.eql('cmd2');
+          expect(cmds[2].version).to.eql(1);
+          expect(cmds[3].name).to.eql('cmd2');
+          expect(cmds[3].version).to.eql(2);
+          expect(cmds[4].name).to.eql('cmd3');
+          expect(cmds[4].version).to.eql(0);
+          
+        });
+        
+      });
+
+      describe('calling getCommandsByName', function () {
+        
+        it('it should work as expected', function () {
+
+          var ex0 = aggr.getCommandsByName('someCmdName');
+          expect(ex0.length).to.eql(0);
+          
+          var ex1 = aggr.getCommandsByName('cmd1');
+          expect(ex1.length).to.eql(1);
+          expect(ex1[0].name).to.eql('cmd1');
+          expect(ex1[0].version).to.eql(0);
+
+          var ex2 = aggr.getCommandsByName('cmd2');
+          expect(ex2.length).to.eql(3);
+          expect(ex2[0].name).to.eql('cmd2');
+          expect(ex2[0].version).to.eql(0);
+          expect(ex2[1].name).to.eql('cmd2');
+          expect(ex2[1].version).to.eql(1);
+          expect(ex2[2].name).to.eql('cmd2');
+          expect(ex2[2].version).to.eql(2);
+
+          var ex3 = aggr.getCommandsByName('cmd3');
+          expect(ex3.length).to.eql(1);
+          expect(ex3[0].name).to.eql('cmd3');
+          expect(ex3[0].version).to.eql(0);
+          
+        });
+        
+      });
+
+      describe('calling getCommand', function () {
+        
+        it('it should work as expected', function () {
+          
+          var ex0 = aggr.getCommand('someCmd', 0);
+          expect(ex0).not.to.be.ok();
+          
+          var ex1 = aggr.getCommand('cmd1', 3);
+          expect(ex1).not.to.be.ok();
+
+          var ex2 = aggr.getCommand('cmd1', 0);
+          expect(ex2.name).to.eql('cmd1');
+          expect(ex2.version).to.eql(0);
+
+          var ex3 = aggr.getCommand('cmd2', 0);
+          expect(ex3.name).to.eql('cmd2');
+          expect(ex3.version).to.eql(0);
+
+          var ex4 = aggr.getCommand('cmd2', 1);
+          expect(ex4.name).to.eql('cmd2');
+          expect(ex4.version).to.eql(1);
+
+          var ex5 = aggr.getCommand('cmd2', 2);
+          expect(ex5.name).to.eql('cmd2');
+          expect(ex5.version).to.eql(2);
+
+          var ex6 = aggr.getCommand('cmd3', 0);
+          expect(ex6.name).to.eql('cmd3');
+          expect(ex6.version).to.eql(0);
+
+          var ex7 = aggr.getCommand('cmd3');
+          expect(ex7.name).to.eql('cmd3');
+          expect(ex7.version).to.eql(0);
+
+          var ex8 = aggr.getCommand('cmd2');
+          expect(ex8.name).to.eql('cmd2');
+          expect(ex8.version).to.eql(0);
+          
+        });
+        
+      });
+      
+    });
+
+    describe('having added some events', function () {
+
+      var aggr;
+
+      beforeEach(function () {
+        aggr = api.defineAggregate();
+        aggr.addEvent({ name: 'evt1', version: 0 });
+        aggr.addEvent({ name: 'evt2', version: 0 });
+        aggr.addEvent({ name: 'evt2', version: 1 });
+        aggr.addEvent({ name: 'evt2', version: 2 });
+        aggr.addEvent({ name: 'evt3', version: 0 });
+      });
+
+      describe('calling getEvents', function () {
+
+        it('it should return all events', function () {
+
+          var evts = aggr.getEvents();
+          expect(evts.length).to.eql(5);
+          expect(evts[0].name).to.eql('evt1');
+          expect(evts[0].version).to.eql(0);
+          expect(evts[1].name).to.eql('evt2');
+          expect(evts[1].version).to.eql(0);
+          expect(evts[2].name).to.eql('evt2');
+          expect(evts[2].version).to.eql(1);
+          expect(evts[3].name).to.eql('evt2');
+          expect(evts[3].version).to.eql(2);
+          expect(evts[4].name).to.eql('evt3');
+          expect(evts[4].version).to.eql(0);
+
+        });
+
+      });
+
+      describe('calling getEvent', function () {
+
+        it('it should work as expected', function () {
+
+          var ex0 = aggr.getEvent('someEvt', 0);
+          expect(ex0).not.to.be.ok();
+
+          var ex1 = aggr.getEvent('evt1', 3);
+          expect(ex1).not.to.be.ok();
+
+          var ex2 = aggr.getEvent('evt1', 0);
+          expect(ex2.name).to.eql('evt1');
+          expect(ex2.version).to.eql(0);
+
+          var ex3 = aggr.getEvent('evt2', 0);
+          expect(ex3.name).to.eql('evt2');
+          expect(ex3.version).to.eql(0);
+
+          var ex4 = aggr.getEvent('evt2', 1);
+          expect(ex4.name).to.eql('evt2');
+          expect(ex4.version).to.eql(1);
+
+          var ex5 = aggr.getEvent('evt2', 2);
+          expect(ex5.name).to.eql('evt2');
+          expect(ex5.version).to.eql(2);
+
+          var ex6 = aggr.getEvent('evt3', 0);
+          expect(ex6.name).to.eql('evt3');
+          expect(ex6.version).to.eql(0);
+
+          var ex7 = aggr.getEvent('evt3');
+          expect(ex7.name).to.eql('evt3');
+          expect(ex7.version).to.eql(0);
+
+          var ex8 = aggr.getEvent('evt2');
+          expect(ex8.name).to.eql('evt2');
+          expect(ex8.version).to.eql(0);
+
+        });
+
+      });
+
+    });
+
+    describe('having added some command handlers', function () {
+
+      var aggr;
+
+      beforeEach(function () {
+        aggr = api.defineAggregate();
+        aggr.addCommandHandler({ name: 'cmdHndl1', version: 0, useAggregate: function () {} });
+        aggr.addCommandHandler({ name: 'cmdHndl2', version: 0, useAggregate: function () {} });
+        aggr.addCommandHandler({ name: 'cmdHndl2', version: 1, useAggregate: function () {} });
+        aggr.addCommandHandler({ name: 'cmdHndl2', version: 2, useAggregate: function () {} });
+        aggr.addCommandHandler({ name: 'cmdHndl3', version: 0, useAggregate: function () {} });
+      });
+
+      describe('calling getCommandHandlers', function () {
+
+        it('it should return all commandHandlers', function () {
+
+          var cmdHndls = aggr.getCommandHandlers();
+          expect(cmdHndls.length).to.eql(5);
+          expect(cmdHndls[0].name).to.eql('cmdHndl1');
+          expect(cmdHndls[0].version).to.eql(0);
+          expect(cmdHndls[1].name).to.eql('cmdHndl2');
+          expect(cmdHndls[1].version).to.eql(0);
+          expect(cmdHndls[2].name).to.eql('cmdHndl2');
+          expect(cmdHndls[2].version).to.eql(1);
+          expect(cmdHndls[3].name).to.eql('cmdHndl2');
+          expect(cmdHndls[3].version).to.eql(2);
+          expect(cmdHndls[4].name).to.eql('cmdHndl3');
+          expect(cmdHndls[4].version).to.eql(0);
+
+        });
+
+      });
+
+      describe('calling getCommandHandler', function () {
+
+        it('it should work as expected', function () {
+
+          var ex0 = aggr.getCommandHandler('someCmdHndl', 0);
+          expect(ex0).to.be.a(DefaultCommandHandler);
+          expect(ex0).to.eql(aggr.defaultCommandHandler);
+
+          var ex1 = aggr.getCommandHandler('cmdHndl1', 3);
+          expect(ex0).to.be.a(DefaultCommandHandler);
+          expect(ex0).to.eql(aggr.defaultCommandHandler);
+
+          var ex2 = aggr.getCommandHandler('cmdHndl1', 0);
+          expect(ex2.name).to.eql('cmdHndl1');
+          expect(ex2.version).to.eql(0);
+
+          var ex3 = aggr.getCommandHandler('cmdHndl2', 0);
+          expect(ex3.name).to.eql('cmdHndl2');
+          expect(ex3.version).to.eql(0);
+
+          var ex4 = aggr.getCommandHandler('cmdHndl2', 1);
+          expect(ex4.name).to.eql('cmdHndl2');
+          expect(ex4.version).to.eql(1);
+
+          var ex5 = aggr.getCommandHandler('cmdHndl2', 2);
+          expect(ex5.name).to.eql('cmdHndl2');
+          expect(ex5.version).to.eql(2);
+
+          var ex6 = aggr.getCommandHandler('cmdHndl3', 0);
+          expect(ex6.name).to.eql('cmdHndl3');
+          expect(ex6.version).to.eql(0);
+
+          var ex7 = aggr.getCommandHandler('cmdHndl3');
+          expect(ex7.name).to.eql('cmdHndl3');
+          expect(ex7.version).to.eql(0);
+
+          var ex8 = aggr.getCommandHandler('cmdHndl2');
+          expect(ex8.name).to.eql('cmdHndl2');
+          expect(ex8.version).to.eql(0);
+
+        });
+
+      });
+
+    });
+    
+    describe('calling create', function () {
+      
+      describe('with a wrong id', function () {
+        
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.create(123);
+          }).to.throwError(/id/);
+          
+        });
+        
+      });
+
+      describe('with a correct id', function () {
+
+        it('it should not throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.create('123');
+          }).not.to.throwError();
+
+        });
+        
+        it('it should return a correct object', function () {
+
+          var aggr = api.defineAggregate();
+          var agg = aggr.create('123');
+          expect(agg).to.be.a(AggregateModel);
+          expect(agg.set).to.be.a('function');
+          expect(agg.get).to.be.a('function');
+          expect(agg.has).to.be.a('function');
+          expect(agg.setRevision).to.be.a('function');
+          expect(agg.getRevision).to.be.a('function');
+          expect(agg.destroy).to.be.a('function');
+          expect(agg.isDestroyed).to.be.a('function');
+          expect(agg.getUncommittedEvents).to.be.a('function');
+          expect(agg.addUncommittedEvent).to.be.a('function');
+          expect(agg.clearUncommittedEvents).to.be.a('function');
+          expect(agg.toJSON).to.be.a('function');
+          
+        });
+
+      });
+      
     });
     
   });
