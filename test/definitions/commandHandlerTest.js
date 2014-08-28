@@ -63,8 +63,9 @@ describe('commandHandler definition', function () {
         var cmdHndFn = function () {};
         var cmdHnd = api.defineCommandHandler(null, cmdHndFn);
         expect(cmdHnd).to.be.a(DefinitionBase);
-        expect(cmdHnd).to.be.an(DefaultCommandHandler);
-        expect(cmdHnd).to.be.an(CommandHandler);
+        expect(cmdHnd).to.be.a(DefaultCommandHandler);
+        expect(cmdHnd).to.be.a(CommandHandler);
+        expect(cmdHnd.id).to.be.a('string');
         expect(cmdHnd.cmdHndlFn).to.eql(cmdHndFn);
         expect(cmdHnd.definitions).to.be.an('object');
         expect(cmdHnd.definitions.command).to.be.an('object');
@@ -94,8 +95,9 @@ describe('commandHandler definition', function () {
         var cmdHndFn = function () {};
         var cmdHnd = api.defineCommandHandler({ name: 'commandName', version: 3 }, cmdHndFn);
         expect(cmdHnd).to.be.a(DefinitionBase);
-        expect(cmdHnd).to.be.an(DefaultCommandHandler);
-        expect(cmdHnd).to.be.an(CommandHandler);
+        expect(cmdHnd).to.be.a(DefaultCommandHandler);
+        expect(cmdHnd).to.be.a(CommandHandler);
+        expect(cmdHnd.id).to.be.a('string');
         expect(cmdHnd.cmdHndlFn).to.eql(cmdHndFn);
         expect(cmdHnd.definitions).to.be.an('object');
         expect(cmdHnd.definitions.command).to.be.an('object');

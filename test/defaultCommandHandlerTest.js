@@ -1,7 +1,429 @@
 var expect = require('expect.js'),
-  DefaultCommandHandler = require('../lib/defaultCommandHandler');
+  DefaultCommandHandler = require('../lib/defaultCommandHandler'),
+  DefinitionBase = require('../lib/definitionBase');
 
 describe('defaultCommandHandler', function () {
 
+  describe('creating a new instance', function () {
+
+    var cmdHnd;
+    
+    beforeEach(function () {
+      cmdHnd = new DefaultCommandHandler();
+    });
+    
+    it('it should return a correct object', function () {
+
+      expect(cmdHnd).to.be.a(DefinitionBase);
+      expect(cmdHnd.id).to.be.a('string');
+      expect(cmdHnd.definitions).to.be.an('object');
+      expect(cmdHnd.definitions.command).to.be.an('object');
+      expect(cmdHnd.definitions.event).to.be.an('object');
+      expect(cmdHnd.defineCommand).to.be.a('function');
+      expect(cmdHnd.defineEvent).to.be.a('function');
+      expect(cmdHnd.defineOptions).to.be.a('function');
+
+      expect(cmdHnd.useAggregate).to.be.a('function');
+      expect(cmdHnd.useEventStore).to.be.a('function');
+      expect(cmdHnd.useAggregateLock).to.be.a('function');
+      expect(cmdHnd.queueCommand).to.be.a('function');
+      expect(cmdHnd.getNextCommandInQueue).to.be.a('function');
+      expect(cmdHnd.lockAggregate).to.be.a('function');
+      expect(cmdHnd.loadAggregate).to.be.a('function');
+      expect(cmdHnd.createSnapshot).to.be.a('function');
+      expect(cmdHnd.isAggregateDestroyed).to.be.a('function');
+      expect(cmdHnd.isRevisionWrong).to.be.a('function');
+      expect(cmdHnd.validateCommand).to.be.a('function');
+      expect(cmdHnd.verifyAggregate).to.be.a('function');
+      expect(cmdHnd.letHandleCommandByAggregate).to.be.a('function');
+      expect(cmdHnd.checkAggregateLock).to.be.a('function');
+      expect(cmdHnd.resolveAggregateLock).to.be.a('function');
+      expect(cmdHnd.commit).to.be.a('function');
+      expect(cmdHnd.workflow).to.be.a('function');
+      expect(cmdHnd.handle).to.be.a('function');
+      
+    });
+    
+    describe('calling useAggregate', function () {
+      
+      it('it should work as expected', function () {
+
+        var aggregate = { agg: 'regate' };
+        cmdHnd.useAggregate(aggregate);
+        expect(cmdHnd.aggregate).to.eql(aggregate);
+        
+      });
+      
+    });
+
+    describe('calling useEventStore', function () {
+
+      it('it should work as expected', function () {
+
+        var eventstore = { event: 'store' };
+        cmdHnd.useEventStore(eventstore);
+        expect(cmdHnd.eventStore).to.eql(eventstore);
+
+      });
+
+    });
+
+    describe('calling useEventStore', function () {
+
+      it('it should work as expected', function () {
+
+        var aggLock = { agg: 'lock' };
+        cmdHnd.useAggregateLock(aggLock);
+        expect(cmdHnd.aggregateLock).to.eql(aggLock);
+
+      });
+
+    });
+
+    describe('calling queueCommand', function () {
+
+      it('it should work as expected', function () {
+
+        cmdHnd.defineCommand({
+          aggregateId: 'aggId'
+        });
+        var cmd = { my: 'cmd', aggId: '123' };
+        var clb = function () {};
+        cmdHnd.queueCommand(cmd, clb);
+        var cmd2 = { my: 'cmd2', aggId: '12345' };
+        var clb2 = function () {};
+        cmdHnd.queueCommand(cmd2, clb2);
+        var cmd3 = { my: 'cmd3', aggId: '123' };
+        var clb3 = function () {};
+        cmdHnd.queueCommand(cmd3, clb3);
+        expect(cmdHnd.queue['123']).to.be.an('array');
+        expect(cmdHnd.queue['123'].length).to.eql(2);
+        expect(cmdHnd.queue['123'][0].command).to.eql(cmd);
+        expect(cmdHnd.queue['123'][0].callback).to.eql(clb);
+        expect(cmdHnd.queue['123'][1].command).to.eql(cmd3);
+        expect(cmdHnd.queue['123'][1].callback).to.eql(clb3);
+        expect(cmdHnd.queue['12345']).to.be.an('array');
+        expect(cmdHnd.queue['12345'].length).to.eql(1);
+        expect(cmdHnd.queue['12345'][0].command).to.eql(cmd2);
+        expect(cmdHnd.queue['12345'][0].callback).to.eql(clb2);
+
+      });
+
+    });
+
+    describe('calling getNextCommandInQueue', function () {
+
+      it('it should work as expected', function () {
+
+        cmdHnd.defineCommand({
+          aggregateId: 'aggId'
+        });
+        var cmd = { my: 'cmd', aggId: '123' };
+        var clb = function () {};
+        cmdHnd.queueCommand(cmd, clb);
+        var cmd2 = { my: 'cmd2', aggId: '12345' };
+        var clb2 = function () {};
+        cmdHnd.queueCommand(cmd2, clb2);
+        var cmd3 = { my: 'cmd3', aggId: '123' };
+        var clb3 = function () {};
+        cmdHnd.queueCommand(cmd3, clb3);
+
+        var next = cmdHnd.getNextCommandInQueue(cmd);
+        
+        expect(cmdHnd.queue['123']).to.be.an('array');
+        expect(cmdHnd.queue['123'].length).to.eql(1);
+        expect(next.command).to.eql(cmd);
+        expect(next.callback).to.eql(clb);
+        expect(cmdHnd.queue['123'][0].command).to.eql(cmd3);
+        expect(cmdHnd.queue['123'][0].callback).to.eql(clb3);
+        expect(cmdHnd.queue['12345']).to.be.an('array');
+        expect(cmdHnd.queue['12345'].length).to.eql(1);
+        expect(cmdHnd.queue['12345'][0].command).to.eql(cmd2);
+        expect(cmdHnd.queue['12345'][0].callback).to.eql(clb2);
+
+      });
+
+    });
+
+    describe('calling lockAggregate', function () {
+
+      it('it should work as expected', function (done) {
+        
+        var calledBack = false;
+        var aggLock = {
+          reserve: function (workerId, aggregateId, callback) {
+            expect(workerId).to.be.a('string');
+            expect(workerId).to.eql(cmdHnd.id);
+            expect(aggregateId).to.eql('myAggId');
+            calledBack = true;
+            callback(null);
+          }
+        };
+        cmdHnd.useAggregateLock(aggLock);
+
+        cmdHnd.lockAggregate('myAggId', function (err) {
+          expect(err).not.to.be.ok();
+          expect(calledBack).to.eql(true);
+          done();
+        });
+
+      });
+
+    });
+
+    describe('calling loadAggregate', function () {
+
+      it('it should work as expected', function (done) {
+
+        var snap = { version: 2, data: 'my data' };
+        var stream = { events: [ { payload: { the: 'event' } } ] };
+        var calledBackSnap = false;
+        var calledLoad = false;
+        var eventStore = {
+          getFromSnapshot: function (query, callback) {
+            expect(query.aggregateId).to.eql('myAggId');
+            expect(query.aggregate).to.eql('aggName');
+            expect(query.context).to.eql('ctx');
+            calledBackSnap = true;
+            callback(null, snap, stream);
+          }
+        };
+        cmdHnd.defineCommand({
+          aggregate: 'agg',
+          context: 'c'
+        });
+        cmdHnd.useEventStore(eventStore);
+        cmdHnd.useAggregate({ name: 'aggName',
+          context: { name: 'ctx' },
+          create: function (id) { return { id: id }; },
+          loadFromHistory: function (aggregate, snapshot, events) {
+            expect(aggregate.id).to.eql('myAggId');
+            expect(snapshot.data).to.eql('my data');
+            expect(events.length).to.eql(1);
+            expect(events[0]).to.eql(stream.events[0].payload);
+            calledLoad = true;
+            return true;
+          }
+        });
+
+        cmdHnd.loadAggregate('myAggId', function (err) {
+          expect(err).not.to.be.ok();
+          expect(calledBackSnap).to.eql(true);
+          expect(calledLoad).to.eql(true);
+          done();
+        });
+
+      });
+
+    });
+
+    describe('calling createSnapshot', function () {
+
+      it('it should work as expected', function (done) {
+
+        var aggr = {
+          id: 'myAggId',
+          toJSON: function () {
+            return { a: 'b' };
+          }
+        };
+        var stream = { lastRevision: 3, events: [ { payload: { the: 'event' } } ] };
+        var calledBackSnap = false;
+        var eventStore = {
+          createSnapshot: function (query, callback) {
+            expect(query.aggregateId).to.eql('myAggId');
+            expect(query.aggregate).to.eql('aggName');
+            expect(query.context).to.eql('ctx');
+            expect(query.data.a).to.eql('b');
+            expect(query.revision).to.eql(3);
+            expect(query.version).to.eql(2);
+            calledBackSnap = true;
+            callback(null);
+          }
+        };
+        cmdHnd.defineCommand({
+          aggregate: 'agg',
+          context: 'c'
+        });
+        cmdHnd.useEventStore(eventStore);
+        cmdHnd.useAggregate({ name: 'aggName',
+          context: { name: 'ctx' },
+          version: 2
+        });
+
+        cmdHnd.createSnapshot(aggr, stream, function (err) {
+          expect(err).not.to.be.ok();
+          expect(calledBackSnap).to.eql(true);
+          done();
+        });
+
+      });
+
+    });
+
+    describe('calling isAggregateDestroyed', function () {
+      
+      describe('if false', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = {
+            isDestroyed: function () {
+              return false;
+            }
+          };
+
+          var res = cmdHnd.isAggregateDestroyed(aggr);
+          expect(res).to.eql(null);
+
+        });
+        
+      });
+
+      describe('if true', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = {
+            id: '234',
+            getRevision: function () {
+              return 4;
+            },
+            isDestroyed: function () {
+              return true;
+            }
+          };
+
+          var res = cmdHnd.isAggregateDestroyed(aggr);
+          expect(res.name).to.eql('AggregateDestroyedError');
+          expect(res.more.aggregateId).to.eql('234');
+          expect(res.more.aggregateRevision).to.eql(4);
+
+        });
+
+      });
+
+    });
+    
+    describe('calling isRevisionWrong', function () {
+      
+      describe('without having defined a revision', function () {
+        
+        it('it should work as expected', function () {
+          
+          var aggr = {};
+          var cmd = {};
+          var res = cmdHnd.isRevisionWrong(aggr, cmd);
+          expect(res).to.eql(null);
+          
+        });
+        
+      });
+
+      describe('with a command revision is less then the aggregate revision', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = { id: '332', getRevision: function () { return 3; } };
+          var cmd = { r: 2 };
+
+          cmdHnd.defineCommand({
+            revision: 'r'
+          });
+
+          var res = cmdHnd.isRevisionWrong(aggr, cmd);
+          expect(res.name).to.eql('AggregateConcurrencyError');
+          expect(res.more.aggregateId).to.eql('332');
+          expect(res.more.aggregateRevision).to.eql(3);
+          expect(res.more.commandRevision).to.eql(2);
+
+        });
+
+      });
+
+      describe('with a command revision is greater then the aggregate revision', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = { id: '332', getRevision: function () { return 2; } };
+          var cmd = { r: 3 };
+
+          cmdHnd.defineCommand({
+            revision: 'r'
+          });
+
+          var res = cmdHnd.isRevisionWrong(aggr, cmd);
+          expect(res.name).to.eql('AggregateConcurrencyError');
+          expect(res.more.aggregateId).to.eql('332');
+          expect(res.more.aggregateRevision).to.eql(2);
+          expect(res.more.commandRevision).to.eql(3);
+
+        });
+
+      });
+
+      describe('with a command revision matching the aggregate revision', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = { id: '332', getRevision: function () { return 3; } };
+          var cmd = { r: 3 };
+
+          cmdHnd.defineCommand({
+            revision: 'r'
+          });
+
+          var res = cmdHnd.isRevisionWrong(aggr, cmd);
+          expect(res).to.eql(null);
+
+        });
+
+      });
+      
+    });
+    
+    describe('calling validateCommand', function () {
+      
+      it('it should work as expected', function (done) {
+        
+        var cmd = { my: 'cmd' };
+        var aggr = {
+          validateCommand: function (c) {
+            expect(c).to.eql(cmd);
+            done();
+          }
+        };
+        cmdHnd.useAggregate(aggr);
+        cmdHnd.validateCommand(cmd);
+        
+      });
+      
+    });
+
+    describe('calling verifyAggregate', function () {
+
+      it('it should work as expected', function () {
+
+        var cmd = { my: 'cmd' };
+        var aggr = { my: 'aggr' };
+
+        cmdHnd.isAggregateDestroyed = function (a) {
+          expect(a).to.eql(aggr);
+          return null;
+        };
+
+        cmdHnd.isRevisionWrong = function (a, c) {
+          expect(a).to.eql(aggr);
+          expect(c).to.eql(cmd);
+          return null;
+        };
+        
+        cmdHnd.verifyAggregate(aggr, cmd);
+
+      });
+
+    });
+
+  });
 
 });
