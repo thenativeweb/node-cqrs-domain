@@ -52,7 +52,7 @@ describe('aggregate definition', function () {
       expect(aggr.handle).to.be.a('function');
       expect(aggr.apply).to.be.a('function');
       expect(aggr.loadFromHistory).to.be.a('function');
-      expect(aggr.isSnapshotThresholdNeeded).to.be.a('function');
+      expect(aggr.isSnapshotNeeded).to.be.a('function');
 
     });
     
@@ -742,6 +742,202 @@ describe('aggregate definition', function () {
       });
       
     });
+    
+    describe('calling checkBusinessRules', function () {
+      
+      it('it should call the check function on the business rule objects', function (done) {
+
+        var aggr = api.defineAggregate();
+        
+        var ch = 'changed';
+        var pr = 'previous';
+        var evt = 'events';
+        var cmd = 'command';
+        
+        var called = 0;
+        
+        var br1 = {
+          check: function (changed, previous, events, command, callback) {
+            expect(changed).to.eql(ch);
+            expect(previous).to.eql(pr);
+            expect(events).to.eql(evt);
+            expect(command).to.eql(cmd);
+            called++;
+            callback(null);
+          }
+        };
+
+        var br2 = {
+          check: function (changed, previous, events, command, callback) {
+            expect(changed).to.eql(ch);
+            expect(previous).to.eql(pr);
+            expect(events).to.eql(evt);
+            expect(command).to.eql(cmd);
+            called++;
+            callback(null);
+          }
+        };
+
+        aggr.addBusinessRule(br1);
+        aggr.addBusinessRule(br2);
+        
+        aggr.checkBusinessRules(ch, pr, evt, cmd, done);
+        
+      });
+      
+    });
+    
+    describe('calling isSnapshotNeeded', function () {
+      
+      describe('passing more events than threshold', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+
+          var res = aggr.isSnapshotNeeded([1, 2, 3, 4]);
+          
+          expect(res).to.eql(true);
+
+        });
+        
+      });
+
+      describe('passing less events than threshold', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+          
+          expect(aggr.getSnapshotThreshold()).to.eql(100); // default
+
+          var res = aggr.isSnapshotNeeded([1, 2, 3, 4]);
+
+          expect(res).to.eql(false);
+
+        });
+
+      });
+      
+    });
+    
+    describe('calling apply', function () {
+
+      describe('with no matching event name', function () {
+
+        it('it should throw an error', function () {
+          
+          var aggr = api.defineAggregate();
+
+          aggr.defineEvent({
+            name: 'evtName'
+          });
+          
+          aggr.addEvent({ name: 'evt1', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 1, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 2, apply: function () {} });
+          aggr.addEvent({ name: 'evt3', version: 0, apply: function () {} });
+
+          expect(function () {
+            aggr.apply([{ name: 'evt1' }]);
+          }).to.throwError(/name/);
+
+        });
+
+      });
+
+      describe('without having defined an event that handles it', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineEvent({
+            name: 'evtName'
+          });
+
+          aggr.addEvent({ name: 'evt1', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 1, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 2, apply: function () {} });
+          aggr.addEvent({ name: 'evt3', version: 0, apply: function () {} });
+
+          expect(function () {
+            aggr.apply([{ evtName: 'evt1NotExisting' }]);
+          }).to.throwError(/not found/);
+
+        });
+
+      });
+
+      describe('having defined an event that handles it', function () {
+
+        it('it should not throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineEvent({
+            name: 'evtName'
+          });
+
+          aggr.addEvent({ name: 'evt1', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 1, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 2, apply: function () {} });
+          aggr.addEvent({ name: 'evt3', version: 0, apply: function () {} });
+
+          expect(function () {
+            aggr.apply([{ evtName: 'evt2' }]);
+          }).not.to.throwError();
+
+        });
+
+        it('it should not throw an error', function (done) {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineEvent({
+            name: 'evtName',
+            version: 'v'
+          });
+          
+          var checked = 0;
+          
+          function check () {
+            checked++;
+            if (checked === 2) {
+              done();
+            }
+          }
+
+          aggr.addEvent({ name: 'evt1', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 0, apply: function () {} });
+          aggr.addEvent({ name: 'evt2', version: 1, apply: function (evt, aggModel) {
+            expect(evt.evtName).to.eql('evt2');
+            expect(evt.v).to.eql(1);
+            expect(aggModel).to.eql('model');
+            check();
+          } });
+          aggr.addEvent({ name: 'evt2', version: 2, apply: function () {} });
+          aggr.addEvent({ name: 'evt3', version: 0, apply: function (evt, aggModel) {
+            expect(evt.evtName).to.eql('evt3');
+            expect(evt.v).to.eql(0);
+            expect(aggModel).to.eql('model');
+            check();
+          } });
+
+          aggr.apply([{ evtName: 'evt2', v: 1 }, { evtName: 'evt3', v: 0 }], 'model');
+
+        });
+
+      });
+
+    });
+    
+    describe('calling loadFromHistory');
+
+    describe('calling handle');
     
   });
 
