@@ -666,6 +666,83 @@ describe('aggregate definition', function () {
       
     });
     
+    describe('calling validateCommand', function () {
+      
+      describe('passing a command object that not have a name', function () {
+        
+        it('it should throw an Error', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineCommand({
+            name: 'cmdName'
+          });
+          
+          expect(function () {
+            aggr.validateCommand({ my: 'cmd', with: 'payload' });
+          }).to.throwError(/name/);
+          
+        });
+        
+      });
+
+      describe('passing a command object that not matches an existing command', function () {
+
+        it('it should throw an Error', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineCommand({
+            name: 'cmdName'
+          });
+
+          expect(function () {
+            aggr.validateCommand({ cmdName: 'cmd', with: 'payload' });
+          }).to.throwError(/not found/);
+
+        });
+
+      });
+
+      describe('passing a command object that matches an existing command', function () {
+
+        it('it should not throw an Error', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineCommand({
+            name: 'cmdName',
+            version: 'v'
+          });
+          
+          aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; } });
+
+          expect(function () {
+            aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' });
+          }).not.to.throwError();
+
+        });
+
+        it('it should return what the command validation function returns', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.defineCommand({
+            name: 'cmdName',
+            version: 'v'
+          });
+
+          aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return 'myValidationRes'; } });
+
+          var err = aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' });
+          expect(err).to.eql('myValidationRes')
+          
+        });
+
+      });
+      
+    });
+    
   });
 
 });
