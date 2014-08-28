@@ -935,9 +935,225 @@ describe('aggregate definition', function () {
 
     });
     
-    describe('calling loadFromHistory');
+    describe('calling loadFromHistory', function () {
 
-    describe('calling handle');
+      describe('passing more events than threshold', function () {
+
+        it('it should work as expected', function () {
+
+          var evts = [{ evtName: 'evt1' }, { evtName: 'evt2' }, { evtName: 'evt3' }];
+          var aggModel = {
+            set: function () {},
+            setRevision: function () {}
+          };
+
+          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+
+          aggr.apply = function (events, aggregateModel) { // mock
+            expect(events).to.eql(evts);
+            expect(aggregateModel).to.eql(aggModel);
+          };
+
+          aggr.defineEvent({
+            name: 'evtName'
+          });
+
+          var res = aggr.loadFromHistory(aggModel, null, evts);
+
+          expect(res).to.eql(true);
+
+        });
+
+      });
+
+      describe('passing less events than threshold', function () {
+
+        it('it should work as expected', function () {
+
+          var evts = [{ evtName: 'evt1' }, { evtName: 'evt2' }, { evtName: 'evt3' }];
+          var aggModel = {
+            set: function () {},
+            setRevision: function () {}
+          };
+
+          var aggr = api.defineAggregate();
+
+          aggr.apply = function (events, aggregateModel) { // mock
+            expect(events).to.eql(evts);
+            expect(aggregateModel).to.eql(aggModel);
+          };
+
+          aggr.defineEvent({
+            name: 'evtName'
+          });
+
+          expect(aggr.getSnapshotThreshold()).to.eql(100); // default
+
+          var res = aggr.loadFromHistory(aggModel, null, evts);
+
+          expect(res).to.eql(false);
+
+        });
+
+      });
+      
+      describe('passing a snapshot', function () {
+
+        describe('with actual version', function () {
+
+          it('it should work as expected', function () {
+
+            var snap = {
+              version: 4,
+              revision: 5,
+              data: {
+                my: { da: 'ta' }
+              }
+            };
+
+            var aggModel = {
+              set: function (d) {
+                expect(d).to.eql(snap.data);
+              },
+              setRevision: function (r) {
+                expect(r).to.eql(5);
+              }
+            };
+
+            var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+
+            expect(aggr.getSnapshotThreshold()).to.eql(2);
+
+            var res = aggr.loadFromHistory(aggModel, snap, null);
+
+            expect(res).to.eql(false);
+
+          });
+          
+        });
+
+        describe('with older version', function () {
+
+          it('it should work as expected', function () {
+
+            var snap = {
+              version: 1,
+              revision: 5,
+              data: {
+                my: { da: 'ta' }
+              }
+            };
+
+            var aggModel = {
+              set: function () {
+              },
+              setRevision: function (r) {
+                expect(r).to.eql(5);
+              }
+            };
+
+            var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+
+            aggr.defineSnapshotConversion({ version: 1 }, function (data, aggregateModel) {
+              expect(data).to.eql(snap.data);
+              expect(aggregateModel).to.eql(aggModel);
+            });
+
+            expect(aggr.getSnapshotThreshold()).to.eql(2);
+
+            var res = aggr.loadFromHistory(aggModel, snap, null);
+
+            expect(res).to.eql(true);
+
+          });
+
+        });
+
+      });
+
+      describe('passing some events', function () {
+
+        it('it should actualize the aggregateModel correctly', function () {
+
+          var evts = [{ evtName: 'evt1', r: 3 }, { evtName: 'evt2', r: 1 }, { evtName: 'evt3', r: 2 }];
+          var rev;
+          var aggModel = {
+            set: function () {},
+            setRevision: function (r) { rev = r;}
+          };
+
+          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+
+          aggr.apply = function (events, aggregateModel) { // mock
+            expect(events).to.eql(evts);
+            expect(aggregateModel).to.eql(aggModel);
+            expect(aggregateModel).to.eql(aggModel);
+          };
+
+          aggr.defineEvent({
+            name: 'evtName',
+            revision: 'r'
+          });
+
+          aggr.loadFromHistory(aggModel, null, evts);
+
+          expect(rev).to.eql(3);
+
+        });
+        
+      });
+      
+      describe('passing a snapshot and some events', function () {
+
+        it('it should actualize the aggregateModel correctly', function () {
+
+          var evts = [{ evtName: 'evt1', r: 6 }, { evtName: 'evt2', r: 7 }, { evtName: 'evt3', r: 8 }];
+          var snap = {
+            version: 1,
+            revision: 5,
+            data: {
+              my: { da: 'ta' }
+            }
+          };
+
+          var rev;
+          var aggModel = {
+            set: function () {
+            },
+            setRevision: function (r) {
+              rev = r;
+            }
+          };
+
+          var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+
+          aggr.defineSnapshotConversion({ version: 1 }, function (data, aggregateModel) {
+            expect(data).to.eql(snap.data);
+            expect(aggregateModel).to.eql(aggModel);
+          });
+
+          aggr.apply = function (events, aggregateModel) { // mock
+            expect(events).to.eql(evts);
+            expect(aggregateModel).to.eql(aggModel);
+            expect(aggregateModel).to.eql(aggModel);
+          };
+
+          aggr.defineEvent({
+            name: 'evtName',
+            revision: 'r'
+          });
+
+          aggr.loadFromHistory(aggModel, null, evts);
+          
+          expect(rev).to.eql(8);
+
+        });
+        
+      });
+
+    });
+
+//    describe('calling handle');
     
   });
 
