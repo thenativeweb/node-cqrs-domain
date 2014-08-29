@@ -113,7 +113,7 @@ describe('AggregateLock', function() {
               lock.disconnect(done);
             });
 
-            it('it should return with the correct queue', function(done) {
+            it('it should return with the correct lock', function(done) {
 
               aggregatelock.create({ type: type }, function(err, resL) {
                 lock = resL;
@@ -276,21 +276,31 @@ describe('AggregateLock', function() {
 
                 beforeEach(function (done) {
                   lock.clear(function () {
-                    async.parallel([
+                    async.series([
                       function (callback) {
-                        lock.reserve('workerId111', 'aggregateId111', callback);
+                        setTimeout(function () {
+                          lock.reserve('workerId111', 'aggregateId111', callback);
+                        }, 1);
                       },
                       function (callback) {
-                        lock.reserve('workerId222', 'aggregateId111', callback);
+                        setTimeout(function () {
+                          lock.reserve('workerId222', 'aggregateId111', callback);
+                        }, 2);
                       },
                       function (callback) {
-                        lock.reserve('workerId333', 'aggregateId111', callback);
+                        setTimeout(function () {
+                          lock.reserve('workerId333', 'aggregateId111', callback);
+                        }, 3);
                       },
                       function (callback) {
-                        lock.reserve('workerIdFirst', 'aggregateIdSecond', callback);
+                        setTimeout(function () {
+                          lock.reserve('workerIdFirst', 'aggregateIdSecond', callback);
+                        }, 4);
                       },
                       function (callback) {
-                        lock.reserve('workerIdSecond', 'aggregateIdSecond', callback);
+                        setTimeout(function () {
+                          lock.reserve('workerIdSecond', 'aggregateIdSecond', callback);
+                        }, 5);
                       }
                     ], done);
                   });
