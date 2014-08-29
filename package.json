@@ -51,6 +51,6 @@
     }
   ],
   "scripts": {
-    "test": "mocha"
+    "test": "mocha test/unit && mocha test/integration"
   }
 }
