@@ -50,6 +50,10 @@ describe('domain', function () {
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
+        
+        expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
+        expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
+        expect(domain.options.snapshotThreshold).to.eql(100);
 
       });
 
@@ -279,6 +283,60 @@ describe('domain', function () {
 
       });
 
+    });
+    
+    describe('defining onEvent handler', function () {
+
+      var domain;
+
+      beforeEach(function () {
+        domain = api({ domainPath: __dirname });
+        domain.onEventHandle = null;
+      });
+
+      describe('in a synchronous way', function() {
+
+        it('it should be transformed internally to an asynchronous way', function(done) {
+
+          var called = false;
+          domain.onEvent(function (evt) {
+            expect(evt.my).to.eql('evt');
+            called = true;
+          });
+
+          domain.onEventHandle({ my: 'evt' }, function (err) {
+            expect(err).not.to.be.ok();
+            expect(called).to.eql(true);
+            done();
+          });
+
+        });
+
+      });
+
+      describe('in an synchronous way', function() {
+
+        it('it should be taken as it is', function(done) {
+
+          var called = false;
+          domain.onEvent(function (evt, callback) {
+            setTimeout(function () {
+              expect(evt.my).to.eql('evt');
+              called = true;
+              callback(null);
+            }, 10);
+          });
+
+          domain.onEventHandle({ my: 'evt' }, function (err) {
+            expect(err).not.to.be.ok();
+            expect(called).to.eql(true);
+            done();
+          });
+
+        });
+
+      });
+      
     });
 
   });
