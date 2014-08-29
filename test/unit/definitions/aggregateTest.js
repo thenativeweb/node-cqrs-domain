@@ -695,6 +695,32 @@ describe('aggregate definition', function () {
         });
 
       });
+
+      describe('having defined initialization values', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate(null, { stuff: [] });
+          var agg = aggr.create('123');
+          expect(agg).to.be.a(AggregateModel);
+          expect(agg.set).to.be.a('function');
+          expect(agg.get).to.be.a('function');
+          expect(agg.has).to.be.a('function');
+          expect(agg.setRevision).to.be.a('function');
+          expect(agg.getRevision).to.be.a('function');
+          expect(agg.destroy).to.be.a('function');
+          expect(agg.isDestroyed).to.be.a('function');
+          expect(agg.getUncommittedEvents).to.be.a('function');
+          expect(agg.addUncommittedEvent).to.be.a('function');
+          expect(agg.clearUncommittedEvents).to.be.a('function');
+          expect(agg.toJSON).to.be.a('function');
+          
+          expect(agg.get('stuff')).to.be.an('array');
+          expect(agg.get('stuff').length).to.eql(0);
+
+        });
+
+      });
       
     });
     
@@ -1249,13 +1275,24 @@ describe('aggregate definition', function () {
 
       describe('passing a command object that matches an existing command', function () {
 
-        it('it should not callback with an Error', function () {
+        it('it should not callback with an Error', function (done) {
 
+          var rev = 0;
+          var uncommittedEvts = [];
+          var applyCalled = false;
           var aggModel = {
+            id: 'aggId',
+            set: function (k, v) {
+              expect(k).to.eql('applied');
+              expect(v).to.eql(true);
+            },
             get: function () {
             },
+            setRevision: function (r) { rev = r; },
+            getRevision: function () { return rev; },
             toJSON: function () {},
-            getUncommittedEvents: function () { return []; }
+            addUncommittedEvent: function (e) { uncommittedEvts.push(e); },
+            getUncommittedEvents: function () { return uncommittedEvts; }
           };
           
           var cmdToUse = { cmdName: 'cmd', v: 2, with: 'payload' };
@@ -1266,16 +1303,31 @@ describe('aggregate definition', function () {
             name: 'cmdName',
             version: 'v'
           });
+
+          aggr.defineEvent({
+            name: 'evtName',
+            version: 'v'
+          });
           
           var handle = function (cmd, aggregateModel) {
             expect(cmd).to.eql(cmdToUse);
             expect(aggregateModel).to.eql(aggModel);
+            aggregateModel.apply({ evtName: 'evt', with: 'payloadOfEvt' });
           };
 
           aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, handle: handle });
 
+          aggr.addEvent({ name: 'evt', version: 0, apply: function (e, a) {
+            a.set('applied', true);
+            applyCalled = true;
+          }});
+
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
+            expect(rev).to.eql(1);
+            expect(applyCalled).to.eql(true);
+            
+            done();
           });
         });
 
@@ -1344,6 +1396,9 @@ describe('aggregate definition', function () {
           };
 
           aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, handle: handle });
+          aggr.addEvent({ name: 'evt1', version: 0, apply: function (e, a) {}});
+          aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
+          aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
 
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
@@ -1463,6 +1518,9 @@ describe('aggregate definition', function () {
             };
 
             aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, handle: handle });
+            aggr.addEvent({ name: 'evt1', version: 0, apply: function (e, a) {}});
+            aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
+            aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
 
             aggr.handle(aggModel, cmdToUse, function (err) {
               expect(err).to.be.ok();

@@ -3,7 +3,7 @@
   "oneOf": [
     {
       "allOf": [
-        { "$ref": "#/command_hr_person" },
+        { "$ref": "/command/hr/person" },
         {
           "version": {
             "type": "integer",

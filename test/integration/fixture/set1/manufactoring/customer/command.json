@@ -1,7 +1,7 @@
 {
-  "title": "command_manufactoring_customer",
+  "title": "command/manufactoring/customer",
   "allOf": [
-    { "$ref": "#/command_manufactoring" },
+    { "$ref": "/command/manufactoring" },
     {
       "properties": {
         "aggregate": {

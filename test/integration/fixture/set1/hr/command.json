@@ -1,7 +1,7 @@
 {
-  "title": "command_hr",
+  "title": "command/hr",
   "allOf": [
-    { "$ref": "#/command" },
+    { "$ref": "/command" },
     {
       "properties": {
         "context": {

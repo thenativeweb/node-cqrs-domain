@@ -488,7 +488,7 @@ describe('defaultCommandHandler', function () {
             getAll: function (aggId, clb) {
               expect(aggId).to.eql('1234');
               called = true;
-              clb(null, [{ id: cmdHnd.id }, { id: '1111' }]);
+              clb(null, [cmdHnd.id, '1111']);
             }
           });
           cmdHnd.checkAggregateLock('1234', function (err) {
@@ -511,7 +511,7 @@ describe('defaultCommandHandler', function () {
             getAll: function (aggId, clb) {
               expect(aggId).to.eql('1234');
               called = true;
-              clb(null, [{ id: cmdHnd.id }]);
+              clb(null, [cmdHnd.id]);
             }
           });
           cmdHnd.checkAggregateLock('1234', function (err) {

@@ -1,7 +1,7 @@
 {
-  "title": "command_hr_person",
+  "title": "command/hr/person",
   "allOf": [
-    { "$ref": "#/command_hr" },
+    { "$ref": "/command/hr" },
     {
       "properties": {
         "aggregate": {

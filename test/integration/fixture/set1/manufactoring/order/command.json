@@ -1,7 +1,7 @@
 {
-  "title": "command_manufactoring_order",
+  "title": "command/manufactoring/order",
   "allOf": [
-    { "$ref": "#/command_manufactoring" },
+    { "$ref": "/command/manufactoring" },
     {
       "properties": {
         "aggregate": {
