@@ -1,9 +1,14 @@
-# before_script: "npm install --dev"
+# before_script: "npm install"
+
+services:
+  - redis-server
+  - mongodb
+  - couchdb
 
 language: node_js
 node_js:
   - 0.8
-  - 0.1
+  - 0.10
 
 branches:
   only:
