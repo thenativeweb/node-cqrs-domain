@@ -1,5 +1,9 @@
 var expect = require('expect.js'),
   api = require('../'),
+  ValidationError = require('../lib/errors/validationError'),
+  BusinessRuleError = require('../lib/errors/businessRuleError'),
+  AggregateDestroyedError = require('../lib/errors/aggregateDestroyedError'),
+  AggregateConcurrencyError = require('../lib/errors/aggregateConcurrencyError'),
   _ = require('lodash');
 
 describe('domain', function () {
@@ -331,6 +335,409 @@ describe('domain', function () {
             expect(err).not.to.be.ok();
             expect(called).to.eql(true);
             done();
+          });
+
+        });
+
+      });
+      
+    });
+    
+    describe('calling createCommandRejectedEvent', function () {
+
+      var domain;
+
+      beforeEach(function () {
+        domain = api({ domainPath: __dirname, commandRejectedEventName: 'cmdRej' });
+        domain.defineCommand({
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+        domain.defineEvent({
+          correlationId: 'corr',
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+      });
+      
+      describe('with an error as object', function () {
+        
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = { my: 'err' };
+          
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+          
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason).to.eql(err);
+          
+        });
+        
+      });
+
+      describe('with an error as Error', function () {
+
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = new Error('my err');
+
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason.name).to.eql('Error');
+          expect(evt.p.reason.message).to.eql('my err');
+
+        });
+
+      });
+
+      describe('with an error as ValidationError', function () {
+
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = new ValidationError('my err', { mo: 're' });
+
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason.name).to.eql('ValidationError');
+          expect(evt.p.reason.message).to.eql('my err');
+          expect(evt.p.reason.more.mo).to.eql('re');
+
+        });
+
+      });
+
+      describe('with an error as BusinessRuleError', function () {
+
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = new BusinessRuleError('my err');
+
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason.name).to.eql('BusinessRuleError');
+          expect(evt.p.reason.message).to.eql('my err');
+
+        });
+
+      });
+
+      describe('with an error as AggregateDestroyedError', function () {
+
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = new AggregateDestroyedError('my err', { mo: 're' });
+
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason.name).to.eql('AggregateDestroyedError');
+          expect(evt.p.reason.message).to.eql('my err');
+          expect(evt.p.reason.more.mo).to.eql('re');
+
+        });
+
+      });
+
+      describe('with an error as AggregateConcurrencyError', function () {
+
+        it('it should return an event as expected', function () {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var err = new AggregateConcurrencyError('my err', { mo: 're' });
+
+          var evt = domain.createCommandRejectedEvent(cmd, err);
+
+          expect(evt.corr).to.eql(cmd.i);
+          expect(evt.i).to.eql(cmd.i + '_rejected');
+          expect(evt.n).to.eql('cmdRej');
+          expect(evt.ai).to.eql(cmd.ai);
+          expect(evt.c).to.eql(cmd.c);
+          expect(evt.a).to.eql(cmd.a);
+          expect(evt.r).not.to.be.ok();
+          expect(evt.v).not.to.be.ok();
+          expect(evt.m).to.eql(cmd.m);
+          expect(evt.p.command).to.eql(cmd);
+          expect(evt.p.reason.name).to.eql('AggregateConcurrencyError');
+          expect(evt.p.reason.message).to.eql('my err');
+          expect(evt.p.reason.more.mo).to.eql('re');
+
+        });
+
+      });
+      
+    });
+    
+    describe('initializing', function () {
+
+      var domain;
+
+      beforeEach(function () {
+        domain = api({ domainPath: __dirname });
+        domain.defineCommand({
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+        domain.defineEvent({
+          correlationId: 'corr',
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+      });
+      
+      describe('with a callback', function () {
+
+        it('it should work as expected', function (done) {
+          
+          var called = 0;
+          domain.eventStore.once('connect', function () {
+            called++;
+          });
+          domain.aggregateLock.once('connect', function () {
+            called++;
+          });
+          domain.once('connect', function () {
+            called++;
+          });
+
+          domain.init(function (err) {
+            expect(err).not.to.be.ok();
+            expect(called).to.eql(3);
+            done();
+          });
+
+        });
+        
+      });
+
+      describe('without a callback', function () {
+
+        it('it should work as expected', function (done) {
+
+          var called = 0;
+          
+          function check () {
+            called++;
+            if (called >= 3) {
+              done();
+            }
+          }
+          
+          domain.eventStore.once('connect', function () {
+            check();
+          });
+          domain.aggregateLock.once('connect', function () {
+            check();
+          });
+          domain.once('connect', function () {
+            check();
+          });
+
+          domain.init();
+
+        });
+
+      });
+      
+    });
+    
+    describe('handling a command', function () {
+
+      var domain;
+
+      beforeEach(function () {
+        domain = api({ domainPath: __dirname });
+        domain.defineCommand({
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+        domain.defineEvent({
+          correlationId: 'corr',
+          id: 'i',
+          name: 'n',
+          aggregateId: 'ai',
+          context: 'c',
+          aggregate: 'a',
+          payload: 'p',
+          revision: 'r',
+          version: 'v',
+          meta: 'm'
+        });
+      });
+      
+      describe('with a callback', function () {
+
+        it('it should work as expected', function (done) {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var dispatchCalled = false;
+          var eventstoreCalled = [];
+          var onEventCalled = [];
+          
+          domain.onEvent(function (e) {
+            onEventCalled.push(e);
+          });
+
+          domain.init(function (err) {
+            expect(err).not.to.be.ok();
+
+            domain.commandDispatcher.dispatch = function (c, clb) {
+              dispatchCalled = true;
+              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }]);
+            };
+            
+            domain.eventStore.setEventToDispatched = function (e, clb) {
+              eventstoreCalled.push(e);
+              clb(null);
+            };
+
+            domain.handle(cmd, function (err, evts) {
+              expect(err).not.to.be.ok();
+              expect(dispatchCalled).to.eql(true);
+              expect(eventstoreCalled.length).to.eql(2);
+              expect(eventstoreCalled[0].my1).to.eql('evt1');
+              expect(eventstoreCalled[1].my2).to.eql('evt2');
+              expect(onEventCalled.length).to.eql(2);
+              expect(onEventCalled[0]).to.eql('1');
+              expect(onEventCalled[1]).to.eql('2');
+              expect(evts.length).to.eql(2);
+              expect(evts[0]).to.eql('1');
+              expect(evts[1]).to.eql('2');
+              
+              done();
+            });
+          });
+
+        });
+        
+      });
+
+      describe('without a callback', function () {
+
+        it('it should work as expected', function (done) {
+
+          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
+          var dispatchCalled = false;
+          var eventstoreCalled = [];
+          var onEventCalled = [];
+
+          domain.onEvent(function (e) {
+            onEventCalled.push(e);
+          });
+
+          domain.init(function (err) {
+            expect(err).not.to.be.ok();
+
+            domain.commandDispatcher.dispatch = function (c, clb) {
+              dispatchCalled = true;
+              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }]);
+            };
+
+            domain.eventStore.setEventToDispatched = function (e, clb) {
+              eventstoreCalled.push(e);
+              clb(null);
+
+              if (eventstoreCalled.length === 2) {
+                expect(dispatchCalled).to.eql(true);
+                expect(eventstoreCalled.length).to.eql(2);
+                expect(eventstoreCalled[0].my1).to.eql('evt1');
+                expect(eventstoreCalled[1].my2).to.eql('evt2');
+                expect(onEventCalled.length).to.eql(2);
+                expect(onEventCalled[0]).to.eql('1');
+                expect(onEventCalled[1]).to.eql('2');
+
+                done();
+              }
+            };
+
+            domain.handle(cmd);
           });
 
         });
