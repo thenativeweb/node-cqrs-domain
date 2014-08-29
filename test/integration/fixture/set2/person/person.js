@@ -1,43 +1,3 @@
-// if exports is an array, it will be the same like loading multiple files...
-//module.exports = require('cqrs-domain').defineAggregate({
-module.exports = require('../../../../../').defineAggregate({
-  name: 'person', // optional, default is last part of path name
-  version: 3//, // optional, default 0
-  // versionPath: 'version', // can be defined globally, but can be overwritten here...
-},
-// optionally, define some initialization data...
-{
-  emails: ['default@mycomp.org'],
-  phoneNumbers: []
-})
-  // define snapshot need algorithm...
-.defineSnapshotNeed(function (loadingTime, events, aggregate) {
-  return events.length >= 20;
-})
-// always convert directly to newest version...
-.defineSnapshotConversion({
-  version: 2
-}, function (data, aggregate) {
-  aggregate.set('emails', data.emails);
-  aggregate.set('phoneNumbers', data.phoneNumbers);
-
-  aggregate.set('firstname', data.firstName);
-  aggregate.set('lastname', data.lastName);
-})
-// always convert directly to newest version...
-.defineSnapshotConversion({
-  version: 1
-}, function (data, aggregate) {
-  aggregate.set('emails', data.emails);
-  aggregate.set('phoneNumbers', data.phoneNumbers);
-
-  var names = data.name.split(' ');
-  aggregate.set('firstname', names[0]);
-  aggregate.set('lastname', names[1]);
-});
-// info to me: when loaded a snapshot create a new snapshot with same revision with newer version
-
-
 var _ = require('lodash');
 
 // if exports is an array, it will be the same like loading multiple files...
@@ -45,7 +5,7 @@ var _ = require('lodash');
 module.exports = [
 
   // aggregate
-  require('../../../../../../').defineAggregate({
+  require('../../../../../').defineAggregate({
     name: 'person'//, // optional, default is last part of path name
     // versionPath: 'version', // can be defined globally, but can be overwritten here...
     },
@@ -61,7 +21,7 @@ module.exports = [
   ),
 
   // commands
-  require('../../../../../../').defineCommand({
+  require('../../../../../').defineCommand({
     name: 'enterNewPerson',  // optional, default is file name without extenstion and without _vx
     // version: 1, // optional, default 0
     payload: 'payload' // if not defined it will pass the whole command...
@@ -74,7 +34,7 @@ module.exports = [
     // });
   }),
 
-  require('../../../../../../').defineCommand({
+  require('../../../../../').defineCommand({
     name: 'unregisterAllContactInformation'//,  // optional, default is file name without extenstion and without _vx
     // payload: 'payload' // if not defined it will pass the whole command...
   }, function (cmd, aggregate) {
@@ -109,7 +69,7 @@ module.exports = [
 
   // events
 
-  require('../../../../../../').defineEvent({
+  require('../../../../../').defineEvent({
     name: 'enteredNewPerson', // optional, default is file name without extension
     payload: 'payload' // if not defined it will pass the whole event...
   }, function (data, aggregate) {
@@ -118,7 +78,7 @@ module.exports = [
     aggregate.get('emails').push(data.email);
   }),
 
-  require('../../../../../../').defineEvent({
+  require('../../../../../').defineEvent({
     name: 'unregisteredEMailAddress', // optional, default is file name without extenstion and without _vx
     // version: 1, // optional, default 0
     payload: 'payload' // if not defined it will pass the whole event...
@@ -126,7 +86,7 @@ module.exports = [
     aggregate.set('emails', _.without(aggregate.get('emails'), data.mail));
   }),
 
-  require('../../../../../../').defineEvent({
+  require('../../../../../').defineEvent({
     name: 'unregisteredPhoneNumber'//,  // optional, default is file name without extenstion and without _vx
     // version: 1, // optional, default 0
     // payload: 'payload' // if not defined it will pass the whole event...

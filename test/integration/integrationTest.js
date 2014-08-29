@@ -704,6 +704,166 @@ describe('integration', function () {
 
         });
 
+        describe('that fails on the validation rules', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              idd: 'cmdId',
+              command: 'enterNewPerson',
+              payload: {
+                id: 'aggregateId'
+              },
+              head: {
+                userId: 'userId',
+                revision: 0
+              }
+            };
+
+            domain.handle(cmd, function (err, evts) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('ValidationError');
+              expect(evts).not.to.be.ok();
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].event).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that fails on a business rule', function () {
+
+          it.only('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              command: 'enterNewPerson',
+              payload: {
+                id: 'aggregateId',
+                firstname: 'jack',
+                lastname: 'jack',
+                email: 'jack'
+              },
+              head: {
+                userId: 'userId',
+                revision: 0
+              }
+            };
+
+            domain.handle(cmd, function (err, evts) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('BusinessRuleError');
+              expect(evts).not.to.be.ok();
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].event).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that is completely valid', function () {
+
+          it('it should publish a the resulting event and it should callback without an error and with events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              command: 'enterNewPerson',
+              payload: {
+                id: 'aggregateId',
+                firstname: 'jack',
+                lastname: 'doe',
+                email: 'jack'
+              },
+              head: {
+                userId: 'userId',
+                revision: 0
+              }
+            };
+
+            domain.handle(cmd, function (err, evts) {
+              expect(err).not.to.be.ok();
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('enteredNewPerson');
+              expect(evts[0].payload).to.eql(cmd.payload);
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].event).to.eql('enteredNewPerson');
+              expect(publishedEvents[0].payload).to.eql(cmd.payload);
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that generates 2 events', function () {
+
+          it('it should publish a the resulting events and it should callback without an error and with events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              command: 'unregisterAllContactInformation',
+              payload: {
+                id: 'aggregateId'
+              },
+              head: {
+                userId: 'userId',
+                revision: 0
+              }
+            };
+
+            domain.handle(cmd, function (err, evts) {
+              expect(err).not.to.be.ok();
+              expect(evts.length).to.eql(2);
+              expect(evts[0].event).to.eql('unregisteredEMailAddress');
+              expect(evts[0].payload.email).to.eql('default@mycomp.org');
+              expect(evts[1].event).to.eql('unregisteredEMailAddress');
+              expect(evts[1].payload.email).to.eql('jack');
+              expect(publishedEvents.length).to.eql(2);
+              expect(publishedEvents[0].event).to.eql('unregisteredEMailAddress');
+              expect(publishedEvents[0].payload.email).to.eql('default@mycomp.org');
+              expect(publishedEvents[1].event).to.eql('unregisteredEMailAddress');
+              expect(publishedEvents[1].payload.email).to.eql('jack');
+
+              done();
+            });
+
+          });
+
+        });
+
         describe('that has a custom command handler', function () {
 
           it('it use that handler', function (done) {
