@@ -181,11 +181,13 @@ describe('defaultCommandHandler', function () {
         var calledLoad = false;
         var eventStore = {
           getFromSnapshot: function (query, callback) {
-            expect(query.aggregateId).to.eql('myAggId');
-            expect(query.aggregate).to.eql('aggName');
-            expect(query.context).to.eql('ctx');
-            calledBackSnap = true;
-            callback(null, snap, stream);
+            setTimeout(function () {
+              expect(query.aggregateId).to.eql('myAggId');
+              expect(query.aggregate).to.eql('aggName');
+              expect(query.context).to.eql('ctx');
+              calledBackSnap = true;
+              callback(null, snap, stream);
+            }, 6);
           }
         };
         cmdHnd.defineCommand({
@@ -196,11 +198,12 @@ describe('defaultCommandHandler', function () {
         cmdHnd.useAggregate({ name: 'aggName',
           context: { name: 'ctx' },
           create: function (id) { return { id: id }; },
-          loadFromHistory: function (aggregate, snapshot, events) {
+          loadFromHistory: function (aggregate, snapshot, events, time) {
             expect(aggregate.id).to.eql('myAggId');
             expect(snapshot.data).to.eql('my data');
             expect(events.length).to.eql(1);
             expect(events[0]).to.eql(stream.events[0].payload);
+            expect(time).to.be.greaterThan(5);
             calledLoad = true;
             return true;
           }

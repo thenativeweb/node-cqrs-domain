@@ -31,6 +31,7 @@ describe('aggregate definition', function () {
       expect(aggr.defineOptions).to.be.a('function');
 
       expect(aggr.defineSnapshotConversion).to.be.a('function');
+      expect(aggr.defineSnapshotNeed).to.be.a('function');
 
       expect(aggr.idGenerator).to.be.a('function');
       expect(aggr.defineContext).to.be.a('function');
@@ -102,6 +103,37 @@ describe('aggregate definition', function () {
         
       });
       
+    });
+
+    describe('defining snapshot need', function () {
+
+      describe('by passing no function', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.defineSnapshotNeed();
+          }).to.throwError(/function/);
+
+        });
+
+      });
+
+      describe('by passing all valid arguments', function () {
+
+        it('it should save them as expected', function () {
+
+          var aggr = api.defineAggregate();
+          var fn = function () {};
+          aggr.defineSnapshotNeed(fn);
+          expect(aggr.isSnapshotNeeded).to.eql(fn);
+
+        });
+
+      });
+
     });
 
     describe('defining an id generator function', function() {
@@ -793,9 +825,12 @@ describe('aggregate definition', function () {
 
         it('it should work as expected', function () {
 
-          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+          var aggr = api.defineAggregate();
+          aggr.defineSnapshotNeed(function (time, evts, model) {
+            return evts.length >= 2;
+          });
 
-          var res = aggr.isSnapshotNeeded([1, 2, 3, 4]);
+          var res = aggr.isSnapshotNeeded(null, [1, 2, 3, 4]);
           
           expect(res).to.eql(true);
 
@@ -808,10 +843,8 @@ describe('aggregate definition', function () {
         it('it should work as expected', function () {
 
           var aggr = api.defineAggregate();
-          
-          expect(aggr.getSnapshotThreshold()).to.eql(100); // default
 
-          var res = aggr.isSnapshotNeeded([1, 2, 3, 4]);
+          var res = aggr.isSnapshotNeeded(null, [1, 2, 3, 4]);
 
           expect(res).to.eql(false);
 
@@ -947,7 +980,10 @@ describe('aggregate definition', function () {
             setRevision: function () {}
           };
 
-          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+          var aggr = api.defineAggregate();
+          aggr.defineSnapshotNeed(function (time, evts, model) {
+            return evts.length >= 2;
+          });
 
           aggr.apply = function (events, aggregateModel) { // mock
             expect(events).to.eql(evts);
@@ -987,8 +1023,6 @@ describe('aggregate definition', function () {
             name: 'evtName'
           });
 
-          expect(aggr.getSnapshotThreshold()).to.eql(100); // default
-
           var res = aggr.loadFromHistory(aggModel, null, evts);
 
           expect(res).to.eql(false);
@@ -1020,9 +1054,11 @@ describe('aggregate definition', function () {
               }
             };
 
-            var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+            var aggr = api.defineAggregate({ version: 4 });
 
-            expect(aggr.getSnapshotThreshold()).to.eql(2);
+            aggr.defineSnapshotNeed(function (time, evts, model) {
+              return evts.length >= 2;
+            });
 
             var res = aggr.loadFromHistory(aggModel, snap, null);
 
@@ -1052,14 +1088,16 @@ describe('aggregate definition', function () {
               }
             };
 
-            var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+            var aggr = api.defineAggregate({ version: 4 });
 
             aggr.defineSnapshotConversion({ version: 1 }, function (data, aggregateModel) {
               expect(data).to.eql(snap.data);
               expect(aggregateModel).to.eql(aggModel);
             });
-
-            expect(aggr.getSnapshotThreshold()).to.eql(2);
+            
+            aggr.defineSnapshotNeed(function (time, evts, model) {
+              return evts.length >= 2;
+            });
 
             var res = aggr.loadFromHistory(aggModel, snap, null);
 
@@ -1082,13 +1120,16 @@ describe('aggregate definition', function () {
             setRevision: function (r) { rev = r;}
           };
 
-          var aggr = api.defineAggregate({ snapshotThreshold: 2 });
+          var aggr = api.defineAggregate();
 
           aggr.apply = function (events, aggregateModel) { // mock
             expect(events).to.eql(evts);
             expect(aggregateModel).to.eql(aggModel);
             expect(aggregateModel).to.eql(aggModel);
           };
+          aggr.defineSnapshotNeed(function (time, evts, model) {
+            return evts.length >= 2;
+          });
 
           aggr.defineEvent({
             name: 'evtName',
@@ -1125,11 +1166,14 @@ describe('aggregate definition', function () {
             }
           };
 
-          var aggr = api.defineAggregate({ snapshotThreshold: 2, version: 4 });
+          var aggr = api.defineAggregate({ version: 4 });
 
           aggr.defineSnapshotConversion({ version: 1 }, function (data, aggregateModel) {
             expect(data).to.eql(snap.data);
             expect(aggregateModel).to.eql(aggModel);
+          });
+          aggr.defineSnapshotNeed(function (time, evts, model) {
+            return evts.length >= 2;
           });
 
           aggr.apply = function (events, aggregateModel) { // mock
