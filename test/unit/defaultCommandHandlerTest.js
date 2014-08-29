@@ -1,6 +1,7 @@
 var expect = require('expect.js'),
   DefaultCommandHandler = require('../../lib/defaultCommandHandler'),
-  DefinitionBase = require('../../lib/definitionBase');
+  DefinitionBase = require('../../lib/definitionBase'),
+  ConcurrencyError = require('../../lib/errors/concurrencyError');
 
 describe('defaultCommandHandler', function () {
 
@@ -492,7 +493,7 @@ describe('defaultCommandHandler', function () {
             }
           });
           cmdHnd.checkAggregateLock('1234', function (err) {
-            expect(err.message).to.match(/concurrency/i);
+            expect(err).to.be.a(ConcurrencyError);
             expect(called).to.eql(true);
             done();
           });
