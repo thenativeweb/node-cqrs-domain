@@ -23,13 +23,13 @@ module.exports = require('../../../../../../../').defineCommand({
 
   _.each(aggregate.get('emails'), function(mail) {
     aggregate.apply('unregisteredEMailAddress', {
-      mail: mail
+      email: mail
     });
     // or
     // aggregate.apply(aggregate.toEvent({
     //   event: 'unregisteredEMailAddress',
     //   payload: {
-    //     mail: mail
+    //     email: mail
     //   }
     // });
   });

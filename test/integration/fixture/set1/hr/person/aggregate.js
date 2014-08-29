@@ -7,7 +7,7 @@ module.exports = require('../../../../../../').defineAggregate({
 },
 // optionally, define some initialization data...
 {
-  emails: [],
+  emails: ['default@mycomp.org'],
   phoneNumbers: []
 })
   // define snapshot need algorithm...

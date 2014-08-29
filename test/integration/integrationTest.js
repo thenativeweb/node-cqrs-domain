@@ -335,9 +335,109 @@ describe('integration', function () {
             expect(evts.length).to.eql(1);
             expect(evts[0].name).to.eql('enteredNewPerson');
             expect(evts[0].payload).to.eql(cmd.payload);
+            expect(evts[0].meta).to.eql(cmd.meta);
             expect(publishedEvents.length).to.eql(1);
             expect(publishedEvents[0].name).to.eql('enteredNewPerson');
             expect(publishedEvents[0].payload).to.eql(cmd.payload);
+            expect(publishedEvents[0].meta).to.eql(cmd.meta);
+
+            done();
+          });
+
+        });
+
+      });
+
+      describe('that generates 2 events', function () {
+
+        it('it should publish a the resulting events and it should callback without an error and with events', function (done) {
+
+          var publishedEvents = [];
+
+          domain.onEvent(function (evt) {
+            publishedEvents.push(evt);
+          });
+
+          var cmd = {
+            id: 'cmdId',
+            name: 'unregisterAllContactInformation',
+            aggregate: {
+              id: 'aggregateId',
+              name: 'person'
+            },
+            context: {
+              name: 'hr'
+            },
+            payload: {
+            },
+            revision: 1,
+            version: 2,
+            meta: {
+              userId: 'userId'
+            }
+          };
+
+          domain.handle(cmd, function (err, evts) {
+            expect(err).not.to.be.ok();
+            expect(evts.length).to.eql(2);
+            expect(evts[0].name).to.eql('unregisteredEMailAddress');
+            expect(evts[0].payload.email).to.eql('default@mycomp.org');
+            expect(evts[0].meta).to.eql(cmd.meta);
+            expect(evts[1].name).to.eql('unregisteredEMailAddress');
+            expect(evts[1].payload.email).to.eql('jack');
+            expect(evts[1].meta).to.eql(cmd.meta);
+            expect(publishedEvents.length).to.eql(2);
+            expect(publishedEvents[0].name).to.eql('unregisteredEMailAddress');
+            expect(publishedEvents[0].payload.email).to.eql('default@mycomp.org');
+            expect(publishedEvents[0].meta).to.eql(cmd.meta);
+            expect(publishedEvents[1].name).to.eql('unregisteredEMailAddress');
+            expect(publishedEvents[1].payload.email).to.eql('jack');
+            expect(publishedEvents[1].meta).to.eql(cmd.meta);
+
+            done();
+          });
+
+        });
+
+      });
+
+      describe('that has a custom command handler', function () {
+
+        it('it use that handler', function (done) {
+
+          var publishedEvents = [];
+
+          domain.onEvent(function (evt) {
+            publishedEvents.push(evt);
+          });
+
+          var cmd = {
+            id: 'cmdId',
+            name: 'enterNewSpecialPerson',
+            aggregate: {
+              id: 'aggregateId',
+              name: 'person'
+            },
+            context: {
+              name: 'hr'
+            },
+            payload: {
+            },
+            revision: 1,
+            version: 0,
+            meta: {
+              userId: 'userId'
+            }
+          };
+
+          domain.handle(cmd, function (err, evts) {
+            expect(err).not.to.be.ok();
+            expect(evts.length).to.eql(1);
+            expect(evts[0].my).to.eql('special');
+            expect(evts[0].ev).to.eql('ent');
+            expect(publishedEvents.length).to.eql(1);
+            expect(publishedEvents[0].my).to.eql('special');
+            expect(publishedEvents[0].ev).to.eql('ent');
 
             done();
           });
