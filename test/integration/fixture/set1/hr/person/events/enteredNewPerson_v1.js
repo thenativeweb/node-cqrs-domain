@@ -1,7 +1,6 @@
 //module.exports = require('cqrs-domain').defineEvent({
 module.exports = require('../../../../../../../').defineEvent({
-  name: 'enteredNewPerson', // optional, default is file name without extenstion and without _vx
-  version: 1,
+  name: 'enteredNewPerson', // optional, default is file name without extension
   payload: 'payload' // if not defined it will pass the whole event...
 }, function (data, aggregate) {
   var names = data.name.split(' ');

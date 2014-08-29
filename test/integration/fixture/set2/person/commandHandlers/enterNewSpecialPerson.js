@@ -3,8 +3,7 @@
 // if exports is an array, it will be the same like loading multiple files...
 //module.exports = require('cqrs-domain').defineCommandHandler({
 module.exports = require('../../../../../../../').defineCommandHandler({
-  name: 'enterNewSpecialPerson'//,  // optional, default is file name without extension
-  // version: 1, // optional, default 0
+  name: 'enterNewSpecialPerson'//,  // optional, default is file name without extension and without _vx
   // payload: 'payload' // if not defined it will pass the whole command...
 }, function (cmd, commandHandler, callback) {
   // if cmd was sent without aggregateId, now in cmd there is a generated aggregateId...
