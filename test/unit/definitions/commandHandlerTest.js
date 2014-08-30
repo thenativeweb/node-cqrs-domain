@@ -5,7 +5,7 @@ var expect = require('expect.js'),
   DefaultCommandHandler = require('../../../lib/defaultCommandHandler'),
   Aggregate = require('../../../lib/definitions/aggregate'),
   eventStore = require('eventstore')(),
-  aggregateLock = require('../../../lib/aggregatelock').create(),
+  aggregateLock = require('../../../lib/lock').create(),
   api = require('../../../');
 
 describe('commandHandler definition', function () {

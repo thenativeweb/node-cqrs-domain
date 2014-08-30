@@ -1,8 +1,8 @@
 var expect = require('expect.js'),
   async = require('async'),
-  aggregatelock = require('../../lib/aggregatelock/index'),
-  Base = require('../../lib/aggregatelock/base'),
-  InMemory = require('../../lib/aggregatelock/databases/inmemory');
+  aggregatelock = require('../../lib/lock'),
+  Base = require('../../lib/lock/base'),
+  InMemory = require('../../lib/lock/databases/inmemory');
 
 describe('AggregateLock', function() {
 
