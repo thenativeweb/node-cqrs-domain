@@ -1198,7 +1198,7 @@ describe('integration', function () {
       it('it should work as expected', function (done) {
 
         var dumpingCalled = false;
-        domain.defineAggregateDumping(function (d) {
+        domain.defineAggregateDumping(function (d, meta) {
           expect(d.id).to.eql('aggregateId');
           expect(d.emails).to.be.an('array');
           expect(d.emails.length).to.eql(2);
@@ -1210,6 +1210,10 @@ describe('integration', function () {
           expect(d.lastname).to.eql('doe');
           expect(d._destroyed).to.eql(false);
           expect(d._revision).to.eql(1);
+          
+          expect(meta.aggregateId).to.eql('aggregateId');
+          expect(meta.aggregate).to.eql('person');
+          expect(meta.context).to.eql('hr');
           
           dumpingCalled = true;
         });
