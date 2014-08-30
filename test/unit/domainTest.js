@@ -54,6 +54,7 @@ describe('domain', function () {
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
+        expect(domain.defineAggregateDumping).to.be.a('function');
         
         expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
         expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
