@@ -587,6 +587,8 @@ describe('defaultCommandHandler', function () {
         cmdHnd.defineCommand({
           aggregateId: 'aggId'
         });
+
+        cmdHnd.useAggregate({ name: 'aggName', context: { name: 'ctxName' } });
         
         var step = 1;
         
@@ -607,25 +609,25 @@ describe('defaultCommandHandler', function () {
           expect(a).to.eql('8931');
           expect(step).to.eql(3);
           step++;
-          clb(null, 'aggregate', 'stream', true);
+          clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, 'stream', true);
         };
 
         cmdHnd.createSnapshot = function (a, s) {
-          expect(a).to.eql('aggregate');
+          expect(a.my).to.eql('aggregate');
           expect(s).to.eql('stream');
           expect(step).to.eql(4);
           step++;
         };
 
         cmdHnd.verifyAggregate = function (a, c) {
-          expect(a).to.eql('aggregate');
+          expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
           expect(step).to.eql(5);
           step++;
         };
 
         cmdHnd.letHandleCommandByAggregate = function (a, c, clb) {
-          expect(a).to.eql('aggregate');
+          expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
           expect(step).to.eql(6);
           step++;
@@ -636,11 +638,11 @@ describe('defaultCommandHandler', function () {
           expect(a).to.eql('8931');
           expect(step).to.eql(7);
           step++;
-          clb(null, 'aggregate', 'stream');
+          clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, 'stream');
         };
 
         cmdHnd.commit = function (a, s, clb) {
-          expect(a).to.eql('aggregate');
+          expect(a.my).to.eql('aggregate');
           expect(s).to.eql('stream');
           expect(step).to.eql(8);
           step++;
@@ -655,13 +657,17 @@ describe('defaultCommandHandler', function () {
         };
         
 
-        cmdHnd.workflow(cmd, function (err, evts) {
+        cmdHnd.workflow(cmd, function (err, evts, aggData, meta) {
           expect(err).not.to.be.ok();
           expect(step).to.eql(10);
           expect(evts).to.be.an('array');
           expect(evts.length).to.eql(2);
           expect(evts[0].evt1).to.eql('one');
           expect(evts[1].evt2).to.eql('two');
+          expect(aggData).to.eql('aggregateAsJSON');
+          expect(meta.aggregateId).to.eql('8931');
+          expect(meta.aggregate).to.eql('aggName');
+          expect(meta.context).to.eql('ctxName');
           done();
         });
         
@@ -712,12 +718,14 @@ describe('defaultCommandHandler', function () {
           cmdHnd.workflow = function (c, clb) {
             expect(c).to.eql(cmd);
             workflowCalled = true;
-            clb(null, 'evts');
+            clb(null, 'evts', 'aggData', 'meta');
           };
 
-          cmdHnd.handle(cmd, function (err, evts) {
+          cmdHnd.handle(cmd, function (err, evts, aggData, meta) {
             expect(err).not.to.be.ok();
             expect(evts).to.eql('evts');
+            expect(aggData).to.eql('aggData');
+            expect(meta).to.eql('meta');
             expect(cmd.aggId).to.eql('newId');
             expect(queueCalled).to.eql(true);
             expect(nextCalled).to.eql(true);
@@ -770,12 +778,14 @@ describe('defaultCommandHandler', function () {
           cmdHnd.workflow = function (c, clb) {
             expect(c).to.eql(cmd);
             workflowCalled = true;
-            clb(null, 'evts');
+            clb(null, 'evts', 'aggData', 'meta');
           };
 
-          cmdHnd.handle(cmd, function (err, evts) {
+          cmdHnd.handle(cmd, function (err, evts, aggData, meta) {
             expect(err).not.to.be.ok();
             expect(evts).to.eql('evts');
+            expect(aggData).to.eql('aggData');
+            expect(meta).to.eql('meta');
             expect(cmd.aggId).to.eql('1421');
             expect(queueCalled).to.eql(true);
             expect(nextCalled).to.eql(true);

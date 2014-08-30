@@ -195,13 +195,21 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].name).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+              
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -238,13 +246,21 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].name).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -285,13 +301,21 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('BusinessRuleError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].name).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -332,7 +356,7 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).not.to.be.ok();
               expect(evts.length).to.eql(1);
               expect(evts[0].name).to.eql('enteredNewPerson');
@@ -342,6 +366,11 @@ describe('integration', function () {
               expect(publishedEvents[0].name).to.eql('enteredNewPerson');
               expect(publishedEvents[0].payload).to.eql(cmd.payload);
               expect(publishedEvents[0].meta).to.eql(cmd.meta);
+
+              expect(aggData.lastname).to.eql('doe');
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -379,7 +408,7 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).not.to.be.ok();
               expect(evts.length).to.eql(2);
               expect(evts[0].name).to.eql('unregisteredEMailAddress');
@@ -395,6 +424,11 @@ describe('integration', function () {
               expect(publishedEvents[1].name).to.eql('unregisteredEMailAddress');
               expect(publishedEvents[1].payload.email).to.eql('jack');
               expect(publishedEvents[1].meta).to.eql(cmd.meta);
+
+              expect(aggData.emails.length).to.eql(0);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -540,13 +574,21 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].event).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
 
               done();
             });
@@ -689,13 +731,20 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].event).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -726,13 +775,20 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].event).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -766,13 +822,20 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('BusinessRuleError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].event).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -806,7 +869,7 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).not.to.be.ok();
               expect(evts.length).to.eql(1);
               expect(evts[0].event).to.eql('enteredNewPerson');
@@ -814,6 +877,10 @@ describe('integration', function () {
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].event).to.eql('enteredNewPerson');
               expect(publishedEvents[0].payload).to.eql(cmd.payload);
+
+              expect(aggData.lastname).to.eql('doe');
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -844,7 +911,7 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).not.to.be.ok();
               expect(evts.length).to.eql(2);
               expect(evts[0].event).to.eql('unregisteredEMailAddress');
@@ -856,6 +923,10 @@ describe('integration', function () {
               expect(publishedEvents[0].payload.email).to.eql('default@mycomp.org');
               expect(publishedEvents[1].event).to.eql('unregisteredEMailAddress');
               expect(publishedEvents[1].payload.email).to.eql('jack');
+
+              expect(aggData.emails.length).to.eql(0);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -1096,13 +1167,20 @@ describe('integration', function () {
               }
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('ValidationError');
-              expect(evts).not.to.be.ok();
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].name).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
 
               done();
             });
@@ -1154,116 +1232,6 @@ describe('integration', function () {
 
           });
 
-        });
-
-      });
-
-    });
-
-  });
-
-  describe('specials', function () {
-
-    var domain;
-
-    before(function () {
-      domain = api({ domainPath: __dirname + '/fixture/set1', commandRejectedEventName: 'rejectedCommand' });
-      domain.defineCommand({
-        id: 'id',
-        name: 'name',
-        aggregateId: 'aggregate.id',
-        context: 'context.name',
-        aggregate: 'aggregate.name',
-        payload: 'payload',
-        revision: 'revision',
-        version: 'version',
-        meta: 'meta'
-      });
-      domain.defineEvent({
-        correlationId: 'correlationId',
-        id: 'id',
-        name: 'name',
-        aggregateId: 'aggregate.id',
-        context: 'context.name',
-        aggregate: 'aggregate.name',
-        payload: 'payload',
-        revision: 'revision',
-        version: 'version',
-        meta: 'meta'
-      });
-    });
-
-    describe('using aggregateDumping function', function () {
-
-      it('it should work as expected', function (done) {
-
-        var dumpingCalled = false;
-        domain.defineAggregateDumping(function (d, meta) {
-          expect(d.id).to.eql('aggregateId');
-          expect(d.emails).to.be.an('array');
-          expect(d.emails.length).to.eql(2);
-          expect(d.emails[0]).to.eql('default@mycomp.org');
-          expect(d.emails[1]).to.eql('jack');
-          expect(d.phoneNumbers).to.be.an('array');
-          expect(d.phoneNumbers.length).to.eql(0);
-          expect(d.firstname).to.eql('jack');
-          expect(d.lastname).to.eql('doe');
-          expect(d._destroyed).to.eql(false);
-          expect(d._revision).to.eql(1);
-          
-          expect(meta.aggregateId).to.eql('aggregateId');
-          expect(meta.aggregate).to.eql('person');
-          expect(meta.context).to.eql('hr');
-          
-          dumpingCalled = true;
-        });
-
-        domain.init(function (err) {
-          expect(err).not.to.be.ok()
-
-          var publishedEvents = [];
-
-          domain.onEvent(function (evt) {
-            publishedEvents.push(evt);
-          });
-
-          var cmd = {
-            id: 'cmdId',
-            name: 'enterNewPerson',
-            aggregate: {
-              id: 'aggregateId',
-              name: 'person'
-            },
-            context: {
-              name: 'hr'
-            },
-            payload: {
-              firstname: 'jack',
-              lastname: 'doe',
-              email: 'jack'
-            },
-            revision: 0,
-            version: 0,
-            meta: {
-              userId: 'userId'
-            }
-          };
-
-          domain.handle(cmd, function (err, evts) {
-            expect(err).not.to.be.ok();
-            expect(evts.length).to.eql(1);
-            expect(evts[0].name).to.eql('enteredNewPerson');
-            expect(evts[0].payload).to.eql(cmd.payload);
-            expect(evts[0].meta).to.eql(cmd.meta);
-            expect(publishedEvents.length).to.eql(1);
-            expect(publishedEvents[0].name).to.eql('enteredNewPerson');
-            expect(publishedEvents[0].payload).to.eql(cmd.payload);
-            expect(publishedEvents[0].meta).to.eql(cmd.meta);
-
-            expect(dumpingCalled).to.eql(true);
-
-            done();
-          });
         });
 
       });

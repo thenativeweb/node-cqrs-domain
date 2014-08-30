@@ -83,7 +83,7 @@ module.exports = [
     // version: 1, // optional, default 0
     payload: 'payload' // if not defined it will pass the whole event...
   }, function (data, aggregate) {
-    aggregate.set('emails', _.without(aggregate.get('emails'), data.mail));
+    aggregate.set('emails', _.without(aggregate.get('emails'), data.email));
   }),
 
   require('../../../../../').defineEvent({

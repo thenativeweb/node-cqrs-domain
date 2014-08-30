@@ -54,7 +54,6 @@ describe('aggregate definition', function () {
       expect(aggr.apply).to.be.a('function');
       expect(aggr.loadFromHistory).to.be.a('function');
       expect(aggr.isSnapshotNeeded).to.be.a('function');
-      expect(aggr.defineAggregateDumping).to.be.a('function');
 
     });
     
@@ -1455,6 +1454,9 @@ describe('aggregate definition', function () {
             
             var aggModel = {
               id: 'myAggId',
+              reset: function (r) {
+                prevValues = r;
+              },
               set: function (v) {
                 prevValues = v;
               },
@@ -1537,133 +1539,6 @@ describe('aggregate definition', function () {
           
         });
 
-      });
-      
-      describe('having defined a dumping function', function () {
-
-        it('it should work as expected', function () {
-
-          var evts = [];
-          var rev = 3;
-
-          var aggModel = {
-            id: 'myAggId',
-            toJSON: function () { return 'dump'; },
-            getRevision: function () {
-              return rev;
-            },
-            setRevision: function (r) {
-              rev = r;
-            },
-            addUncommittedEvent: function (e) { evts.push(e); },
-            getUncommittedEvents: function () { return evts; }
-          };
-
-          var cmdToUse = { cmdId: '111222333', cmdName: 'cmd', v: 2, with: 'payload', head: { m: 'mmm' } };
-
-          var aggr = api.defineAggregate({ name: 'aggName' });
-
-          var dumpingCalled = false;
-          
-          aggr.defineAggregateDumping(function (d) {
-            expect(d).to.eql('dump');
-            dumpingCalled = true;
-          });
-
-          aggr.defineContext({ name: 'ctxName' });
-
-          aggr.defineCommand({
-            name: 'cmdName',
-            id: 'cmdId',
-            version: 'v',
-            aggregate: 'aName',
-            context: 'c',
-            meta: 'head.m'
-          });
-
-          aggr.defineEvent({
-            name: 'evtName',
-            version: 'v',
-            id: 'iii',
-            correlationId: 'commandId',
-            revision: 'r',
-            payload: 'p',
-            aggregateId: 'a',
-            aggregate: 'aName',
-            context: 'c',
-            meta: 'p.m'
-          });
-
-          var handleCalled = false;
-
-          var handle = function (cmd, aggregateModel) {
-            expect(cmd).to.eql(cmdToUse);
-            expect(aggregateModel).to.eql(aggModel);
-            aggregateModel.apply('evt1', { value: 'data1' });
-            aggregateModel.apply({ evtName: 'evt2', p: { value: 'data2' } });
-            aggregateModel.apply('evt3');
-            handleCalled = true;
-          };
-
-          var checkBRCalled = false;
-          var tmpFn = aggr.checkBusinessRules;
-          aggr.checkBusinessRules = function (changed, previous, events, command, callback) { // mock
-            checkBRCalled = true;
-            tmpFn.call(aggr, changed, previous, events, command, callback);
-          };
-
-          aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, handle: handle });
-          aggr.addEvent({ name: 'evt1', version: 0, apply: function (e, a) {}});
-          aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
-          aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
-
-          aggr.handle(aggModel, cmdToUse, function (err) {
-            expect(err).not.to.be.ok();
-            expect(handleCalled).to.eql(true);
-
-            expect(dumpingCalled).to.eql(true);
-
-            expect(evts[0].evtName).to.eql('evt1');
-            expect(evts[0].iii).to.be.a('string');
-            expect(evts[0].v).to.eql(0);
-            expect(evts[0].r).to.eql(4);
-            expect(evts[0].p.value).to.eql('data1');
-            expect(evts[0].commandId).to.eql(cmdToUse.cmdId);
-            expect(evts[0].a).to.eql('myAggId');
-            expect(evts[0].aName).to.eql('aggName');
-            expect(evts[0].c).to.eql('ctxName');
-            expect(evts[0].p.m).to.eql('mmm');
-
-            expect(evts[1].evtName).to.eql('evt2');
-            expect(evts[1].iii).to.be.a('string');
-            expect(evts[1].iii).not.to.eql(evts[0].iii);
-            expect(evts[1].v).to.eql(0);
-            expect(evts[1].r).to.eql(5);
-            expect(evts[1].p.value).to.eql('data2');
-            expect(evts[1].commandId).to.eql(cmdToUse.cmdId);
-            expect(evts[1].a).to.eql('myAggId');
-            expect(evts[1].aName).to.eql('aggName');
-            expect(evts[1].c).to.eql('ctxName');
-            expect(evts[1].p.m).to.eql('mmm');
-
-            expect(evts[2].evtName).to.eql('evt3');
-            expect(evts[2].iii).to.be.a('string');
-            expect(evts[2].iii).not.to.eql(evts[1].iii);
-            expect(evts[2].v).to.eql(0);
-            expect(evts[2].r).to.eql(6);
-            expect(evts[2].commandId).to.eql(cmdToUse.cmdId);
-            expect(evts[2].a).to.eql('myAggId');
-            expect(evts[2].aName).to.eql('aggName');
-            expect(evts[2].c).to.eql('ctxName');
-            expect(evts[2].p.m).to.eql('mmm');
-
-            expect(rev).to.eql(6);
-
-            expect(checkBRCalled).to.eql(true);
-          });
-
-        });
-        
       });
 
     });

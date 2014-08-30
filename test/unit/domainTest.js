@@ -54,7 +54,6 @@ describe('domain', function () {
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
-        expect(domain.defineAggregateDumping).to.be.a('function');
         
         expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
         expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
@@ -671,7 +670,7 @@ describe('domain', function () {
 
             domain.commandDispatcher.dispatch = function (c, clb) {
               dispatchCalled = true;
-              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }]);
+              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }], 'aggData', 'meta');
             };
             
             domain.eventStore.setEventToDispatched = function (e, clb) {
@@ -679,9 +678,11 @@ describe('domain', function () {
               clb(null);
             };
 
-            domain.handle(cmd, function (err, evts) {
+            domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).not.to.be.ok();
               expect(dispatchCalled).to.eql(true);
+              expect(aggData).to.eql('aggData');
+              expect(meta).to.eql('meta');
               expect(eventstoreCalled.length).to.eql(2);
               expect(eventstoreCalled[0].my1).to.eql('evt1');
               expect(eventstoreCalled[1].my2).to.eql('evt2');
@@ -718,7 +719,7 @@ describe('domain', function () {
 
             domain.commandDispatcher.dispatch = function (c, clb) {
               dispatchCalled = true;
-              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }]);
+              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }], 'aggData', 'meta');
             };
 
             domain.eventStore.setEventToDispatched = function (e, clb) {

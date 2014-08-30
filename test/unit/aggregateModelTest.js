@@ -55,6 +55,7 @@ describe('aggregate model', function () {
         expect(agg.getUncommittedEvents).to.be.a('function');
         expect(agg.addUncommittedEvent).to.be.a('function');
         expect(agg.clearUncommittedEvents).to.be.a('function');
+        expect(agg.reset).to.be.a('function');
         
         expect(agg.id).to.eql('1234');
         expect(agg.get('id')).to.eql('1234');
@@ -322,6 +323,27 @@ describe('aggregate model', function () {
 
         expect(evts).to.be.an('array');
         expect(evts.length).to.eql(0);
+
+      });
+
+    });
+
+    describe('calling reset', function () {
+
+      it('it should work as expected', function () {
+
+        var agg = new AggregateModel('1234456745');
+
+        agg.set('my', 'value');
+
+        agg.setRevision(8);
+        
+        agg.reset({ other: 'value', _revision: 8 });
+
+        expect(agg.getRevision()).to.eql(8);
+        
+        expect(agg.get('my')).not.to.be.ok();
+        expect(agg.get('other')).to.eql('value');
 
       });
 
