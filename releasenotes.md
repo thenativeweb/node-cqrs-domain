@@ -1,3 +1,13 @@
+## v1.0.0
+- refactored whole module
+- added possibility to define aggregateId, aggregate and context
+- generic message structure for commands and events
+- command validation changed, now based on [tv4](https://github.com/geraintluff/tv4)
+- added a lot of tests
+- stabilized everything
+- optimized performance
+- IMPORTANT: changed API!!!
+
 ## v0.8.2
 
 - do not use newer eventstore version
