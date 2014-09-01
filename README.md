@@ -359,6 +359,28 @@ The values describes the path to that property in the event message.
 	});
 
 
+## Command validation
+All command schemas are json schemas. Hint [http://jsonary.com/documentation/json-schema/](http://jsonary.com/documentation/json-schema/)
+
+Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation.
+
+Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
+
+To support mutliple verstion loo at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
+
+You can also have an hierarchical command extension look at:
+
+- [command](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
+- [aggregate](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/command.json)
+- [context](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/command.json)
+- [general](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/command.json)
+
+
+## Command
+
+
+
+
 
 [Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
 
