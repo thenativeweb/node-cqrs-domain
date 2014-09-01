@@ -12,6 +12,10 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 # Usage
 
 	var domain = require('cqrs-domain', {
+	  // the path to the "working directory"
+	  // can be structured like
+	  // [set 1](https://github.com/adrai/node-cqrs-domain/tree/1.0/test/integration/fixture/set1) or
+	  // [set 2](https://github.com/adrai/node-cqrs-domain/tree/1.0/test/integration/fixture/set2)
 	  domainPath: '/path/to/my/files',
 	  
 	  // optional, default is 'commandRejected'
