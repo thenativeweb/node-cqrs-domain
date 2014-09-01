@@ -414,7 +414,7 @@ You can also have an hierarchical command extension look at:
 	  // optional, if not defined it will pass the whole event...
 	  payload: 'payload'
 	}, function (data, aggregate) {
-	  // data is the command data
+	  // data is the event data
 	  // aggregate is the aggregate object
 	  
 	  aggregate.set('firstname', data.firstname);
@@ -465,6 +465,40 @@ You can also have an hierarchical command extension look at:
 	});
 
 
+## Command Handler (Be careful!!!)
+Is your use case not solvable without a custom command handling? Sagas? Micro-Services?
+
+	module.exports = require('cqrs-domain').defineCommandHandler({
+	  // optional, default is file name without extension
+	  name: 'enterNewSpecialPerson',
+	  
+	  // optional, default 0
+	  version: 1,
+	  
+	  // optional, if not defined it will pass the whole command...
+	  payload: 'payload'
+	}, function (cmd, commandHandler, callback) {
+	  // cmd is the command data
+	
+	  // if cmd was sent without aggregateId, now in cmd there is a generated aggregateId...
+	  
+	  commandHandler.loadAggregate(cmd.aggregate.id, function (err, aggregate, stream) {
+	    if (err) {
+	      return callback(err);
+	    }
+	    
+	    callback(null, [{ my: 'special', ev: 'ent' }]);
+	
+	//    // check if destroyed, check revision, validate command
+	//    var err = commandHandler.verifyAggregate(aggregate, cmd);
+	//    if (err) {
+	//      return callback(err);
+	//    }
+	//
+	//    // call api or emit a command or whatever...
+	//    // and at the end perhaps you call: commandHandler.handle(cmd, callback);
+	  });
+	});
 
 
 
