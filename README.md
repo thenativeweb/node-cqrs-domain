@@ -218,7 +218,6 @@ The values describes the path to that property in the event message.
 
 ## Handling a command
 
-
 	domain.handle({
 	  id: 'b80ade36-dd05-4340-8a8b-846eea6e286f',
 	  name: 'enterNewPerson',
