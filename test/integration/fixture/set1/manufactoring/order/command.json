@@ -1,0 +1,19 @@
+{
+  "title": "command/manufactoring/order",
+  "allOf": [
+    { "$ref": "/command/manufactoring" },
+    {
+      "properties": {
+        "aggregate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "order"
+            }
+          }
+        }
+      }
+    }
+  ]
+}

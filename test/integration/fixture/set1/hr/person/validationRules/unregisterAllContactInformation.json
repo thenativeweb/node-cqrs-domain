@@ -1,0 +1,54 @@
+{
+  "title": "unregisterAllContactInformation",
+  "oneOf": [
+    {
+      "allOf": [
+        { "$ref": "/command/hr/person" },
+        {
+          "version": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 2
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "unregisterAllContactInformation"
+            }
+          },
+          "required": ["version"]
+        }
+      ]
+    },
+    {
+      "allOf": [
+        { "$ref": "/command/hr/person" },
+        {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "unregisterAllContactInformation"
+            },
+            "payload": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "phoneNumbers",
+                  "mails"
+                ]
+              },
+              "required": ["firstname", "lastname"]
+            }
+          },
+          "required": ["version", "payload"]
+        }
+      ]
+    }
+  ]
+}

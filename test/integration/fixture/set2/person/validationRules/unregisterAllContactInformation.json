@@ -1,0 +1,15 @@
+{
+  "title": "unregisterAllContactInformation",
+  "allOf": [
+    { "$ref": "/command" },
+    {
+      "properties": {
+        "command": {
+          "type": "string",
+          "pattern": "unregisterAllContactInformation"
+        }
+      },
+      "required": ["command"]
+    }
+  ]
+}
