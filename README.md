@@ -180,7 +180,7 @@ The values describes the path to that property in the event message.
 ### or you can define an asynchronous function
 
 	domain.idGenerator(function (callback) {
-	  setTimeout(function() {
+	  setTimeout(function () {
 	    var id = require('node-uuid').v4().toString();
 	    callback(null, id);
 	  }, 50);
