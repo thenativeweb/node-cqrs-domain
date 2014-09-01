@@ -3,7 +3,6 @@
 module.exports = require('../../../../../../').defineAggregate({
   name: 'person', // optional, default is last part of path name
   version: 3//, // optional, default 0
-  // versionPath: 'version', // can be defined globally, but can be overwritten here...
 },
 // optionally, define some initialization data...
 {

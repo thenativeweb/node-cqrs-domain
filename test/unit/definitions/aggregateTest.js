@@ -1003,7 +1003,8 @@ describe('aggregate definition', function () {
           var evts = [{ evtName: 'evt1' }, { evtName: 'evt2' }, { evtName: 'evt3' }];
           var aggModel = {
             set: function () {},
-            setRevision: function () {}
+            setRevision: function () {},
+            toJSON: function () { return 'json'; }
           };
 
           var aggr = api.defineAggregate();
@@ -1035,7 +1036,8 @@ describe('aggregate definition', function () {
           var evts = [{ evtName: 'evt1' }, { evtName: 'evt2' }, { evtName: 'evt3' }];
           var aggModel = {
             set: function () {},
-            setRevision: function () {}
+            setRevision: function () {},
+            toJSON: function () { return 'json'; }
           };
 
           var aggr = api.defineAggregate();
@@ -1143,7 +1145,8 @@ describe('aggregate definition', function () {
           var rev;
           var aggModel = {
             set: function () {},
-            setRevision: function (r) { rev = r;}
+            setRevision: function (r) { rev = r;},
+            toJSON: function () { return 'json'; }
           };
 
           var aggr = api.defineAggregate();
@@ -1189,7 +1192,8 @@ describe('aggregate definition', function () {
             },
             setRevision: function (r) {
               rev = r;
-            }
+            },
+            toJSON: function () { return 'json'; }
           };
 
           var aggr = api.defineAggregate({ version: 4 });

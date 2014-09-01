@@ -306,6 +306,60 @@ The values describes the path to that property in the event message.
 	  // metaInfos: { aggregateId: '3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70', aggregate: 'person', context: 'context' }
 	});
 
+
+# Components definition
+
+## Context
+
+	module.exports = require('cqrs-domain').defineContext({
+	  // optional, default is the directory name
+	  name: 'hr'
+	});
+
+
+## Aggregate
+
+	module.exports = require('cqrs-domain').defineAggregate({
+	  // optional, default is last part of path name
+	  name: 'person',
+	  
+	  // optional, default 0
+	  version: 3
+	},
+	
+	// optionally, define some initialization data...
+	{
+	  emails: ['default@mycomp.org'],
+	  phoneNumbers: []
+	})
+	
+	// optionally, define snapshot need algorithm...
+	.defineSnapshotNeed(function (loadingTime, events, aggregateData) {
+	  // loadingTime is the loading time in ms of the eventstore data
+	  // events are all loaded events in an array
+	  // aggregateData represents the aggregateData after applying the resulting events
+	  return events.length >= 200;
+	})
+	
+	// optionally, define conversion algorithm for older snapshots
+	// always convert directly to newest version...
+	// when loaded a snapshot and it's an older snapshot, a new snapshot with same revision but with newer aggregate version will be created
+	.defineSnapshotConversion({
+	  version: 1
+	}, function (data, aggregate) {
+	  // data is the snapshot data
+	  // aggregate is the aggregate object
+	  
+	  aggregate.set('emails', data.emails);
+	  aggregate.set('phoneNumbers', data.phoneNumbers);
+	
+	  var names = data.name.split(' ');
+	  aggregate.set('firstname', names[0]);
+	  aggregate.set('lastname', names[1]);
+	});
+
+
+
 [Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
 
 # License
