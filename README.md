@@ -378,6 +378,92 @@ You can also have an hierarchical command extension look at:
 
 ## Command
 
+	module.exports = require('cqrs-domain').defineCommand({
+	  // optional, default is file name without extension
+	  name: 'enterNewPerson',
+	  
+	  // optional, default 0
+	  version: 1,
+	  
+	  // optional, if not defined it will pass the whole command...
+	  payload: 'payload'
+	}, function (data, aggregate) {
+	  // data is the command data
+	  // aggregate is the aggregate object
+	  
+	  // if (aggregate.get('someAttr') === 'someValue' && aggregate.has('special')) { ... }
+	  
+	  aggregate.apply('enteredNewPerson', data);
+	  // or
+	  // aggregate.apply({
+	  //   event: 'enteredNewPerson',
+	  //   payload: data
+	  // });
+	});
+
+
+## Event
+
+	module.exports = require('cqrs-domain').defineEvent({
+	  // optional, default is file name without extension
+	  name: 'enteredNewPerson',
+	  
+	  // optional, default 0
+	  version: 3,
+	  
+	  // optional, if not defined it will pass the whole event...
+	  payload: 'payload'
+	}, function (data, aggregate) {
+	  // data is the command data
+	  // aggregate is the aggregate object
+	  
+	  aggregate.set('firstname', data.firstname);
+	  aggregate.set('lastname', data.lastname);
+	  aggregate.get('emails').push(data.email);
+	});
+
+
+## Business Rule
+
+	module.exports = require('cqrs-domain').defineBusinessRule({
+	  // optional, default is file name without extension
+	  name: 'nameEquality',
+	  
+	  // optional
+	  description: 'firstname should never be equal lastname',
+	  
+	  // optional, default Infinity, all business rules will be sorted by this value
+	  priority: 1
+	}, function (changed, previous, events, command, callback) {
+	  // changed is the new aggregate object
+	  // previous is the old aggregate object
+	  // events is the array with the resulting events
+	  // command the handling command
+	  // callback is optional, if not defined as function argument you can throw errors or return errors here (sync way) 
+	
+	  if (changed.get('firstname') === changed.get('lastname')) {
+	    return callback('names not valid');
+	    // or
+	    // return callback(new Error('names not valid'));
+	    // or
+	    // return callback(new Error()); // if no error message is defined then the description will be taken
+	  }
+	  callback(null);
+	  
+	  // or if callback is not defined as function argument
+	  // if (changed.get('firstname') === changed.get('lastname')) {
+    //   return 'names not valid';
+    //   // or
+    //   // return new Error('names not valid');
+    //   // or
+    //   // return new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error('names not valid');
+    // }
+	});
+
 
 
 
