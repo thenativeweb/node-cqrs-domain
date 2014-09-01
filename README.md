@@ -172,14 +172,14 @@ The values describes the path to that property in the event message.
 ## Define the id generator function [optional]
 ### you can define a synchronous function
 
-	domain.idGenerator(function() {
+	domain.idGenerator(function () {
 	  var id = require('node-uuid').v4().toString();
 	  return id;
 	});
 
 ### or you can define an asynchronous function
 
-	domain.idGenerator(function(callback) {
+	domain.idGenerator(function (callback) {
 	  setTimeout(function() {
 	    var id = require('node-uuid').v4().toString();
 	    callback(null, id);
@@ -191,14 +191,14 @@ The values describes the path to that property in the event message.
 ### you can define a synchronous function
 
 	// pass events to bus
-	domain.onEvent(function(evt) {
+	domain.onEvent(function (evt) {
 	  bus.emit('event', evt);
 	});
 	
 ### or you can define an asynchronous function
 
 	// pass events to bus
-	domain.onEvent(function(evt, callback) {
+	domain.onEvent(function (evt, callback) {
 	  bus.emit('event', evt, function ack () {
 	    callback();
 	  });
