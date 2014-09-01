@@ -116,6 +116,7 @@ describe('AggregateLock', function() {
             it('it should return with the correct lock', function(done) {
 
               aggregatelock.create({ type: type }, function(err, resL) {
+                expect(err).not.to.be.ok();
                 lock = resL;
                 expect(lock).to.be.a('object');
                 done();
