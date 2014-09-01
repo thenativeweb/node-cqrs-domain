@@ -64,6 +64,37 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  }
 	});
 
+
+## Catch connect ad disconnect events
+
+	// eventStore
+	domain.eventStore.on('connect', function() {
+	  console.log('eventStore connected');
+	});
+	
+	domain.eventStore.on('disconnect', function() {
+	  console.log('eventStore disconnected');
+	});
+	
+	// aggregateLock
+	domain.aggregateLock.on('connect', function() {
+	  console.log('aggregateLock connected');
+	});
+	
+	domain.aggregateLock.on('disconnect', function() {
+	  console.log('aggregateLock disconnected');
+	});
+	
+	
+	// anything (eventStore or aggregateLock)
+	domain.on('connect', function() {
+	  console.log('something connected');
+	});
+	
+	domain.on('disconnect', function() {
+	  console.log('something disconnected');
+	});
+
 	
 ## Define the command structure
 The values describes the path to that property in the command message.
