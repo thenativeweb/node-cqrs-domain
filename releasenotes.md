@@ -1,6 +1,7 @@
-## v1.0.1
+## v1.0.2
 - fix handling of command without command validation
 - fix multiple adding of same definition
+- remove debug in redis
 
 ## v1.0.0
 - refactored whole module
