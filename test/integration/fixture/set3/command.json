@@ -1,0 +1,35 @@
+{
+  "title": "command",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "command": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "head": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "userId": {
+          "type": "string"
+        }
+      },
+      "required": []
+    }
+  },
+  "required": ["id", "command"]
+}

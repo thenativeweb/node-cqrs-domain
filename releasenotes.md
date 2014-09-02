@@ -1,3 +1,7 @@
+## v1.0.1
+- fix handling of command without command validation
+- fix multiple adding of same definition
+
 ## v1.0.0
 - refactored whole module
 - added possibility to define aggregateId, aggregate and context
