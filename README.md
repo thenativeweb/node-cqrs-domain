@@ -14,8 +14,8 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	var domain = require('cqrs-domain')({
 	  // the path to the "working directory"
 	  // can be structured like
-	  // [set 1](https://github.com/adrai/node-cqrs-domain/tree/1.0/test/integration/fixture/set1) or
-	  // [set 2](https://github.com/adrai/node-cqrs-domain/tree/1.0/test/integration/fixture/set2)
+	  // [set 1](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set1) or
+	  // [set 2](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set2)
 	  domainPath: '/path/to/my/files',
 	  
 	  // optional, default is 'commandRejected'
@@ -101,7 +101,7 @@ The values describes the path to that property in the command message.
 
 	domain.defineCommand({
 	  // optional, default is 'id'
-	  id: 'id'
+	  id: 'id',
 	  
 	  // optional, default is 'name'
 	  name: 'name',
@@ -134,13 +134,13 @@ The values describes the path to that property in the command message.
 ## Define the event structure
 The values describes the path to that property in the event message.
 
-	domain.defineCommand({
+	domain.defineEvent({
 	  // optional, default is 'correlationId'
 	  // will use the command id as correlationId, so you can match it in the sender 
 	  correlationId: 'correlationId',
 	  
 	  // optional, default is 'id'
-	  id: 'id'
+	  id: 'id',
 	  
 	  // optional, default is 'name'
 	  name: 'name',
