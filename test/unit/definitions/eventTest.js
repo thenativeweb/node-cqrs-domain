@@ -10,11 +10,11 @@ describe('event definition', function () {
     
     describe('without any arguments', function () {
 
-      it('it should throw an error', function () {
+      it('it should not throw an error', function () {
 
         expect(function () {
           api.defineEvent();
-        }).to.throwError(/function/);
+        }).not.to.throwError();
 
       });
       
@@ -26,7 +26,7 @@ describe('event definition', function () {
 
         expect(function () {
           api.defineEvent(null);
-        }).to.throwError(/function/);
+        }).not.to.throwError();
 
       });
 

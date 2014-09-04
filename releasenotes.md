@@ -1,3 +1,6 @@
+## v1.0.5
+- allow to not pass an event function in defining an event
+
 ## v1.0.4
 - do not try-catch errors in domain handle
 

@@ -443,13 +443,16 @@ You can also have an hierarchical command extension look at:
 	  
 	  // optional, if not defined it will pass the whole event...
 	  payload: 'payload'
-	}, function (data, aggregate) {
+	},
+	// passing a function is optional
+	function (data, aggregate) {
 	  // data is the event data
 	  // aggregate is the aggregate object
 	  
 	  aggregate.set('firstname', data.firstname);
 	  aggregate.set('lastname', data.lastname);
-	  aggregate.get('emails').push(data.email);
+	  // or
+	  // aggregate.set(data);
 	});
 
 
