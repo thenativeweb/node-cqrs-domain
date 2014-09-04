@@ -1,3 +1,6 @@
+## v1.0.4
+- do not try-catch errors in domain handle
+
 ## v1.0.3
 - fix some callback arguments of aggregateLock
 

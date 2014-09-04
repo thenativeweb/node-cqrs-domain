@@ -670,7 +670,7 @@ describe('domain', function () {
 
             domain.commandDispatcher.dispatch = function (c, clb) {
               dispatchCalled = true;
-              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }], 'aggData', 'meta');
+              clb(null, [{ id: '1', my1: 'evt1', payload: '1' }, { id: '2', my2: 'evt2', payload: '2' }], 'aggData', 'meta');
             };
             
             domain.eventStore.setEventToDispatched = function (e, clb) {
@@ -719,7 +719,7 @@ describe('domain', function () {
 
             domain.commandDispatcher.dispatch = function (c, clb) {
               dispatchCalled = true;
-              clb(null, [{ my1: 'evt1', payload: '1' }, { my2: 'evt2', payload: '2' }], 'aggData', 'meta');
+              clb(null, [{ id: '1', my1: 'evt1', payload: '1' }, { id: '2', my2: 'evt2', payload: '2' }], 'aggData', 'meta');
             };
 
             domain.eventStore.setEventToDispatched = function (e, clb) {
