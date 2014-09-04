@@ -233,8 +233,9 @@ describe('AggregateLock', function() {
 
                   it('it should callback correctly', function(done) {
 
-                    lock.resolve('23', function(err) {
+                    lock.resolve('23', function(err, nothing) {
                       expect(err).not.to.be.ok();
+                      expect(nothing).to.eql(undefined);
                       done();
                     });
 
@@ -246,8 +247,9 @@ describe('AggregateLock', function() {
 
                   it('it should callback with no error', function(done) {
 
-                    lock.reserve('workerId1', 'aggregateId1', function(err) {
+                    lock.reserve('workerId1', 'aggregateId1', function(err, nothing) {
                       expect(err).not.to.be.ok();
+                      expect(nothing).to.eql(undefined);
                       done();
                     });
 
@@ -344,8 +346,9 @@ describe('AggregateLock', function() {
                   
                   it('it should have removed all reservation for this aggregate', function (done) {
                     
-                    lock.resolve('aggregateId111', function (err) {
+                    lock.resolve('aggregateId111', function (err, nothing) {
                       expect(err).not.to.be.ok();
+                      expect(nothing).to.eql(undefined);
                       
                       lock.getAll('aggregateId111', function (err, workerIds) {
                         expect(err).not.to.be.ok();
@@ -359,8 +362,9 @@ describe('AggregateLock', function() {
 
                   it('it should not have removed any reservation for the other aggregate', function (done) {
 
-                    lock.resolve('aggregateId111', function (err) {
+                    lock.resolve('aggregateId111', function (err, nothing) {
                       expect(err).not.to.be.ok();
+                      expect(nothing).to.eql(undefined);
 
                       lock.getAll('aggregateIdSecond', function (err, workerIds) {
                         expect(err).not.to.be.ok();

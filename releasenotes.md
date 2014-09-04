@@ -1,3 +1,6 @@
+## v1.0.3
+- fix some callback arguments of aggregateLock
+
 ## v1.0.2
 - fix handling of command without command validation
 - fix multiple adding of same definition
