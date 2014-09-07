@@ -1,3 +1,6 @@
+## v1.0.6
+- fix for fallback for file and directory names
+
 ## v1.0.5
 - allow to not pass an event function in defining an event
 
