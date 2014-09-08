@@ -1,3 +1,6 @@
+## v1.0.7
+- use new version of eventstore
+
 ## v1.0.6
 - fix for fallback for file and directory names
 
