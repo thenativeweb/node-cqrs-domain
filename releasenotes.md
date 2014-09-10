@@ -1,3 +1,6 @@
+## v1.1.0
+- add possibility to define defaultCommandPayload and defaultEventPayload in aggragate
+
 ## v1.0.7
 - use new version of eventstore
 

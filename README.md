@@ -354,7 +354,13 @@ The values describes the path to that property in the event message.
 	  name: 'person',
 	  
 	  // optional, default 0
-	  version: 3
+	  version: 3,
+	  
+	  // optional, default ''
+	  defaultCommandPayload: 'payload',
+	  
+	  // optional, default ''
+	  defaultEventPayload: 'payload'
 	},
 	
 	// optionally, define some initialization data...
@@ -415,7 +421,7 @@ You can also have an hierarchical command extension look at:
 	  // optional, default 0
 	  version: 1,
 	  
-	  // optional, if not defined it will pass the whole command...
+	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
 	  payload: 'payload'
 	}, function (data, aggregate) {
 	  // data is the command data
@@ -441,7 +447,7 @@ You can also have an hierarchical command extension look at:
 	  // optional, default 0
 	  version: 3,
 	  
-	  // optional, if not defined it will pass the whole event...
+	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole event...
 	  payload: 'payload'
 	},
 	// passing a function is optional

@@ -2,7 +2,9 @@
 //module.exports = require('cqrs-domain').defineAggregate({
 module.exports = require('../../../../../../').defineAggregate({
   name: 'person', // optional, default is last part of path name
-  version: 3//, // optional, default 0
+  version: 3, // optional, default 0
+  defaultCommandPayload: 'payload'//,
+//  defaultEventPayload: 'payload'
 },
 // optionally, define some initialization data...
 {

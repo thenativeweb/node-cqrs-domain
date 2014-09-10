@@ -248,6 +248,74 @@ describe('aggregate definition', function () {
 
       });
 
+      describe('having not defined a default payload for commands', function () {
+        
+        describe('having not defined a payload in the command', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate();
+
+            aggr.addCommand({ name: 'myCommand', payload: null });
+
+            expect(aggr.commands.length).to.eql(1);
+            expect(aggr.commands[0].payload).to.eql('');
+
+          });
+          
+        });
+
+        describe('having defined a payload in the command', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate();
+
+            aggr.addCommand({ name: 'myCommand', payload: 'maPay' });
+
+            expect(aggr.commands.length).to.eql(1);
+            expect(aggr.commands[0].payload).to.eql('maPay');
+
+          });
+
+        });
+
+      });
+
+      describe('having defined a default payload for commands', function () {
+
+        describe('having not defined a payload in the command', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate({ defaultCommandPayload: 'def' });
+
+            aggr.addCommand({ name: 'myCommand', payload: null });
+
+            expect(aggr.commands.length).to.eql(1);
+            expect(aggr.commands[0].payload).to.eql('def');
+
+          });
+
+        });
+
+        describe('having defined a payload in the command', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate({ defaultCommandPayload: 'def' });
+
+            aggr.addCommand({ name: 'myCommand', payload: 'maPay' });
+
+            expect(aggr.commands.length).to.eql(1);
+            expect(aggr.commands[0].payload).to.eql('maPay');
+
+          });
+
+        });
+
+      });
+
     });
 
     describe('calling addEvent', function () {
@@ -276,6 +344,74 @@ describe('aggregate definition', function () {
 
           expect(aggr.events.length).to.eql(1);
           expect(aggr.events[0].name).to.eql('myEvent');
+
+        });
+
+      });
+
+      describe('having not defined a default payload for events', function () {
+
+        describe('having not defined a payload in the event', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate();
+
+            aggr.addEvent({ name: 'myEvent', payload: null });
+
+            expect(aggr.events.length).to.eql(1);
+            expect(aggr.events[0].payload).to.eql('');
+
+          });
+
+        });
+
+        describe('having defined a payload in the event', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate();
+
+            aggr.addEvent({ name: 'myEvent', payload: 'maPay' });
+
+            expect(aggr.events.length).to.eql(1);
+            expect(aggr.events[0].payload).to.eql('maPay');
+
+          });
+
+        });
+
+      });
+
+      describe('having defined a default payload for events', function () {
+
+        describe('having not defined a payload in the event', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate({ defaultEventPayload: 'def' });
+
+            aggr.addEvent({ name: 'myEvent', payload: null });
+
+            expect(aggr.events.length).to.eql(1);
+            expect(aggr.events[0].payload).to.eql('def');
+
+          });
+
+        });
+
+        describe('having defined a payload in the command', function () {
+
+          it('it should work as expected', function () {
+
+            var aggr = api.defineAggregate({ defaultEventPayload: 'def' });
+
+            aggr.addEvent({ name: 'myEvent', payload: 'maPay' });
+
+            expect(aggr.events.length).to.eql(1);
+            expect(aggr.events[0].payload).to.eql('maPay');
+
+          });
 
         });
 

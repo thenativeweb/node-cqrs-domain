@@ -4,8 +4,8 @@ var _ = require('lodash');
 //module.exports = require('cqrs-domain').defineCommand({
 module.exports = require('../../../../../../../').defineCommand({
   name: 'unregisterAllContactInformation',  // optional, default is file name without extension
-  version: 2//, // optional, default 0
-  // payload: 'payload' // if not defined it will pass the whole command...
+  version: 2, // optional, default 0
+  payload: '' // if not defined it will use what is defined as default in aggregate or pass the whole command...
 }, function (cmd, aggregate) {
 
   _.each(aggregate.get('phoneNumbers'), function(number) {

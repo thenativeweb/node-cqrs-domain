@@ -62,7 +62,7 @@ describe('command definition', function () {
         expect(cmd).to.be.a(Command);
         expect(cmd.cmdFn).to.eql(cmdFn);
         expect(cmd.version).to.eql(0);
-        expect(cmd.payload).to.eql('');
+        expect(cmd.payload).to.eql(null);
         expect(cmd.definitions).to.be.an('object');
         expect(cmd.definitions.command).to.be.an('object');
         expect(cmd.definitions.event).to.be.an('object');

@@ -62,7 +62,7 @@ describe('event definition', function () {
         expect(evt).to.be.an(Event);
         expect(evt.evtFn).to.eql(evtFn);
         expect(evt.version).to.eql(0);
-        expect(evt.payload).to.eql('');
+        expect(evt.payload).to.eql(null);
         expect(evt.definitions).to.be.an('object');
         expect(evt.definitions.command).to.be.an('object');
         expect(evt.definitions.event).to.be.an('object');
