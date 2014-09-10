@@ -44,17 +44,17 @@ describe('validator', function () {
 
     describe('with all correct arguments', function () {
 
-      it('it should throw an error', function () {
+      it('it should not throw an error', function () {
 
         expect(function () {
-          validator({ validateMultiple: function () {} }, {});
+          validator({ validateMultiple: function () {}, addFormat: function () {} }, {});
         }).not.to.throwError();
 
       });
 
       it('it should return a function', function () {
 
-        var fn = validator({ validateMultiple: function () {} }, {});
+        var fn = validator({ validateMultiple: function () {}, addFormat: function() { } }, {});
         expect(fn).to.be.a('function');
         
       });
@@ -107,6 +107,32 @@ describe('validator', function () {
 
     });
     
+    describe('with additional tv4 formats', function() {
+      
+      describe('validating an email address with format property', function() {
+        var emailValidation = validator(tv4, {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email'
+            }
+          }
+        });
+        
+        it('should reject invalid email addresses', function() {
+          var result = emailValidation({ email: 'test@example'});
+          
+          expect(result.name).to.eql('ValidationError');
+        });
+        
+        it('should accept valid email addresses', function() {
+          var result = emailValidation({ email: 'test-address+extension@example.com' });
+          
+          expect(result).to.eql(null);
+        });
+      });
+    });
   });
 
 });
