@@ -1,0 +1,24 @@
+{
+  "env": {
+    "browser": false,
+    "node": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "camelcase": 1,
+    "no-global-strict": 2,
+    "strict": 0,
+    "quotes": [2, "single"],
+    "if-curly-formatting": 0,
+    "no-console": 0,
+    "no-undef": 1,
+    "no-mixed-requires": 0
+  },
+  "globals": {
+    "describe": false,
+    "it": false,
+    "before": false,
+    "beforeEach": false,
+    "afterEach": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "env": {
+    "node": true
+  },
+  "rules": {
+    "no-underscore-dangle": 0,
+    "camelcase": 1,
+    "no-console": 2,
+    "strict": 2,
+    "quotes": [2, "single"],
+    "no-mixed-requires": 0
+  },
+  "globals": {
+  }
+}
