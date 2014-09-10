@@ -392,7 +392,7 @@ The values describes the path to that property in the event message.
 ## Command validation
 All command schemas are json schemas. Hint [http://jsonary.com/documentation/json-schema/](http://jsonary.com/documentation/json-schema/)
 
-Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation.
+Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation. Additionaly the plugin [tv4-formats](https://github.com/ikr/tv4-formats) is integrated, so you can easily use format constraints (i.e. 'email') for your 'string'-types.
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 
