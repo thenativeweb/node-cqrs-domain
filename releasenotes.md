@@ -1,3 +1,6 @@
+## v1.1.1
+- do not extend the command if no aggregateId is presented
+
 ## v1.1.0
 - add possibility to define defaultCommandPayload and defaultEventPayload in aggragate
 - add additional validation formats for tv4 [#21](https://github.com/adrai/node-cqrs-domain/pull/21) thanks to [zauberpony](https://github.com/zauberpony)

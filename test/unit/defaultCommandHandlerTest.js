@@ -90,13 +90,13 @@ describe('defaultCommandHandler', function () {
         });
         var cmd = { my: 'cmd', aggId: '123' };
         var clb = function () {};
-        cmdHnd.queueCommand(cmd, clb);
+        cmdHnd.queueCommand('123', cmd, clb);
         var cmd2 = { my: 'cmd2', aggId: '12345' };
         var clb2 = function () {};
-        cmdHnd.queueCommand(cmd2, clb2);
+        cmdHnd.queueCommand('12345', cmd2, clb2);
         var cmd3 = { my: 'cmd3', aggId: '123' };
         var clb3 = function () {};
-        cmdHnd.queueCommand(cmd3, clb3);
+        cmdHnd.queueCommand('123', cmd3, clb3);
         expect(cmdHnd.queue['123']).to.be.an('array');
         expect(cmdHnd.queue['123'].length).to.eql(2);
         expect(cmdHnd.queue['123'][0].command).to.eql(cmd);
@@ -121,15 +121,15 @@ describe('defaultCommandHandler', function () {
         });
         var cmd = { my: 'cmd', aggId: '123' };
         var clb = function () {};
-        cmdHnd.queueCommand(cmd, clb);
+        cmdHnd.queueCommand('123', cmd, clb);
         var cmd2 = { my: 'cmd2', aggId: '12345' };
         var clb2 = function () {};
-        cmdHnd.queueCommand(cmd2, clb2);
+        cmdHnd.queueCommand('12345', cmd2, clb2);
         var cmd3 = { my: 'cmd3', aggId: '123' };
         var clb3 = function () {};
-        cmdHnd.queueCommand(cmd3, clb3);
+        cmdHnd.queueCommand('123', cmd3, clb3);
 
-        var next = cmdHnd.getNextCommandInQueue(cmd);
+        var next = cmdHnd.getNextCommandInQueue('123');
         
         expect(cmdHnd.queue['123']).to.be.an('array');
         expect(cmdHnd.queue['123'].length).to.eql(1);
@@ -657,7 +657,7 @@ describe('defaultCommandHandler', function () {
         };
         
 
-        cmdHnd.workflow(cmd, function (err, evts, aggData, meta) {
+        cmdHnd.workflow('8931', cmd, function (err, evts, aggData, meta) {
           expect(err).not.to.be.ok();
           expect(step).to.eql(10);
           expect(evts).to.be.an('array');
@@ -685,6 +685,7 @@ describe('defaultCommandHandler', function () {
           var queueCalled = false;
           var nextCalled = false;
           var workflowCalled = false;
+          var aggregateId;
 
           cmdHnd.defineCommand({
             aggregateId: 'aggId'
@@ -698,24 +699,25 @@ describe('defaultCommandHandler', function () {
 
           var queued;
 
-          cmdHnd.queueCommand = function (c, clb) {
+          cmdHnd.queueCommand = function (aggId, c, clb) {
+            expect(aggId).to.eql('newId');
             expect(c).to.eql(cmd);
             queueCalled = true;
             queued = { command: c, callback: clb };
           };
 
           var first = true;
-          cmdHnd.getNextCommandInQueue = function (c) {
+          cmdHnd.getNextCommandInQueue = function (aggId) {
+            expect(aggId).to.eql('newId');
             if (!first) {
               return null;
             }
             first = false;
-            expect(c).to.eql(cmd);
             nextCalled = true;
             return queued;
           };
 
-          cmdHnd.workflow = function (c, clb) {
+          cmdHnd.workflow = function (aggId, c, clb) {
             expect(c).to.eql(cmd);
             workflowCalled = true;
             clb(null, 'evts', 'aggData', 'meta');
@@ -726,7 +728,7 @@ describe('defaultCommandHandler', function () {
             expect(evts).to.eql('evts');
             expect(aggData).to.eql('aggData');
             expect(meta).to.eql('meta');
-            expect(cmd.aggId).to.eql('newId');
+            expect(cmd.aggId).not.to.be.ok();
             expect(queueCalled).to.eql(true);
             expect(nextCalled).to.eql(true);
             expect(workflowCalled).to.eql(true);
@@ -758,24 +760,26 @@ describe('defaultCommandHandler', function () {
           
           var queued;
           
-          cmdHnd.queueCommand = function (c, clb) {
+          cmdHnd.queueCommand = function (aggId, c, clb) {
+            expect(aggId).to.eql('1421');
             expect(c).to.eql(cmd);
             queueCalled = true;
             queued = { command: c, callback: clb };
           };
           
           var first = true;
-          cmdHnd.getNextCommandInQueue = function (c) {
+          cmdHnd.getNextCommandInQueue = function (aggId) {
+            expect(aggId).to.eql('1421');
             if (!first) {
               return null;
             }
             first = false;
-            expect(c).to.eql(cmd);
             nextCalled = true;
             return queued;
           };
 
-          cmdHnd.workflow = function (c, clb) {
+          cmdHnd.workflow = function (aggId, c, clb) {
+            expect(aggId).to.eql('1421');
             expect(c).to.eql(cmd);
             workflowCalled = true;
             clb(null, 'evts', 'aggData', 'meta');

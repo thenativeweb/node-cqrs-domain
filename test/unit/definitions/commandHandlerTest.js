@@ -115,10 +115,11 @@ describe('commandHandler definition', function () {
     describe('handling a command', function () {
 
       it('it should work as expected', function (done) {
-        var cmdObj = { my: 'command', with: { deep: 'value' }, aggregate: { id: 1234 } };
+        var cmdObj = { my: 'command', with: { deep: 'value' }, aggregate: { id: '1234' } };
         var clb = function () {};
 
-        var cmdHndFn = function (cmd, commandHandler, callback) {
+        var cmdHndFn = function (aggId, cmd, commandHandler, callback) {
+          expect(aggId).to.eql('1234');
           expect(cmd).to.eql(cmdObj);
           expect(commandHandler).to.eql(cmdHnd);
           expect(clb).to.be.a('function');

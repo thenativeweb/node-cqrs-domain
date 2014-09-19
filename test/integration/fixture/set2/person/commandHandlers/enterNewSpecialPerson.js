@@ -5,12 +5,8 @@
 module.exports = require('../../../../../../').defineCommandHandler({
   name: 'enterNewSpecialPerson'//,  // optional, default is file name without extension and without _vx
   // payload: 'payload' // if not defined it will pass the whole command...
-}, function (cmd, commandHandler, callback) {
-  // if cmd was sent without aggregateId, now in cmd there is a generated aggregateId...
-
-  var id = cmd.aggregate && cmd.aggregate.id ? cmd.aggregate.id : cmd.payload.id;
-  
-  commandHandler.loadAggregate(id, function (err, aggregate, stream) {
+}, function (aggId, cmd, commandHandler, callback) {
+  commandHandler.loadAggregate(aggId, function (err, aggregate, stream) {
     if (err) {
       return callback(err);
     }

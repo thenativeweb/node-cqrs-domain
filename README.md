@@ -516,12 +516,11 @@ Is your use case not solvable without a custom command handling? Sagas? Micro-Se
 	  
 	  // optional, if not defined it will pass the whole command...
 	  payload: 'payload'
-	}, function (cmd, commandHandler, callback) {
+	}, function (aggId, cmd, commandHandler, callback) {
+	  // aggId is the aggregate id
 	  // cmd is the command data
-	
-	  // if cmd was sent without aggregateId, now in cmd there is a generated aggregateId...
 	  
-	  commandHandler.loadAggregate(cmd.aggregate.id, function (err, aggregate, stream) {
+	  commandHandler.loadAggregate(aggId, function (err, aggregate, stream) {
 	    if (err) {
 	      return callback(err);
 	    }
