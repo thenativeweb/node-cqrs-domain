@@ -1,3 +1,6 @@
+## v1.1.2
+- optimize structureLoader (case if directory starts with same name)
+
 ## v1.1.1
 - do not extend the command if no aggregateId is presented
 
