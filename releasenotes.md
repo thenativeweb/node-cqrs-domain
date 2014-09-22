@@ -1,3 +1,6 @@
+## v1.1.3
+- fixes [#22](https://github.com/adrai/node-cqrs-domain/pull/22) thanks to [zauberpony](https://github.com/zauberpony)
+
 ## v1.1.2
 - optimize structureLoader (case if directory starts with same name)
 
