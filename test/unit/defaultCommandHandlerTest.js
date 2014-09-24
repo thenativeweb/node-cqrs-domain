@@ -132,9 +132,43 @@ describe('defaultCommandHandler', function () {
         var next = cmdHnd.getNextCommandInQueue('123');
         
         expect(cmdHnd.queue['123']).to.be.an('array');
-        expect(cmdHnd.queue['123'].length).to.eql(1);
+        expect(cmdHnd.queue['123'].length).to.eql(2);
         expect(next.command).to.eql(cmd);
         expect(next.callback).to.eql(clb);
+        expect(cmdHnd.queue['123'][0].command).to.eql(cmd);
+        expect(cmdHnd.queue['123'][0].callback).to.eql(clb);
+        expect(cmdHnd.queue['123'][1].command).to.eql(cmd3);
+        expect(cmdHnd.queue['123'][1].callback).to.eql(clb3);
+        expect(cmdHnd.queue['12345']).to.be.an('array');
+        expect(cmdHnd.queue['12345'].length).to.eql(1);
+        expect(cmdHnd.queue['12345'][0].command).to.eql(cmd2);
+        expect(cmdHnd.queue['12345'][0].callback).to.eql(clb2);
+
+      });
+
+    });
+
+    describe('calling removeCommandFromQueue', function () {
+
+      it('it should work as expected', function () {
+
+        cmdHnd.defineCommand({
+          aggregateId: 'aggId'
+        });
+        var cmd = { my: 'cmd', aggId: '123' };
+        var clb = function () {};
+        cmdHnd.queueCommand('123', cmd, clb);
+        var cmd2 = { my: 'cmd2', aggId: '12345' };
+        var clb2 = function () {};
+        cmdHnd.queueCommand('12345', cmd2, clb2);
+        var cmd3 = { my: 'cmd3', aggId: '123' };
+        var clb3 = function () {};
+        cmdHnd.queueCommand('123', cmd3, clb3);
+
+        cmdHnd.removeCommandFromQueue('123', cmd);
+
+        expect(cmdHnd.queue['123']).to.be.an('array');
+        expect(cmdHnd.queue['123'].length).to.eql(1);
         expect(cmdHnd.queue['123'][0].command).to.eql(cmd3);
         expect(cmdHnd.queue['123'][0].callback).to.eql(clb3);
         expect(cmdHnd.queue['12345']).to.be.an('array');
@@ -684,6 +718,7 @@ describe('defaultCommandHandler', function () {
           var cmd = { my: 'cmd' };
           var queueCalled = false;
           var nextCalled = false;
+          var removeCalled = false;
           var workflowCalled = false;
           var aggregateId;
 
@@ -706,15 +741,21 @@ describe('defaultCommandHandler', function () {
             queued = { command: c, callback: clb };
           };
 
-          var first = true;
+          var removed = false;
           cmdHnd.getNextCommandInQueue = function (aggId) {
             expect(aggId).to.eql('newId');
-            if (!first) {
+            if (removed) {
               return null;
             }
-            first = false;
             nextCalled = true;
             return queued;
+          };
+
+          cmdHnd.removeCommandFromQueue = function (aggId, c) {
+            expect(aggId).to.eql('newId');
+            expect(c).to.eql(cmd);
+            removed = true;
+            removeCalled = true;
           };
 
           cmdHnd.workflow = function (aggId, c, clb) {
@@ -731,6 +772,7 @@ describe('defaultCommandHandler', function () {
             expect(cmd.aggId).not.to.be.ok();
             expect(queueCalled).to.eql(true);
             expect(nextCalled).to.eql(true);
+            expect(removeCalled).to.eql(true);
             expect(workflowCalled).to.eql(true);
             done();
           });
@@ -746,6 +788,7 @@ describe('defaultCommandHandler', function () {
           var cmd = { my: 'cmd', aggId: '1421' };
           var queueCalled = false;
           var nextCalled = false;
+          var removeCalled = false;
           var workflowCalled = false;
 
           cmdHnd.defineCommand({
@@ -767,15 +810,21 @@ describe('defaultCommandHandler', function () {
             queued = { command: c, callback: clb };
           };
           
-          var first = true;
+          var removed = false;
           cmdHnd.getNextCommandInQueue = function (aggId) {
             expect(aggId).to.eql('1421');
-            if (!first) {
+            if (removed) {
               return null;
             }
-            first = false;
             nextCalled = true;
             return queued;
+          };
+
+          cmdHnd.removeCommandFromQueue = function (aggId, c) {
+            expect(aggId).to.eql('1421');
+            expect(c).to.eql(cmd);
+            removed = true;
+            removeCalled = true;
           };
 
           cmdHnd.workflow = function (aggId, c, clb) {
@@ -793,6 +842,7 @@ describe('defaultCommandHandler', function () {
             expect(cmd.aggId).to.eql('1421');
             expect(queueCalled).to.eql(true);
             expect(nextCalled).to.eql(true);
+            expect(removeCalled).to.eql(true);
             expect(workflowCalled).to.eql(true);
             done();
           });

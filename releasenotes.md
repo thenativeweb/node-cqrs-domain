@@ -1,3 +1,6 @@
+## v1.1.4
+- fixes a major bug for concurrent command handling of same aggregate instance
+
 ## v1.1.3
 - fixes [#22](https://github.com/adrai/node-cqrs-domain/pull/22) thanks to [zauberpony](https://github.com/zauberpony)
 
