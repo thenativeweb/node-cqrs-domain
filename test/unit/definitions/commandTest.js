@@ -222,12 +222,15 @@ describe('command definition', function () {
           var cmdFn = function (cmd, aggregateModel) {
             expect(cmd).to.eql(cmdObj.with);
             expect(aggregateModel).to.eql(aggregateObj);
+            cmd.deep = 'duup';
             done();
           };
 
           var cmd = api.defineCommand({ payload: 'with' }, cmdFn);
 
           cmd.handle(cmdObj, aggregateObj);
+          
+          expect(cmdObj.with.deep).to.eql('value');
         });
 
       });

@@ -1,3 +1,6 @@
+## v1.1.5
+- clone command and event payload before passing to handle function
+
 ## v1.1.4
 - fixes a major bug for concurrent command handling of same aggregate instance
 

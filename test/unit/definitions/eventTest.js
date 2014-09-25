@@ -139,12 +139,15 @@ describe('event definition', function () {
           var evtFn = function (evt, aggregateModel) {
             expect(evt).to.eql(evtObj.with);
             expect(aggregateModel).to.eql(aggregateObj);
+            evt.deep = 'duup';
             done();
           };
 
           var evt = api.defineEvent({ payload: 'with' }, evtFn);
 
           evt.apply(evtObj, aggregateObj);
+
+          expect(evtObj.with.deep).to.eql('value');
         });
 
       });
