@@ -1,3 +1,6 @@
+## v1.1.6
+- update eventstore dependency
+
 ## v1.1.5
 - clone command and event payload before passing to handle function
 
