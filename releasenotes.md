@@ -1,3 +1,6 @@
+## v1.1.8
+- update eventstore dependency
+
 ## v1.1.7
 - update eventstore dependency
 
