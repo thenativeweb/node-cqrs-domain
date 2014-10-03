@@ -269,6 +269,58 @@ describe('integration', function () {
 
         });
 
+        describe('that fails on a pre-condition', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              name: 'unregisterAllContactInformation',
+              aggregate: {
+                id: 'aggregateIdNew',
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              payload: {
+              },
+              revision: 0,
+              version: 2,
+              meta: {
+                userId: 'userId'
+              }
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('BusinessRuleError');
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateIdNew');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              done();
+            });
+
+          });
+
+        });
+        
         describe('that fails on a business rule', function () {
 
           it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
@@ -777,6 +829,50 @@ describe('integration', function () {
 
               expect(aggData).to.eql(null);
               expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that fails on a pre-condition', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              command: 'unregisterAllContactInformation',
+              payload: {
+                id: 'aggregateIdNew'
+              },
+              head: {
+                userId: 'userId',
+                revision: 0
+              }
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('BusinessRuleError');
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].event).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].event).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateIdNew');
               expect(meta.aggregate).to.eql('person');
 
               done();

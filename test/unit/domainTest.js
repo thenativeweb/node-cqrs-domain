@@ -21,6 +21,7 @@ describe('domain', function () {
     expect(api.defineCommand).to.be.a('function');
     expect(api.defineEvent).to.be.a('function');
     expect(api.defineBusinessRule).to.be.a('function');
+    expect(api.definePreCondition).to.be.a('function');
     expect(api.defineCommandHandler).to.be.a('function');
 
   });

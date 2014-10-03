@@ -192,6 +192,30 @@ describe('command definition', function () {
       
     });
 
+    describe('checking pre-condition', function () {
+
+      it('it should work as expected', function (done) {
+        var cmdObj = { my: 'command', with: { deep: 'value' } };
+        var aggregateObj = { get: function () {}, has: function () {} };
+
+        var pc = api.definePreCondition({}, function (cmd, aggregateModel, callback) {
+          expect(cmd).to.eql(cmdObj);
+          expect(aggregateModel).to.eql(aggregateObj);
+          callback();
+        });
+
+        var cmd = api.defineCommand({}, function () {});
+
+        cmd.definePreCondition(pc);
+
+        cmd.checkPreCondition(cmdObj, aggregateObj, function (err) {
+          expect(err).not.to.be.ok();
+          done();
+        });
+      });
+
+    });
+
     describe('handling a command', function () {
 
       describe('with default payload', function () {

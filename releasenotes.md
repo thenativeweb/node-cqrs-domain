@@ -1,3 +1,6 @@
+## v1.2.0
+- introduced pre-conditions
+
 ## v1.1.8
 - update eventstore dependency
 

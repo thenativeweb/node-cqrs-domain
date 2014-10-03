@@ -42,8 +42,7 @@
                   "phoneNumbers",
                   "mails"
                 ]
-              },
-              "required": ["firstname", "lastname"]
+              }
             }
           },
           "required": ["version", "payload"]

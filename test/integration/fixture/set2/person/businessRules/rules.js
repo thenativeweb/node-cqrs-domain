@@ -1,7 +1,17 @@
 // if exports is an array, it will be the same like loading multiple files...
 //module.exports = require('cqrs-domain').defineBusinessRule({
 module.exports = [
-  
+
+  require('../../../../../../').definePreCondition({
+    name: 'unregisterAllContactInformation',  // optional, default is file name without extension
+    payload: '', // if not defined it will use what is defined as default in aggregate or pass the whole command...
+    description: 'firstname should always be set'
+  }, function (command, agg) {
+    if (!agg.has('firstname')) {
+      throw new Error('not personalized');
+    }
+  }),
+
   require('../../../../../../').defineBusinessRule({
     name: 'nameEquality', // optional, default is file name without extenstion
     description: 'firstname should never be equal lastname'//,

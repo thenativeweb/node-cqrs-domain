@@ -360,7 +360,10 @@ The values describes the path to that property in the event message.
 	  defaultCommandPayload: 'payload',
 	  
 	  // optional, default ''
-	  defaultEventPayload: 'payload'
+	  defaultEventPayload: 'payload',
+           	  
+    // optional, default ''
+    defaultPreConditionPayload: 'payload'
 	},
 	
 	// optionally, define some initialization data...
@@ -410,6 +413,49 @@ You can also have an hierarchical command extension look at:
 - [aggregate](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/command.json)
 - [context](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/command.json)
 - [general](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/command.json)
+
+
+## Pre-Condition
+
+	module.exports = require('cqrs-domain').definePreCondition({
+	  // optional, default is file name without extension
+	  name: 'unregisterAllContactInformation',
+	  
+	  // optional, default 0
+	  version: 2,
+	  
+	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
+	  payload: 'payload'
+	  
+	  // optional
+	  description: 'firstname should always be set'
+	}, function (data, aggregate, callback) {
+	  // data is the command data
+	  // aggregate is the aggregate object
+	  // callback is optional, if not defined as function argument you can throw errors or return errors here (sync way) 
+	
+	  if (!agg.has('firstname')) {
+	    return callback('not personalized');
+	    // or
+	    // return callback(new Error('not personalized'));
+	    // or
+	    // return callback(new Error()); // if no error message is defined then the description will be taken
+	  }
+	  callback(null);
+	  
+	  // or if callback is not defined as function argument
+	  // if (!agg.has('firstname')) {
+    //   return 'not personalized';
+    //   // or
+    //   // return new Error('not personalized');
+    //   // or
+    //   // return new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error('not personalized');
+    // }
+	});
 
 
 ## Command
