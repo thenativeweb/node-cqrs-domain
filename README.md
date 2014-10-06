@@ -416,6 +416,7 @@ You can also have an hierarchical command extension look at:
 
 
 ## Pre-Condition
+Can be used to perform some business rules before handling the command.
 
 	module.exports = require('cqrs-domain').definePreCondition({
 	  // optional, default is file name without extension
@@ -459,6 +460,11 @@ You can also have an hierarchical command extension look at:
 
 
 ## Command
+Collect all needed infos from aggregate to generate your event(s).
+
+Move checks out of here, the correct places are "business rules" or "pre-conditions"!
+
+Do NOT manipulate the aggregate here!
 
 	module.exports = require('cqrs-domain').defineCommand({
 	  // optional, default is file name without extension
@@ -485,6 +491,7 @@ You can also have an hierarchical command extension look at:
 
 
 ## Event
+This is the place where you should manipulate your aggregate.
 
 	module.exports = require('cqrs-domain').defineEvent({
 	  // optional, default is file name without extension
