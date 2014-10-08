@@ -1933,4 +1933,39 @@ describe('integration', function () {
 
   });
 
+
+  describe('Set independent', function () {
+    var domain;
+
+    beforeEach(function (done) {
+      domain = api({domainPath: __dirname + '/fixture/minimalSet'});
+      domain.init(done);
+    });
+
+    it('should not die for invalid commands', function (done) {
+      expect(function () {
+        domain.handle({}, function () {
+          done();
+        });
+      }).to.not.throwError();
+
+    });
+
+    it('should emit commandRejected event', function (done) {
+        domain.handle({}, function (err, events) {
+          expect(err).not.to.be(undefined);
+          expect(err.name).to.be('ValidationError');
+          expect(err.message).to.contain('No command name given');
+          expect(events).to.be.an('array');
+          expect(events.length).to.be(1);
+          expect(events[0].name).to.be('commandRejected');
+          expect(events[0].payload.reason.name).to.be('ValidationError');
+
+          done();
+        });
+
+    });
+
+
+  });
 });
