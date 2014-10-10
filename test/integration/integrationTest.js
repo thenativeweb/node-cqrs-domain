@@ -38,6 +38,70 @@ describe('integration', function () {
         domain.init(done);
       });
 
+      describe('handling a command that is not a json object', function () {
+
+        it('it should not publish any event and it should callback with an error and without events', function (done) {
+
+          var publishedEvents = [];
+
+          domain.onEvent(function (evt) {
+            publishedEvents.push(evt);
+          });
+
+          domain.handle('crappy', function (err, evts) {
+            expect(err).to.be.ok();
+            expect(err.message).to.match(/valid/i);
+            expect(evts).not.to.be.ok();
+            expect(publishedEvents.length).to.eql(0);
+
+            done();
+          });
+
+        });
+
+      });
+      
+      describe('handling a command that has no name', function () {
+
+        it('it should not publish any event and it should callback with an error and without events', function (done) {
+
+          var publishedEvents = [];
+
+          domain.onEvent(function (evt) {
+            publishedEvents.push(evt);
+          });
+
+          var cmd = {
+            id: 'cmdId',
+//            name: 'cmdName',
+            aggregate: {
+              id: 'aggregateId',
+              name: 'aggregate'
+            },
+            context: {
+              name: 'context'
+            },
+            payload: 'payload',
+            revision: 0,
+            version: 0,
+            meta: {
+              userId: 'userId'
+            }
+          };
+
+          domain.handle(cmd, function (err, evts) {
+            expect(err).to.be.ok();
+            expect(err.message).to.match(/valid/i);
+            expect(evts).not.to.be.ok();
+            expect(publishedEvents.length).to.eql(0);
+
+            done();
+          });
+
+        });
+
+      });
+      
       describe('handling a command that will not be handled', function () {
 
         it('it should not publish any event and it should callback with an error and without events', function (done) {
