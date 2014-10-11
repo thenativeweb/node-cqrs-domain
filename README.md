@@ -35,7 +35,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  snapshotThreshold: 1000,
 	  
 	  // optional, default is in-memory
-	  // currently supports: mongodb, redis, tingodb and inmemory
+	  // currently supports: mongodb, redis, tingodb, azuretable and inmemory
 	  // hint: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
 	  eventStore: {
 	    type: 'mongodb',
