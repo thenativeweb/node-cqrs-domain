@@ -4,7 +4,7 @@ var expect = require('expect.js'),
   Base = require('../../lib/lock/base'),
   InMemory = require('../../lib/lock/databases/inmemory');
 
-describe('AggregateLock', function() {
+describe.only('AggregateLock', function() {
 
   it('it should have the correct interface', function() {
 
@@ -77,7 +77,7 @@ describe('AggregateLock', function() {
 
     describe('with options containing a type property with the value of', function() {
 
-      var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'couchdb'];
+      var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'couchdb', 'azuretable'];
 
       types.forEach(function(type) {
 
