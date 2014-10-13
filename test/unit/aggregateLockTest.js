@@ -4,7 +4,7 @@ var expect = require('expect.js'),
   Base = require('../../lib/lock/base'),
   InMemory = require('../../lib/lock/databases/inmemory');
 
-describe.only('AggregateLock', function() {
+describe('AggregateLock', function() {
 
   it('it should have the correct interface', function() {
 
