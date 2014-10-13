@@ -1,3 +1,6 @@
+## v1.2.2
+- fix pre-conditions
+
 ## v1.2.1
 - added azure-table support [##25](https://github.com/adrai/node-cqrs-domain/pull/#25) thanks to [sbiaudet](https://github.com/sbiaudet)
 

@@ -121,11 +121,16 @@ describe('pre-condition definition', function () {
 
             it('it should callback as expected', function (done) {
 
-              var pcFn = function (agg, command) {};
+              var cmdOk = false;
+              var pcFn = function (command, agg) {
+                cmdOk = command.changed === 'changed';
+                expect(command.changed, 'changed');
+              };
               var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla' }, pcFn);
 
               pc.check({ changed: 'changed' }, { cmd: 'cmd1' }, function (err) {
                 expect(err).not.to.be.ok();
+                expect(cmdOk).to.eql(true);
                 done();
               });
 
@@ -137,14 +142,17 @@ describe('pre-condition definition', function () {
 
             it('it should callback as expected', function (done) {
 
-              var pcFn = function (agg, command) {
+              var cmdOk = false;
+              var pcFn = function (command, agg) {
+                cmdOk = command.changed === 'changed';
                 throw new Error('errorMsg');
               };
-              var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla' }, pcFn);
+              var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla', payload: 'deep' }, pcFn);
 
-              pc.check({ changed: 'changed' }, { cmd: 'cmd1' }, function (err) {
+              pc.check({ deep: { changed: 'changed' } }, { cmd: 'cmd1' }, function (err) {
                 expect(err).to.be.a(BusinessRuleError);
                 expect(err.message).to.eql('errorMsg');
+                expect(cmdOk).to.eql(true);
                 done();
               });
 
