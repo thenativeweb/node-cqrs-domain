@@ -1,3 +1,6 @@
+## v1.2.3
+- add possibility to define multiple pre-conditions per command
+
 ## v1.2.2
 - fix pre-conditions
 
