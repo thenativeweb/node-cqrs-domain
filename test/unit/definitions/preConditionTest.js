@@ -64,6 +64,7 @@ describe('pre-condition definition', function () {
         expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql(undefined);
         expect(pc.version).to.eql(0);
+        expect(pc.priority).to.eql(Infinity);
         expect(pc.payload).to.eql(null);
         expect(pc.definitions).to.be.an('object');
         expect(pc.definitions.command).to.be.an('object');
@@ -97,6 +98,7 @@ describe('pre-condition definition', function () {
         expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql('bla bla bla');
         expect(pc.version).to.eql(0);
+        expect(pc.priority).to.eql(3);
         expect(pc.payload).to.eql(null);
         expect(pc.definitions).to.be.an('object');
         expect(pc.definitions.command).to.be.an('object');

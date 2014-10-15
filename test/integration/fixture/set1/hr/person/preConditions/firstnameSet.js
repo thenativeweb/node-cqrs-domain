@@ -4,7 +4,8 @@ module.exports = require('../../../../../../../').definePreCondition({
   name: 'unregisterAllContactInformation',  // optional, default is file name without extension
   version: 2, // optional, default 0
   payload: '', // if not defined it will use what is defined as default in aggregate or pass the whole command...
-  description: 'firstname should always be set'
+  description: 'firstname should always be set',
+  priority: 1 // optional, default Infinity, all pre-conditions will be sorted by this value
 }, function (command, agg, callback) {
   if (!agg.has('firstname')) {
     return callback('not personalized');

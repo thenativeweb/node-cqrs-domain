@@ -418,7 +418,10 @@ You can also have an hierarchical command extension look at:
 ## Pre-Condition
 Can be used to perform some business rules before handling the command.
 
+A Command can have multiple pre-conditions.
+
 	module.exports = require('cqrs-domain').definePreCondition({
+	  // the command name
 	  // optional, default is file name without extension
 	  name: 'unregisterAllContactInformation',
 	  
@@ -429,7 +432,10 @@ Can be used to perform some business rules before handling the command.
 	  payload: 'payload'
 	  
 	  // optional
-	  description: 'firstname should always be set'
+	  description: 'firstname should always be set',
+	  
+	  // optional, default Infinity, all pre-conditions will be sorted by this value
+	  priority: 1
 	}, function (data, aggregate, callback) {
 	  // data is the command data
 	  // aggregate is the aggregate object

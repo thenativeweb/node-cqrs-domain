@@ -70,6 +70,7 @@ describe('command definition', function () {
         expect(cmd.defineEvent).to.be.a('function');
         expect(cmd.defineOptions).to.be.a('function');
 
+        expect(cmd.defineAggregate).to.be.a('function');
         expect(cmd.defineValidation).to.be.a('function');
         expect(cmd.validate).to.be.a('function');
         expect(cmd.handle).to.be.a('function');
@@ -105,9 +106,42 @@ describe('command definition', function () {
         expect(cmd.defineEvent).to.be.a('function');
         expect(cmd.defineOptions).to.be.a('function');
 
+        expect(cmd.defineAggregate).to.be.a('function');
         expect(cmd.defineValidation).to.be.a('function');
         expect(cmd.validate).to.be.a('function');
         expect(cmd.handle).to.be.a('function');
+
+      });
+
+    });
+
+    describe('calling defineAggregate', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var cmd = api.defineCommand(null, function () {});
+
+          expect(function () {
+            cmd.defineAggregate();
+          }).to.throwError(/aggregate/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var cmd = api.defineCommand(null, function () {});
+
+          cmd.defineAggregate({ name: 'aggrName' });
+
+          expect(cmd.aggregate.name).to.eql('aggrName');
+
+        });
 
       });
 
@@ -192,24 +226,69 @@ describe('command definition', function () {
       
     });
 
+    describe('working with priority', function () {
+
+      it('it should order it correctly', function () {
+
+        var cmdFn = function () {};
+        var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
+
+        cmd.defineAggregate({ name: 'myAggr', defaultPreConditionPayload: 'fromAggr' });
+
+        cmd.addPreCondition({ name: 'myRule2', priority: 3 });
+        cmd.addPreCondition({ name: 'myRule4', priority: Infinity });
+        cmd.addPreCondition({ name: 'myRule1', priority: 1, payload: 'mySpec' });
+        cmd.addPreCondition({ name: 'myRule3', priority: 5 });
+
+        expect(cmd.preConditions.length).to.eql(4);
+        expect(cmd.preConditions[0].name).to.eql('myRule1');
+        expect(cmd.preConditions[0].payload).to.eql('mySpec');
+        expect(cmd.preConditions[1].name).to.eql('myRule2');
+        expect(cmd.preConditions[1].payload).to.eql('fromAggr');
+        expect(cmd.preConditions[2].name).to.eql('myRule3');
+        expect(cmd.preConditions[2].payload).to.eql('fromAggr');
+        expect(cmd.preConditions[3].name).to.eql('myRule4');
+        expect(cmd.preConditions[3].payload).to.eql('fromAggr');
+
+      });
+
+    });
+
     describe('checking pre-condition', function () {
 
       it('it should work as expected', function (done) {
         var cmdObj = { my: 'command', with: { deep: 'value' } };
         var aggregateObj = { get: function () {}, has: function () {} };
+        
+        var calledPc1 = false;
+        var calledPc2 = false;
 
         var pc = api.definePreCondition({}, function (cmd, aggregateModel, callback) {
           expect(cmd).to.eql(cmdObj);
           expect(aggregateModel).to.eql(aggregateObj);
+          calledPc1 = true;
+          callback();
+        });
+
+        var pc2 = api.definePreCondition({}, function (cmd, aggregateModel, callback) {
+          expect(cmd).to.eql(cmdObj);
+          expect(aggregateModel).to.eql(aggregateObj);
+          calledPc2 = true;
           callback();
         });
 
         var cmd = api.defineCommand({}, function () {});
 
-        cmd.definePreCondition(pc);
+        cmd.defineAggregate({ name: 'myAggr' });
 
-        cmd.checkPreCondition(cmdObj, aggregateObj, function (err) {
+        cmd.addPreCondition(pc);
+        
+        cmd.addPreCondition(pc2);
+
+        cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).not.to.be.ok();
+          expect(calledPc1).to.eql(true);
+          expect(calledPc2).to.eql(true);
           done();
         });
       });
