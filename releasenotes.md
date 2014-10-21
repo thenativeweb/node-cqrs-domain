@@ -1,10 +1,10 @@
-## v1.2.3
+## [v1.2.3](https://github.com/adrai/node-cqrs-domain/compare/v1.2.2...v1.2.3)
 - add possibility to define multiple pre-conditions per command
 
-## v1.2.2
+## [v1.2.2](https://github.com/adrai/node-cqrs-domain/compare/v1.2.1...v1.2.2)
 - fix pre-conditions
 
-## v1.2.1
+## [v1.2.1](https://github.com/adrai/node-cqrs-domain/compare/v1.2.0...v1.2.1)
 - added azure-table support [##25](https://github.com/adrai/node-cqrs-domain/pull/#25) thanks to [sbiaudet](https://github.com/sbiaudet)
 
 ## v1.2.0
