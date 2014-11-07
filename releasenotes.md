@@ -1,3 +1,6 @@
+## [v1.2.5](https://github.com/adrai/node-cqrs-domain/compare/v1.2.4...v1.2.5)
+- update eventstore dependency
+
 ## [v1.2.4](https://github.com/adrai/node-cqrs-domain/compare/v1.2.3...v1.2.4)
 - address [#27](https://github.com/adrai/node-cqrs-domain/issues/27)
 
