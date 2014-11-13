@@ -4,7 +4,7 @@ var expect = require('expect.js'),
 describe('integration', function () {
 
   describe('set 1', function () {
-    
+
     describe('format 1', function () {
 
       var domain;
@@ -60,7 +60,7 @@ describe('integration', function () {
         });
 
       });
-      
+
       describe('handling a command that has no name', function () {
 
         it('it should not publish any event and it should callback with an error and without events', function (done) {
@@ -101,7 +101,7 @@ describe('integration', function () {
         });
 
       });
-      
+
       describe('handling a command that will not be handled', function () {
 
         it('it should not publish any event and it should callback with an error and without events', function (done) {
@@ -269,7 +269,7 @@ describe('integration', function () {
               expect(publishedEvents.length).to.eql(1);
               expect(publishedEvents[0].name).to.eql('rejectedCommand');
               expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
-              
+
               expect(aggData).to.eql(null);
               expect(meta.aggregateId).to.eql('aggregateId');
               expect(meta.aggregate).to.eql('person');
@@ -365,6 +365,7 @@ describe('integration', function () {
             domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('BusinessRuleError');
+              expect(err.message).to.eql('not personalized');
               expect(evts).to.be.an('array');
               expect(evts.length).to.eql(1);
               expect(evts[0].name).to.eql('rejectedCommand');
@@ -384,7 +385,61 @@ describe('integration', function () {
           });
 
         });
-        
+
+        describe('that fails on a pre-condition of an aggregate', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdId',
+              name: 'unregisterAllContactInformation',
+              aggregate: {
+                id: 'aggregateIdNew',
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              payload: {
+              },
+              revision: 0,
+              version: 2,
+              meta: {
+                userId: 'userId'
+              },
+              notAuthorized: true
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('BusinessRuleError');
+              expect(err.message).to.eql('not authorized');
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateIdNew');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              done();
+            });
+
+          });
+
+        });
+
         describe('that fails on a business rule', function () {
 
           it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
@@ -599,7 +654,7 @@ describe('integration', function () {
         });
 
       });
-      
+
     });
 
     describe('format 2', function () {
@@ -743,7 +798,7 @@ describe('integration', function () {
       });
 
     });
-    
+
   });
 
   describe('set 2', function () {
@@ -927,6 +982,7 @@ describe('integration', function () {
             domain.handle(cmd, function (err, evts, aggData, meta) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('BusinessRuleError');
+              expect(err.message).to.eql('not personalized');
               expect(evts).to.be.an('array');
               expect(evts.length).to.eql(1);
               expect(evts[0].event).to.eql('rejectedCommand');

@@ -56,21 +56,21 @@ describe('aggregate definition', function () {
       expect(aggr.isSnapshotNeeded).to.be.a('function');
 
     });
-    
+
     describe('defining snapshot conversions', function () {
-      
+
       describe('by passing no version', function () {
-        
+
         it('it should throw an error', function () {
 
           var aggr = api.defineAggregate();
-          
+
           expect(function () {
             aggr.defineSnapshotConversion();
           }).to.throwError(/version/);
-          
+
         });
-        
+
       });
 
       describe('by passing no function', function () {
@@ -86,7 +86,7 @@ describe('aggregate definition', function () {
         });
 
       });
-      
+
       describe('by passing all valid arguments', function () {
 
         it('it should save them as expected', function () {
@@ -100,9 +100,9 @@ describe('aggregate definition', function () {
           expect(aggr.snapshotConversions[3]).to.eql(fn2);
 
         });
-        
+
       });
-      
+
     });
 
     describe('defining snapshot need', function () {
@@ -137,7 +137,7 @@ describe('aggregate definition', function () {
     });
 
     describe('defining an id generator function', function() {
-      
+
       var aggr;
 
       beforeEach(function () {
@@ -184,11 +184,11 @@ describe('aggregate definition', function () {
       });
 
     });
-    
+
     describe('calling defineContext', function () {
-      
+
       describe('with a wrong object', function () {
-        
+
         it('it should throw an error', function () {
 
           var aggr = api.defineAggregate();
@@ -196,9 +196,9 @@ describe('aggregate definition', function () {
           expect(function () {
             aggr.defineContext();
           }).to.throwError(/context/);
-          
+
         });
-        
+
       });
 
       describe('with a correct object', function () {
@@ -208,13 +208,13 @@ describe('aggregate definition', function () {
           var aggr = api.defineAggregate();
 
           aggr.defineContext({ name: 'contextName' });
-          
+
           expect(aggr.context.name).to.eql('contextName');
 
         });
 
       });
-      
+
     });
 
     describe('calling addCommand', function () {
@@ -254,7 +254,7 @@ describe('aggregate definition', function () {
       });
 
       describe('having not defined a default payload for commands', function () {
-        
+
         describe('having not defined a payload in the command', function () {
 
           it('it should work as expected', function () {
@@ -272,7 +272,7 @@ describe('aggregate definition', function () {
             expect(defineAggregateCalled).to.eql(true);
 
           });
-          
+
         });
 
         describe('having defined a payload in the command', function () {
@@ -498,6 +498,60 @@ describe('aggregate definition', function () {
 
     });
 
+    describe('calling addPreCondition', function () {
+
+      describe('with a wrong object', function () {
+
+        it('it should throw an error', function () {
+
+          var aggr = api.defineAggregate();
+
+          expect(function () {
+            aggr.addPreCondition();
+          }).to.throwError(/preCondition/);
+
+        });
+
+      });
+
+      describe('with a correct object', function () {
+
+        it('it should work as expected', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addPreCondition({ description: 'my condition' });
+
+          expect(aggr.preConditions.length).to.eql(1);
+          expect(aggr.preConditions[0].description).to.eql('my condition');
+
+        });
+
+      });
+
+      describe('working with priority', function () {
+
+        it('it should order it correctly', function () {
+
+          var aggr = api.defineAggregate();
+
+          aggr.addPreCondition({ description: 'myRule2', priority: 3 });
+          aggr.addPreCondition({ description: 'myRule4', priority: Infinity });
+          aggr.addPreCondition({ description: 'myRule1', priority: 1 });
+          aggr.addPreCondition({ description: 'myRule3', priority: 5 });
+
+          expect(aggr.preConditions.length).to.eql(4);
+          expect(aggr.preConditions[0].description).to.eql('myRule1');
+          expect(aggr.preConditions[1].description).to.eql('myRule2');
+          expect(aggr.preConditions[2].description).to.eql('myRule3');
+          expect(aggr.preConditions[3].description).to.eql('myRule4');
+
+        });
+
+      });
+
+    });
+
     describe('calling addCommandHandler', function () {
 
       describe('with a wrong object', function () {
@@ -530,7 +584,7 @@ describe('aggregate definition', function () {
               expect(agg).to.eql(aggr);
             }
           };
-          
+
           aggr.addCommandHandler(cmdHndl);
 
           expect(aggr.commandHandlers.length).to.eql(1);
@@ -541,11 +595,11 @@ describe('aggregate definition', function () {
       });
 
     });
-    
+
     describe('having added some commands', function () {
-      
+
       var aggr;
-      
+
       beforeEach(function () {
         aggr = api.defineAggregate();
         aggr.addCommand({ name: 'cmd1', version: 0, defineAggregate: function () {} });
@@ -554,11 +608,11 @@ describe('aggregate definition', function () {
         aggr.addCommand({ name: 'cmd2', version: 2, defineAggregate: function () {} });
         aggr.addCommand({ name: 'cmd3', version: 0, defineAggregate: function () {} });
       });
-      
+
       describe('calling getCommands', function () {
-        
+
         it('it should return all commands', function () {
-          
+
           var cmds = aggr.getCommands();
           expect(cmds.length).to.eql(5);
           expect(cmds[0].name).to.eql('cmd1');
@@ -571,18 +625,18 @@ describe('aggregate definition', function () {
           expect(cmds[3].version).to.eql(2);
           expect(cmds[4].name).to.eql('cmd3');
           expect(cmds[4].version).to.eql(0);
-          
+
         });
-        
+
       });
 
       describe('calling getCommandsByName', function () {
-        
+
         it('it should work as expected', function () {
 
           var ex0 = aggr.getCommandsByName('someCmdName');
           expect(ex0.length).to.eql(0);
-          
+
           var ex1 = aggr.getCommandsByName('cmd1');
           expect(ex1.length).to.eql(1);
           expect(ex1[0].name).to.eql('cmd1');
@@ -601,18 +655,18 @@ describe('aggregate definition', function () {
           expect(ex3.length).to.eql(1);
           expect(ex3[0].name).to.eql('cmd3');
           expect(ex3[0].version).to.eql(0);
-          
+
         });
-        
+
       });
 
       describe('calling getCommand', function () {
-        
+
         it('it should work as expected', function () {
-          
+
           var ex0 = aggr.getCommand('someCmd', 0);
           expect(ex0).not.to.be.ok();
-          
+
           var ex1 = aggr.getCommand('cmd1', 3);
           expect(ex1).not.to.be.ok();
 
@@ -643,11 +697,11 @@ describe('aggregate definition', function () {
           var ex8 = aggr.getCommand('cmd2');
           expect(ex8.name).to.eql('cmd2');
           expect(ex8.version).to.eql(0);
-          
+
         });
-        
+
       });
-      
+
     });
 
     describe('having added some events', function () {
@@ -807,11 +861,11 @@ describe('aggregate definition', function () {
       });
 
     });
-    
+
     describe('calling create', function () {
-      
+
       describe('with a wrong id', function () {
-        
+
         it('it should throw an error', function () {
 
           var aggr = api.defineAggregate();
@@ -819,9 +873,9 @@ describe('aggregate definition', function () {
           expect(function () {
             aggr.create(123);
           }).to.throwError(/id/);
-          
+
         });
-        
+
       });
 
       describe('with a correct id', function () {
@@ -835,7 +889,7 @@ describe('aggregate definition', function () {
           }).not.to.throwError();
 
         });
-        
+
         it('it should return a correct object', function () {
 
           var aggr = api.defineAggregate();
@@ -852,7 +906,7 @@ describe('aggregate definition', function () {
           expect(agg.addUncommittedEvent).to.be.a('function');
           expect(agg.clearUncommittedEvents).to.be.a('function');
           expect(agg.toJSON).to.be.a('function');
-          
+
         });
 
       });
@@ -875,20 +929,20 @@ describe('aggregate definition', function () {
           expect(agg.addUncommittedEvent).to.be.a('function');
           expect(agg.clearUncommittedEvents).to.be.a('function');
           expect(agg.toJSON).to.be.a('function');
-          
+
           expect(agg.get('stuff')).to.be.an('array');
           expect(agg.get('stuff').length).to.eql(0);
 
         });
 
       });
-      
+
     });
-    
+
     describe('calling validateCommand', function () {
-      
+
       describe('passing a command object that not have a name', function () {
-        
+
         it('it should throw an Error', function () {
 
           var aggr = api.defineAggregate();
@@ -896,13 +950,13 @@ describe('aggregate definition', function () {
           aggr.defineCommand({
             name: 'cmdName'
           });
-          
+
           expect(function () {
             aggr.validateCommand({ my: 'cmd', with: 'payload' });
           }).to.throwError(/name/);
-          
+
         });
-        
+
       });
 
       describe('passing a command object that not matches an existing command', function () {
@@ -933,7 +987,7 @@ describe('aggregate definition', function () {
             name: 'cmdName',
             version: 'v'
           });
-          
+
           aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, defineAggregate: function () {} });
 
           expect(function () {
@@ -955,26 +1009,26 @@ describe('aggregate definition', function () {
 
           var err = aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' });
           expect(err).to.eql('myValidationRes')
-          
+
         });
 
       });
-      
+
     });
-    
+
     describe('calling checkBusinessRules', function () {
-      
+
       it('it should call the check function on the business rule objects', function (done) {
 
         var aggr = api.defineAggregate();
-        
+
         var ch = 'changed';
         var pr = 'previous';
         var evt = 'events';
         var cmd = 'command';
-        
+
         var called = 0;
-        
+
         var br1 = {
           check: function (changed, previous, events, command, callback) {
             expect(changed).to.eql(ch);
@@ -999,15 +1053,15 @@ describe('aggregate definition', function () {
 
         aggr.addBusinessRule(br1);
         aggr.addBusinessRule(br2);
-        
+
         aggr.checkBusinessRules(ch, pr, evt, cmd, done);
-        
+
       });
-      
+
     });
-    
+
     describe('calling isSnapshotNeeded', function () {
-      
+
       describe('passing more events than threshold', function () {
 
         it('it should work as expected', function () {
@@ -1018,11 +1072,11 @@ describe('aggregate definition', function () {
           });
 
           var res = aggr.isSnapshotNeeded(null, [1, 2, 3, 4]);
-          
+
           expect(res).to.eql(true);
 
         });
-        
+
       });
 
       describe('passing less events than threshold', function () {
@@ -1038,21 +1092,21 @@ describe('aggregate definition', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('calling apply', function () {
 
       describe('with no matching event name', function () {
 
         it('it should throw an error', function () {
-          
+
           var aggr = api.defineAggregate();
 
           aggr.defineEvent({
             name: 'evtName'
           });
-          
+
           aggr.addEvent({ name: 'evt1', version: 0, apply: function () {} });
           aggr.addEvent({ name: 'evt2', version: 0, apply: function () {} });
           aggr.addEvent({ name: 'evt2', version: 1, apply: function () {} });
@@ -1121,9 +1175,9 @@ describe('aggregate definition', function () {
             name: 'evtName',
             version: 'v'
           });
-          
+
           var checked = 0;
-          
+
           function check () {
             checked++;
             if (checked === 2) {
@@ -1154,7 +1208,7 @@ describe('aggregate definition', function () {
       });
 
     });
-    
+
     describe('calling loadFromHistory', function () {
 
       describe('passing more events than threshold', function () {
@@ -1219,7 +1273,7 @@ describe('aggregate definition', function () {
         });
 
       });
-      
+
       describe('passing a snapshot', function () {
 
         describe('with actual version', function () {
@@ -1254,7 +1308,7 @@ describe('aggregate definition', function () {
             expect(res).to.eql(false);
 
           });
-          
+
         });
 
         describe('with older version', function () {
@@ -1283,7 +1337,7 @@ describe('aggregate definition', function () {
               expect(data).to.eql(snap.data);
               expect(aggregateModel).to.eql(aggModel);
             });
-            
+
             aggr.defineSnapshotNeed(function (time, evts, model) {
               return evts.length >= 2;
             });
@@ -1331,9 +1385,9 @@ describe('aggregate definition', function () {
           expect(rev).to.eql(3);
 
         });
-        
+
       });
-      
+
       describe('passing a snapshot and some events', function () {
 
         it('it should actualize the aggregateModel correctly', function () {
@@ -1379,11 +1433,11 @@ describe('aggregate definition', function () {
           });
 
           aggr.loadFromHistory(aggModel, null, evts);
-          
+
           expect(rev).to.eql(8);
 
         });
-        
+
       });
 
     });
@@ -1422,7 +1476,7 @@ describe('aggregate definition', function () {
             get: function () {
             }
           };
-          
+
           var aggr = api.defineAggregate();
 
           aggr.defineCommand({
@@ -1459,7 +1513,7 @@ describe('aggregate definition', function () {
             addUncommittedEvent: function (e) { uncommittedEvts.push(e); },
             getUncommittedEvents: function () { return uncommittedEvts; }
           };
-          
+
           var cmdToUse = { cmdName: 'cmd', v: 2, with: 'payload' };
 
           var aggr = api.defineAggregate();
@@ -1482,7 +1536,7 @@ describe('aggregate definition', function () {
             pcCalled = true;
             clb(null);
           };
-          
+
           var handle = function (cmd, aggregateModel) {
             expect(cmd).to.eql(cmdToUse);
             expect(aggregateModel).to.eql(aggModel);
@@ -1496,18 +1550,30 @@ describe('aggregate definition', function () {
             applyCalled = true;
           }});
 
+          var aggrPcCalled = false;
+          aggr.addPreCondition({
+            check: function (cmd, aggregateModel, clb) {
+              expect(cmd).to.eql(cmdToUse);
+              expect(aggregateModel).to.eql(aggModel);
+              expect(aggregateModel.apply).not.to.be.ok();
+              aggrPcCalled = true;
+              clb(null);
+            }
+          });
+
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
             expect(rev).to.eql(1);
             expect(pcCalled).to.eql(true);
+            expect(aggrPcCalled).to.eql(true);
             expect(applyCalled).to.eql(true);
-            
+
             done();
           });
         });
 
         it('it should work as expected', function () {
-          
+
           var evts = [];
           var rev = 3;
 
@@ -1560,7 +1626,7 @@ describe('aggregate definition', function () {
             pcCalled = true;
             clb(null);
           };
-          
+
           var handleCalled = false;
           var handle = function (cmd, aggregateModel) {
             expect(cmd).to.eql(cmdToUse);
@@ -1570,7 +1636,7 @@ describe('aggregate definition', function () {
             aggregateModel.apply('evt3');
             handleCalled = true;
           };
-          
+
           var checkBRCalled = false;
           var tmpFn = aggr.checkBusinessRules;
           aggr.checkBusinessRules = function (changed, previous, events, command, callback) { // mock
@@ -1583,11 +1649,23 @@ describe('aggregate definition', function () {
           aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
           aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
 
+          var aggrPcCalled = false;
+          aggr.addPreCondition({
+            check: function (cmd, aggregateModel, clb) {
+              expect(cmd).to.eql(cmdToUse);
+              expect(aggregateModel).to.eql(aggModel);
+              expect(aggregateModel.apply).not.to.be.ok();
+              aggrPcCalled = true;
+              clb(null);
+            }
+          });
+
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
+            expect(aggrPcCalled).to.eql(true);
             expect(pcCalled).to.eql(true);
             expect(handleCalled).to.eql(true);
-            
+
             expect(evts[0].evtName).to.eql('evt1');
             expect(evts[0].iii).to.be.a('string');
             expect(evts[0].v).to.eql(0);
@@ -1621,21 +1699,103 @@ describe('aggregate definition', function () {
             expect(evts[2].aName).to.eql('aggName');
             expect(evts[2].c).to.eql('ctxName');
             expect(evts[2].p.m).to.eql('mmm');
-            
+
             expect(rev).to.eql(6);
 
             expect(checkBRCalled).to.eql(true);
           });
 
         });
-        
+
+        describe('if the aggregate precondition fails', function () {
+
+          it('it should work as expected', function (done) {
+
+            var rev = 0;
+            var uncommittedEvts = [];
+            var applyCalled = false;
+            var aggModel = {
+              id: 'aggId',
+              set: function (k, v) {
+                expect(k).to.eql('applied');
+                expect(v).to.eql(true);
+              },
+              get: function () {
+              },
+              setRevision: function (r) { rev = r; },
+              getRevision: function () { return rev; },
+              toJSON: function () {},
+              addUncommittedEvent: function (e) { uncommittedEvts.push(e); },
+              getUncommittedEvents: function () { return uncommittedEvts; }
+            };
+
+            var cmdToUse = { cmdName: 'cmd', v: 2, with: 'payload' };
+
+            var aggr = api.defineAggregate();
+
+            aggr.defineCommand({
+              name: 'cmdName',
+              version: 'v'
+            });
+
+            aggr.defineEvent({
+              name: 'evtName',
+              version: 'v'
+            });
+
+            var pcCalled = false;
+            var checkPreConditions = function (cmd, aggregateModel, clb) {
+              expect(cmd).to.eql(cmdToUse);
+              expect(aggregateModel).to.eql(aggModel);
+              expect(aggregateModel.apply).not.to.be.ok();
+              pcCalled = true;
+              clb(null);
+            };
+
+            var handle = function (cmd, aggregateModel) {
+              expect(cmd).to.eql(cmdToUse);
+              expect(aggregateModel).to.eql(aggModel);
+              aggregateModel.apply({ evtName: 'evt', with: 'payloadOfEvt' });
+            };
+
+            aggr.addCommand({ name: 'cmd', version: 2, defineAggregate: function () {}, validate: function () { return null; }, handle: handle, checkPreConditions: checkPreConditions });
+
+            aggr.addEvent({ name: 'evt', version: 0, apply: function (e, a) {
+              a.set('applied', true);
+              applyCalled = true;
+            }});
+
+            var aggrPcCalled = false;
+            aggr.addPreCondition({
+              check: function (cmd, aggregateModel, clb) {
+                expect(cmd).to.eql(cmdToUse);
+                expect(aggregateModel).to.eql(aggModel);
+                expect(aggregateModel.apply).not.to.be.ok();
+                aggrPcCalled = true;
+                clb('errFromAggPc');
+              }
+            });
+
+            aggr.handle(aggModel, cmdToUse, function (err) {
+              expect(err).to.eql('errFromAggPc');
+              expect(rev).to.eql(0);
+              expect(pcCalled).to.eql(false);
+              expect(aggrPcCalled).to.eql(true);
+              expect(applyCalled).to.eql(false);
+
+              done();
+            });
+          });
+
+        });
+
         describe('if business rules fails', function () {
 
           it('it should work as expected', function () {
 
             var evts = [];
             var prevValues = { '_revision': 3 };
-            
+
             var aggModel = {
               id: 'myAggId',
               reset: function (r) {
@@ -1694,7 +1854,7 @@ describe('aggregate definition', function () {
               pcCalled = true;
               clb(null);
             };
-            
+
             var handleCalled = false;
             var handle = function (cmd, aggregateModel) {
               expect(cmd).to.eql(cmdToUse);
@@ -1711,7 +1871,7 @@ describe('aggregate definition', function () {
               checkBRCalled = true;
               callback('err');
             };
-            
+
             var defineAggregateCalled = false;
             var defineAggregate = function (a) {
               expect(a).to.eql(aggr);
@@ -1736,13 +1896,13 @@ describe('aggregate definition', function () {
             });
 
           });
-          
+
         });
 
       });
 
     });
-    
+
   });
 
 });
