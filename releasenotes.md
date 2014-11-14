@@ -1,3 +1,6 @@
+## [v1.2.7](https://github.com/adrai/node-cqrs-domain/compare/v1.2.6...v1.2.7)
+- handle case of same aggregateId in different contexts or aggregates
+
 ## [v1.2.6](https://github.com/adrai/node-cqrs-domain/compare/v1.2.5...v1.2.6)
 - added possibility to define pre-conditions for all commands of an aggregate
 
