@@ -14,13 +14,13 @@
     "async": "0.9.0",
     "debug": "2.0.0",
     "dotty": "0.0.2",
-    "eventstore": "1.1.1",
+    "eventstore": "1.1.2",
     "jsondate": "0.0.1",
     "lodash": "2.4.1",
     "node-uuid": "1.4.1",
     "tolerance": "1.0.0",
-    "tv4": "1.1.0",
-    "tv4-formats": "0.5.0"
+    "tv4": "1.1.4",
+    "tv4-formats": "0.5.1"
   },
   "devDependencies": {
     "cradle": ">=0.6.7",

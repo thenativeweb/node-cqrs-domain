@@ -1,3 +1,6 @@
+## [v1.2.8](https://github.com/adrai/node-cqrs-domain/compare/v1.2.7...v1.2.8)
+- update some dependencies
+
 ## [v1.2.7](https://github.com/adrai/node-cqrs-domain/compare/v1.2.6...v1.2.7)
 - handle case of same aggregateId in different contexts or aggregates
 
