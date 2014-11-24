@@ -483,8 +483,9 @@ Do NOT manipulate the aggregate here!
 	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
 	  payload: 'payload',
 
-	  // optional, default false
+	  // optional, default undefined
 	  // if true, ensures the aggregate to exists already before this command was handled
+	  // if false, ensures the aggregate to not exists already before this command was handled
 	  existing: true
 	}, function (data, aggregate) {
 	  // data is the command data

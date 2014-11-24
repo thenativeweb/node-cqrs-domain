@@ -295,7 +295,7 @@ describe('command definition', function () {
 
     });
 
-    describe('checking existing flag', function () {
+    describe('checking existing flag [true]', function () {
 
       it('it should work as expected', function (done) {
         var cmdObj = { my: 'command', with: { deep: 'value' } };
@@ -308,7 +308,27 @@ describe('command definition', function () {
 
         cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).to.be.ok();
-          expect(err.message).to.match(/existing/);
+          expect(err.message).to.match(/already existing/);
+          done();
+        });
+      });
+
+    });
+
+    describe('checking existing flag [false]', function () {
+
+      it('it should work as expected', function (done) {
+        var cmdObj = { my: 'command', with: { deep: 'value' } };
+        var aggregateObj = { get: function () { return 1; }, has: function () {} };
+
+
+        var cmd = api.defineCommand({ existing: false }, function () {});
+
+        cmd.defineAggregate({ name: 'myAggr' });
+
+        cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
+          expect(err).to.be.ok();
+          expect(err.message).to.match(/not existing/);
           done();
         });
       });
