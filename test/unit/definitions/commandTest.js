@@ -150,7 +150,7 @@ describe('command definition', function () {
     describe('calling defineValidation', function () {
 
       describe('without arguments', function () {
-        
+
         it('it should throw an error', function () {
 
           var cmdFn = function () {};
@@ -159,11 +159,11 @@ describe('command definition', function () {
           expect(function () {
             cmd.defineValidation();
           }).to.throwError('function');
-          
+
         });
 
       });
-      
+
       describe('with wrong argument', function () {
 
         it('it should throw an error', function () {
@@ -176,7 +176,7 @@ describe('command definition', function () {
           }).to.throwError('function');
 
         });
-        
+
       });
 
       describe('with correct argument', function () {
@@ -204,26 +204,26 @@ describe('command definition', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('calling validate', function () {
-      
+
       it('it should call the injected validator function', function (done) {
 
         var cmdFn = function () {};
         var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
         var cmdObj = { my: 'command' };
-        
+
         var valFn = function (cmd) {
           expect(cmd).to.eql(cmdObj);
           done();
         };
         cmd.defineValidation(valFn);
         cmd.validate(cmdObj);
-        
+
       });
-      
+
     });
 
     describe('working with priority', function () {
@@ -259,7 +259,7 @@ describe('command definition', function () {
       it('it should work as expected', function (done) {
         var cmdObj = { my: 'command', with: { deep: 'value' } };
         var aggregateObj = { get: function () {}, has: function () {} };
-        
+
         var calledPc1 = false;
         var calledPc2 = false;
 
@@ -282,13 +282,33 @@ describe('command definition', function () {
         cmd.defineAggregate({ name: 'myAggr' });
 
         cmd.addPreCondition(pc);
-        
+
         cmd.addPreCondition(pc2);
 
         cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).not.to.be.ok();
           expect(calledPc1).to.eql(true);
           expect(calledPc2).to.eql(true);
+          done();
+        });
+      });
+
+    });
+
+    describe('checking existing flag', function () {
+
+      it('it should work as expected', function (done) {
+        var cmdObj = { my: 'command', with: { deep: 'value' } };
+        var aggregateObj = { get: function () { return 0; }, has: function () {} };
+
+
+        var cmd = api.defineCommand({ existing: true }, function () {});
+
+        cmd.defineAggregate({ name: 'myAggr' });
+
+        cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
+          expect(err).to.be.ok();
+          expect(err.message).to.match(/existing/);
           done();
         });
       });
@@ -332,7 +352,7 @@ describe('command definition', function () {
           var cmd = api.defineCommand({ payload: 'with' }, cmdFn);
 
           cmd.handle(cmdObj, aggregateObj);
-          
+
           expect(cmdObj.with.deep).to.eql('value');
         });
 

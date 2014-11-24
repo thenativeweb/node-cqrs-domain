@@ -1,3 +1,6 @@
+## [v1.2.9](https://github.com/adrai/node-cqrs-domain/compare/v1.2.8...v1.2.9)
+- introduce existing flag in command
+
 ## [v1.2.8](https://github.com/adrai/node-cqrs-domain/compare/v1.2.7...v1.2.8)
 - update some dependencies
 
