@@ -430,7 +430,7 @@ A Command can have multiple pre-conditions.
 	  version: 2,
 
 	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
-	  payload: 'payload'
+	  payload: 'payload',
 
 	  // optional
 	  description: 'firstname should always be set',
