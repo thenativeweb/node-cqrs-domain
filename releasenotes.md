@@ -1,3 +1,7 @@
+## [v1.3.0](https://github.com/adrai/node-cqrs-domain/compare/v1.2.10...v1.3.0)
+- expose tv4 instance
+- IMPORTANT: removed tv4-formats
+
 ## [v1.2.10](https://github.com/adrai/node-cqrs-domain/compare/v1.2.8...v1.2.10)
 - introduce existing flag in command
 

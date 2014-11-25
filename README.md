@@ -401,7 +401,13 @@ The values describes the path to that property in the event message.
 ## Command validation
 All command schemas are json schemas. Hint [http://jsonary.com/documentation/json-schema/](http://jsonary.com/documentation/json-schema/)
 
-Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation. Additionaly the plugin [tv4-formats](https://github.com/ikr/tv4-formats) is integrated, so you can easily use format constraints (i.e. 'email') for your 'string'-types.
+Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation. Additionaly you can extend the tv4 instance with other functionality like [tv4-formats](https://github.com/ikr/tv4-formats), so you can easily use format constraints (i.e. 'email') for your 'string'-types.
+To extend tv4 just catch the tv4 instance after having initialized the domain:
+
+	domain.init(function (err) {
+		domain.tv4.addFormat(require('tv4-formats'));
+	});
+
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 

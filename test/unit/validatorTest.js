@@ -108,6 +108,8 @@ describe('validator', function () {
     });
     
     describe('with additional tv4 formats', function() {
+
+      tv4.addFormat(require('tv4-formats'));
       
       describe('validating an email address with format property', function() {
         var emailValidation = validator(tv4, {

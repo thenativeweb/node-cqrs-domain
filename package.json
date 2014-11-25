@@ -19,8 +19,7 @@
     "lodash": "2.4.1",
     "node-uuid": "1.4.1",
     "tolerance": "1.0.0",
-    "tv4": "1.1.4",
-    "tv4-formats": "0.5.1"
+    "tv4": "1.1.4"
   },
   "devDependencies": {
     "cradle": ">=0.6.7",
@@ -29,7 +28,8 @@
     "mongodb": ">= 0.0.1",
     "redis": ">= 0.10.1",
     "tingodb": ">= 0.0.1",
-    "azure-storage": ">=0.3.0"
+    "azure-storage": ">=0.3.0",
+    "tv4-formats": "0.5.1"
   },
   "description": "Node-cqrs-domain is a node.js module based on node-eventstore. It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.",
   "keywords": [
