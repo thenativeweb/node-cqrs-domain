@@ -5,6 +5,54 @@
 Node-cqrs-domain is a node.js module based on [node-eventstore](http://adrai.github.com/node-eventstore/).
 It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.
 
+# Workflow
+
+```
+        │
+       cmd
+        │
+        ∨
+  ╔════════════╗
+  ║ validation ║─────────> "rejected"
+  ╚════════════╝
+        │
+       cmd
+        │
+        ∨
+╔════════════════╗
+║ pre-conditions ║─────> "rejected"
+╚════════════════╝
+        │
+       cmd
+        │
+        ∨
+  ╔════════════╗
+  ║ handle cmd ║
+  ╚════════════╝
+        │
+       evt
+        │
+        ∨
+  ╔═══════════╗
+  ║ apply evt ║
+  ╚═══════════╝
+        │
+        │
+        │
+        ∨
+╔════════════════╗
+║ business rules ║─────> "rejected"
+╚════════════════╝
+        │
+        │
+        │
+        ∨
+   ╔════════╗
+   ║ commit ║
+   ╚════════╝
+
+```
+
 # Installation
 
     npm install cqrs-domain
