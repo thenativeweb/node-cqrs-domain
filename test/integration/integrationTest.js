@@ -35,7 +35,73 @@ describe('integration', function () {
           meta: 'meta'
         });
 
+        expect(function () {
+          domain.getInfo();
+        }).to.throwError('/init');
+
+        expect(function () {
+          domain.getTv4();
+        }).to.throwError('/init');
+
         domain.init(done);
+      });
+
+      describe('requesting information', function () {
+
+        it('it should return the expected information', function () {
+
+          expect(function () {
+            domain.getTv4();
+          }).not.to.throwError();
+
+          var info = domain.getInfo();
+          expect(info.contexts.length).to.eql(2);
+          expect(info.contexts[0].name).to.eql('_general');
+          expect(info.contexts[0].aggregates.length).to.eql(1);
+          expect(info.contexts[0].aggregates[0].name).to.eql('cart');
+          expect(info.contexts[0].aggregates[0].version).to.eql(0);
+          expect(info.contexts[0].aggregates[0].commands.length).to.eql(1);
+          expect(info.contexts[0].aggregates[0].commands[0].name).to.eql('enterNewPerson');
+          expect(info.contexts[0].aggregates[0].commands[0].version).to.eql(0);
+          expect(info.contexts[0].aggregates[0].events.length).to.eql(1);
+          expect(info.contexts[0].aggregates[0].events[0].name).to.eql('enteredNewPerson');
+          expect(info.contexts[0].aggregates[0].events[0].version).to.eql(3);
+          expect(info.contexts[0].aggregates[0].preConditions.length).to.eql(0);
+          expect(info.contexts[0].aggregates[0].businessRules.length).to.eql(0);
+
+          expect(info.contexts[1].name).to.eql('hr');
+          expect(info.contexts[1].aggregates.length).to.eql(1);
+          expect(info.contexts[1].aggregates[0].name).to.eql('person');
+          expect(info.contexts[1].aggregates[0].version).to.eql(3);
+          expect(info.contexts[1].aggregates[0].commands.length).to.eql(3);
+          expect(info.contexts[1].aggregates[0].commands[0].name).to.eql('enterNewPerson');
+          expect(info.contexts[1].aggregates[0].commands[0].version).to.eql(0);
+          expect(info.contexts[1].aggregates[0].commands[1].name).to.eql('unregisterAllContactInformation');
+          expect(info.contexts[1].aggregates[0].commands[1].version).to.eql(2);
+          expect(info.contexts[1].aggregates[0].commands[2].name).to.eql('unregisterAllContactInformation');
+          expect(info.contexts[1].aggregates[0].commands[2].version).to.eql(1);
+          expect(info.contexts[1].aggregates[0].events.length).to.eql(5);
+          expect(info.contexts[1].aggregates[0].events[0].name).to.eql('enteredNewPerson');
+          expect(info.contexts[1].aggregates[0].events[0].version).to.eql(3);
+          expect(info.contexts[1].aggregates[0].events[1].name).to.eql('enteredNewPerson');
+          expect(info.contexts[1].aggregates[0].events[1].version).to.eql(0);
+          expect(info.contexts[1].aggregates[0].events[2].name).to.eql('enteredNewPerson');
+          expect(info.contexts[1].aggregates[0].events[2].version).to.eql(2);
+          expect(info.contexts[1].aggregates[0].events[3].name).to.eql('unregisteredEMailAddress');
+          expect(info.contexts[1].aggregates[0].events[3].version).to.eql(0);
+          expect(info.contexts[1].aggregates[0].events[4].name).to.eql('unregisteredPhoneNumber');
+          expect(info.contexts[1].aggregates[0].events[4].version).to.eql(0);
+          expect(info.contexts[1].aggregates[0].preConditions.length).to.eql(1);
+          expect(info.contexts[1].aggregates[0].preConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].preConditions[0].description).to.eql('authorization');
+          expect(info.contexts[1].aggregates[0].businessRules.length).to.eql(2);
+          expect(info.contexts[1].aggregates[0].businessRules[0].name).to.eql('atLeast1EMail');
+          expect(info.contexts[1].aggregates[0].businessRules[0].description).to.eql('at least one character should be in email address');
+          expect(info.contexts[1].aggregates[0].businessRules[1].name).to.eql('nameEquality');
+          expect(info.contexts[1].aggregates[0].businessRules[1].description).to.eql('firstname should never be equal lastname');
+
+        });
+
       });
 
       describe('handling a command that is not a json object', function () {

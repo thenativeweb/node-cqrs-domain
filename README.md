@@ -385,6 +385,79 @@ The values describes the path to that property in the event message.
 	});
 
 
+## Request domain information
+
+After the initialization you can request the domain information:
+
+	domain.init(function (err) {
+	  domain.getInfo();
+	  // ==>
+	  // { contexts: [
+	  //   {
+	  //      "name": "hr",
+	  //      "aggregates": [
+	  //        {
+	  //          "name": "person",
+	  //          "version": 3,
+	  //          "commands": [
+	  //            {
+	  //              "name": "enterNewPerson",
+	  //              "version": 0
+	  //            },
+	  //            {
+	  //              "name": "unregisterAllContactInformation",
+	  //              "version": 2
+	  //            },
+	  //            {
+	  //              "name": "unregisterAllContactInformation",
+	  //              "version": 1
+	  //            }
+	  //          ],
+	  //          "events": [
+	  //            {
+	  //              "name": "enteredNewPerson",
+	  //              "version": 3
+	  //            },
+	  //            {
+	  //              "name": "enteredNewPerson",
+	  //              "version": 0
+	  //            },
+	  //            {
+	  //              "name": "enteredNewPerson",
+	  //              "version": 2
+	  //            },
+	  //            {
+	  //              "name": "unregisteredEMailAddress",
+	  //              "version": 0
+	  //            },
+	  //            {
+	  //              "name": "unregisteredPhoneNumber",
+	  //              "version": 0
+	  //            }
+	  //          ],
+	  //          "preConditions": [
+	  //            {
+	  //              "name": "",
+	  //              "description": "authorization"
+	  //            }
+	  //          ],
+	  //          "businessRules": [
+	  //            {
+	  //              "name": "atLeast1EMail",
+	  //              "description": "at least one character should be in email address"
+	  //            },
+	  //            {
+	  //              "name": "nameEquality",
+	  //              "description": "firstname should never be equal lastname"
+	  //            }
+	  //          ]
+	  //        }
+	  //      ]
+	  //   }
+	  //]}
+	});
+
+
 # Components definition
 
 ## Context
@@ -453,7 +526,7 @@ Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for valid
 To extend tv4 just catch the tv4 instance after having initialized the domain:
 
 	domain.init(function (err) {
-		domain.tv4.addFormat(require('tv4-formats'));
+		domain.getTv4().addFormat(require('tv4-formats'));
 	});
 
 
@@ -658,12 +731,11 @@ Is your use case not solvable without a custom command handling? Sagas? Micro-Se
 	});
 
 
-
 [Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
 
 # License
 
-Copyright (c) 2014 Adriano Raiano
+Copyright (c) 2015 Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

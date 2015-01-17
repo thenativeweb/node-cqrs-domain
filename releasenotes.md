@@ -1,3 +1,6 @@
+## [v1.4.0](https://github.com/adrai/node-cqrs-domain/compare/v1.3.2...v1.4.0)
+- added getInfo function
+
 ## [v1.3.2](https://github.com/adrai/node-cqrs-domain/compare/v1.3.1...v1.3.2)
 - fix snapshot creation call
 
