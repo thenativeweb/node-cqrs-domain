@@ -1,6 +1,11 @@
 'use strict';
 
 var Domain = require('./lib/domain'),
+  ValidationError = require('./lib/errors/validationError'),
+  BusinessRuleError = require('./lib/errors/businessRuleError'),
+  AggregateConcurrencyError = require('./lib/errors/aggregateConcurrencyError'),
+  AggregateDestroyedError = require('./lib/errors/aggregateDestroyedError'),
+  ConcurrencyError = require('./lib/errors/concurrencyError'),
   _ = require('lodash'),
   fs = require('fs'),
   path = require('path');
@@ -32,5 +37,13 @@ files.forEach(function (file) {
     return construct(require('./lib/definitions/' + name), _.toArray(arguments));
   };
 });
+
+domain.errors = {
+  ValidationError: ValidationError,
+  BusinessRuleError: BusinessRuleError,
+  AggregateConcurrencyError: AggregateConcurrencyError,
+  AggregateDestroyedError: AggregateDestroyedError,
+  ConcurrencyError: ConcurrencyError
+};
 
 module.exports = domain;

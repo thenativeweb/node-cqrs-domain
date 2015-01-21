@@ -1,3 +1,6 @@
+## [v1.4.1](https://github.com/adrai/node-cqrs-domain/compare/v1.4.0...v1.4.1)
+- expose error prototypes
+
 ## [v1.4.0](https://github.com/adrai/node-cqrs-domain/compare/v1.3.2...v1.4.0)
 - added getInfo function
 

@@ -4,6 +4,7 @@ var expect = require('expect.js'),
   BusinessRuleError = require('../../lib/errors/businessRuleError'),
   AggregateDestroyedError = require('../../lib/errors/aggregateDestroyedError'),
   AggregateConcurrencyError = require('../../lib/errors/aggregateConcurrencyError'),
+  ConcurrencyError = require('../../lib/errors/concurrencyError'),
   _ = require('lodash');
 
 describe('domain', function () {
@@ -11,6 +12,16 @@ describe('domain', function () {
   it('it should be a function', function () {
 
     expect(api).to.be.a('function');
+
+  });
+
+  it('it should expose all domain errors', function () {
+
+    expect(api.errors.ValidationError).to.eql(ValidationError);
+    expect(api.errors.BusinessRuleError).to.eql(BusinessRuleError);
+    expect(api.errors.AggregateDestroyedError).to.eql(AggregateDestroyedError);
+    expect(api.errors.AggregateConcurrencyError).to.eql(AggregateConcurrencyError);
+    expect(api.errors.ConcurrencyError).to.eql(ConcurrencyError);
 
   });
 
@@ -55,7 +66,7 @@ describe('domain', function () {
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
-        
+
         expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
         expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
         expect(domain.options.snapshotThreshold).to.eql(100);
@@ -289,7 +300,7 @@ describe('domain', function () {
       });
 
     });
-    
+
     describe('defining onEvent handler', function () {
 
       var domain;
@@ -341,9 +352,9 @@ describe('domain', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('calling createCommandRejectedEvent', function () {
 
       var domain;
@@ -374,16 +385,16 @@ describe('domain', function () {
           meta: 'm'
         });
       });
-      
+
 //      describe('with an error as object', function () {
-//        
+//
 //        it('it should return an event as expected', function () {
 //
 //          var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
 //          var err = { my: 'err' };
-//          
+//
 //          var evt = domain.createCommandRejectedEvent(cmd, err);
-//          
+//
 //          expect(evt.corr).to.eql(cmd.i);
 //          expect(evt.i).to.eql(cmd.i + '_rejected');
 //          expect(evt.n).to.eql('cmdRej');
@@ -395,9 +406,9 @@ describe('domain', function () {
 //          expect(evt.m).to.eql(cmd.m);
 //          expect(evt.p.command).to.eql(cmd);
 //          expect(evt.p.reason).to.eql(err);
-//          
+//
 //        });
-//        
+//
 //      });
 //
 //      describe('with an error as Error', function () {
@@ -532,9 +543,9 @@ describe('domain', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('initializing', function () {
 
       var domain;
@@ -565,11 +576,11 @@ describe('domain', function () {
           meta: 'm'
         });
       });
-      
+
       describe('with a callback', function () {
 
         it('it should work as expected', function (done) {
-          
+
           var called = 0;
           domain.eventStore.once('connect', function () {
             called++;
@@ -588,7 +599,7 @@ describe('domain', function () {
           });
 
         });
-        
+
       });
 
       describe('without a callback', function () {
@@ -596,14 +607,14 @@ describe('domain', function () {
         it('it should work as expected', function (done) {
 
           var called = 0;
-          
+
           function check () {
             called++;
             if (called >= 3) {
               done();
             }
           }
-          
+
           domain.eventStore.once('connect', function () {
             check();
           });
@@ -619,9 +630,9 @@ describe('domain', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('handling a command', function () {
 
       var domain;
@@ -652,7 +663,7 @@ describe('domain', function () {
           meta: 'm'
         });
       });
-      
+
       describe('with a callback', function () {
 
         it('it should work as expected', function (done) {
@@ -661,7 +672,7 @@ describe('domain', function () {
           var dispatchCalled = false;
           var eventstoreCalled = [];
           var onEventCalled = [];
-          
+
           domain.onEvent(function (e) {
             onEventCalled.push(e);
           });
@@ -673,7 +684,7 @@ describe('domain', function () {
               dispatchCalled = true;
               clb(null, [{ id: '1', my1: 'evt1', payload: '1' }, { id: '2', my2: 'evt2', payload: '2' }], 'aggData', 'meta');
             };
-            
+
             domain.eventStore.setEventToDispatched = function (e, clb) {
               eventstoreCalled.push(e);
               clb(null);
@@ -693,13 +704,13 @@ describe('domain', function () {
               expect(evts.length).to.eql(2);
               expect(evts[0]).to.eql('1');
               expect(evts[1]).to.eql('2');
-              
+
               done();
             });
           });
 
         });
-        
+
       });
 
       describe('without a callback', function () {
@@ -746,7 +757,7 @@ describe('domain', function () {
         });
 
       });
-      
+
     });
 
   });

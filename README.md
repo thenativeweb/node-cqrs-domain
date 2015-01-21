@@ -113,6 +113,16 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	});
 
 
+## Exposed errors
+You can use this for example in you custom command handlers.
+
+	require('cqrs-domain').errors.ValidationError
+	require('cqrs-domain').errors.BusinessRuleError
+	require('cqrs-domain').errors.AggregateDestroyedError
+	require('cqrs-domain').errors.AggregateConcurrencyError
+	require('cqrs-domain').errors.ConcurrencyError
+
+
 ## Catch connect ad disconnect events
 
 	// eventStore
