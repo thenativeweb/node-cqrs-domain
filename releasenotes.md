@@ -1,3 +1,6 @@
+## [v1.4.2](https://github.com/adrai/node-cqrs-domain/compare/v1.4.1...v1.4.2)
+- catch thrown errors in validation workflow
+
 ## [v1.4.1](https://github.com/adrai/node-cqrs-domain/compare/v1.4.0...v1.4.1)
 - expose error prototypes
 
