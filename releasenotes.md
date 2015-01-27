@@ -1,3 +1,6 @@
+## [v1.4.3](https://github.com/adrai/node-cqrs-domain/compare/v1.4.2...v1.4.3)
+- fix usage with own db implementation
+
 ## [v1.4.2](https://github.com/adrai/node-cqrs-domain/compare/v1.4.1...v1.4.2)
 - catch thrown errors in validation workflow
 

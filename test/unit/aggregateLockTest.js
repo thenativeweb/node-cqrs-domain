@@ -68,7 +68,7 @@ describe('AggregateLock', function() {
 
       it('it should return with the an instance of that implementation', function() {
 
-        var lock = aggregatelock.create(InMemory);
+        var lock = aggregatelock.create({ type: InMemory });
         expect(lock).to.be.a(InMemory);
 
       });
@@ -125,13 +125,13 @@ describe('AggregateLock', function() {
             });
 
           });
-          
+
           describe('calling connect', function () {
 
             afterEach(function(done) {
               lock.disconnect(done);
             });
-            
+
             describe('with a callback', function () {
 
               it('it should callback successfully', function(done) {
@@ -143,7 +143,7 @@ describe('AggregateLock', function() {
                 })
 
               });
-              
+
             });
 
             describe('without a callback', function () {
@@ -157,7 +157,7 @@ describe('AggregateLock', function() {
               });
 
             });
-            
+
           });
 
           describe('having connected', function() {
@@ -254,11 +254,11 @@ describe('AggregateLock', function() {
                     });
 
                   });
-                  
+
                   describe('verifying if the reservation is ok, by calling getAll', function () {
-                    
+
                     it('it should callback the correct items', function (done) {
-                      
+
                       lock.getAll('aggregateId1', function (err, workerIds) {
                         expect(err).not.to.be.ok();
                         expect(workerIds).to.be.an('array');
@@ -266,9 +266,9 @@ describe('AggregateLock', function() {
                         expect(workerIds[0]).to.eql('workerId1');
                         done();
                       });
-                      
+
                     });
-                    
+
                   });
 
                 });
@@ -308,11 +308,11 @@ describe('AggregateLock', function() {
                     ], done);
                   });
                 });
-                
+
                 describe('calling getAll of the first aggregate', function () {
-                  
+
                   it('it should callback with the correct amount of workers', function (done) {
-                    
+
                     lock.getAll('aggregateId111', function (err, workerIds) {
                       expect(err).not.to.be.ok();
                       expect(workerIds).to.be.an('array');
@@ -323,7 +323,7 @@ describe('AggregateLock', function() {
                       done();
                     });
                   });
-                  
+
                 });
 
                 describe('calling getAll of the second aggregate', function () {
@@ -341,15 +341,15 @@ describe('AggregateLock', function() {
                   });
 
                 });
-                
+
                 describe('calling resolve of the first aggregate', function() {
-                  
+
                   it('it should have removed all reservation for this aggregate', function (done) {
-                    
+
                     lock.resolve('aggregateId111', function (err, nothing) {
                       expect(err).not.to.be.ok();
                       expect(nothing).to.eql(undefined);
-                      
+
                       lock.getAll('aggregateId111', function (err, workerIds) {
                         expect(err).not.to.be.ok();
                         expect(workerIds).to.be.an('array');
@@ -357,7 +357,7 @@ describe('AggregateLock', function() {
                         done();
                       })
                     })
-                    
+
                   });
 
                   it('it should not have removed any reservation for the other aggregate', function (done) {
@@ -377,7 +377,7 @@ describe('AggregateLock', function() {
                     })
 
                   });
-                  
+
                 });
 
               });
