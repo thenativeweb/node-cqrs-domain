@@ -1,3 +1,6 @@
+## [v1.4.5](https://github.com/adrai/node-cqrs-domain/compare/v1.4.4...v1.4.5)
+- update eventstore
+
 ## [v1.4.4](https://github.com/adrai/node-cqrs-domain/compare/v1.4.2...v1.4.4)
 - fix usage with own db implementation
 
