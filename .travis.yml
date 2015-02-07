@@ -1,5 +1,3 @@
-# before_script: "npm install"
-
 services:
   - redis-server
   - mongodb
@@ -8,7 +6,8 @@ services:
 language: node_js
 node_js:
   - "0.10"
-  # - "0.8"
+  - "0.12"
+  - iojs
 
 branches:
   only:
