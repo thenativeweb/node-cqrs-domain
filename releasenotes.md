@@ -1,3 +1,6 @@
+## [v1.4.6](https://github.com/adrai/node-cqrs-domain/compare/v1.4.5...v1.4.6)
+- fix handling when command does not generate any event
+
 ## [v1.4.5](https://github.com/adrai/node-cqrs-domain/compare/v1.4.4...v1.4.5)
 - update eventstore
 
