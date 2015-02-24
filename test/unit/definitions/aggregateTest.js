@@ -1540,6 +1540,9 @@ describe('aggregate definition', function () {
           var handle = function (cmd, aggregateModel) {
             expect(cmd).to.eql(cmdToUse);
             expect(aggregateModel).to.eql(aggModel);
+            expect(function () {
+              aggregateModel.set();
+            }).to.throwError();
             aggregateModel.apply({ evtName: 'evt', with: 'payloadOfEvt' });
           };
 
