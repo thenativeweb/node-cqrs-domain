@@ -1,4 +1,4 @@
-## [v1.4.8](https://github.com/adrai/node-cqrs-domain/compare/v1.4.6...v1.4.8)
+## [v1.4.9](https://github.com/adrai/node-cqrs-domain/compare/v1.4.6...v1.4.9)
 - optimize structureParser
 - allow setting values on aggregateModel only in event handle function
 
