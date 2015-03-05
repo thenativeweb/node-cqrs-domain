@@ -112,6 +112,70 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  }
 	});
 
+## Using factory methods for event store or / and aggregate lock in domain definition
+You can replace the framework-provided implementation of event store or / and aggregate lock with the one of your own.
+To do that, you need to include a factory method in the options object passed to the domain constructor.
+Using the factory methods, the example above might become:
+
+
+    var myGetEventStore = require('./getEventStore.js');
+    var myLock = require('./myLock.js');
+
+	var domain = require('cqrs-domain')({
+        domainPath: '/path/to/my/files',
+        commandRejectedEventName: 'rejectedCommand',
+        retryOnConcurrencyTimeout: 1000,
+        snapshotThreshold: 1000,
+
+        eventStore: function () {
+            return myGetEventStore({
+                host: '127.0.0.1',
+                port: 2113,
+                username: 'admin',
+                password: 'changeit'
+            });
+        },
+
+        aggregateLock: : function () {
+            return myLock({
+                // ....
+            });
+        }
+	});
+
+When using factory methods, the objects they return are required to implement the following public interfaces:
+
+    Event Store:
+
+        f:  init(function(err));
+        f:  getNewId(function (err, id));
+        f:  on(evtName, function (err));
+        f:  getFromSnapshot(query, revMax, function(err, snapshot, stream));
+        f:  createSnapshot(obj, function (err));
+        f:  setEventToDispatched(evt, function (err));
+
+    Event Stream (returned by getFromSnapshot through the callback):
+
+    	p:  events
+    	p:  lastRevision
+    	p:  eventsToDispatch
+    	f:  addEvents(evts)
+    	f:  commit(function (err, stream));
+
+    Aggregate Lock:
+
+        f: connect(function(err, lock))
+        f:  disconnect(function(err))
+        f:  getNewId(function(err, id))
+        f:  reserve(workerId, aggregateId, function(err))
+        f:  getAll(aggregateId, function(err, workerIds))
+        f:  resolve(aggregateId, function(err))
+
+    where:
+
+        f:  function
+        p:  property
+
 
 ## Exposed errors
 You can use this for example in you custom command handlers.
