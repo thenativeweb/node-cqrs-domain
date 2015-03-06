@@ -65,23 +65,23 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  // [set 1](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set1) or
 	  // [set 2](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set2)
 	  domainPath: '/path/to/my/files',
-
+	
 	  // optional, default is 'commandRejected'
 	  // will be used if an error occurs and an event should be generated
 	  commandRejectedEventName: 'rejectedCommand',
-
+	
 	  // optional, default is 800
 	  // if using in scaled systems and not guaranteeing that each command for an aggregate instance
 	  // dispatches to the same worker process, this module tries to catch the concurrency issues and
 	  // retries to handle the command after a timeout between 0 and the defined value
 	  retryOnConcurrencyTimeout: 1000,
-
+	
 	  // optional, default is 100
 	  // global snapshot threshold value for all aggregates
 	  // defines the amount of loaded events, if there are more events to load, it will do a snapshot, so next loading is faster
 	  // an individual snapshot threshold defining algorithm can be defined per aggregate (scroll down)
 	  snapshotThreshold: 1000,
-
+	
 	  // optional, default is in-memory
 	  // currently supports: mongodb, redis, tingodb, azuretable and inmemory
 	  // hint: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
@@ -97,7 +97,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	    // username: 'technicalDbUser',                // optional
 	    // password: 'secret'                          // optional
 	  },
-
+	
 	  // optional, default is in-memory
 	  // currently supports: mongodb, redis, tingodb, couchdb, azuretable and inmemory
 	  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
@@ -118,63 +118,63 @@ To do that, you need to include a factory method in the options object passed to
 Using the factory methods, the example above might become:
 
 
-    var myGetEventStore = require('./getEventStore.js');
-    var myLock = require('./myLock.js');
-
+	var myGetEventStore = require('./getEventStore.js');
+	var myLock = require('./myLock.js');
+	
 	var domain = require('cqrs-domain')({
-        domainPath: '/path/to/my/files',
-        commandRejectedEventName: 'rejectedCommand',
-        retryOnConcurrencyTimeout: 1000,
-        snapshotThreshold: 1000,
-
-        eventStore: function () {
-            return myGetEventStore({
-                host: '127.0.0.1',
-                port: 2113,
-                username: 'admin',
-                password: 'changeit'
-            });
-        },
-
-        aggregateLock: : function () {
-            return myLock({
-                // ....
-            });
-        }
+	  domainPath: '/path/to/my/files',
+	  commandRejectedEventName: 'rejectedCommand',
+	  retryOnConcurrencyTimeout: 1000,
+	  snapshotThreshold: 1000,
+	
+	  eventStore: function () {
+	    return myGetEventStore({
+	      host: '127.0.0.1',
+	      port: 2113,
+	      username: 'admin',
+	      password: 'changeit'
+	    });
+	  },
+	
+	  aggregateLock: : function () {
+	    return myLock({
+	       // ....
+	    });
+	  }
 	});
 
 When using factory methods, the objects they return are required to implement the following public interfaces:
 
-    Event Store:
-
-        f:  init(function(err));
-        f:  getNewId(function (err, id));
-        f:  on(evtName, function (err));
-        f:  getFromSnapshot(query, revMax, function(err, snapshot, stream));
-        f:  createSnapshot(obj, function (err));
-        f:  setEventToDispatched(evt, function (err));
-
-    Event Stream (returned by getFromSnapshot through the callback):
-
-    	p:  events
-    	p:  lastRevision
-    	p:  eventsToDispatch
-    	f:  addEvents(evts)
-    	f:  commit(function (err, stream));
-
-    Aggregate Lock:
-
-        f: connect(function(err, lock))
-        f:  disconnect(function(err))
-        f:  getNewId(function(err, id))
-        f:  reserve(workerId, aggregateId, function(err))
-        f:  getAll(aggregateId, function(err, workerIds))
-        f:  resolve(aggregateId, function(err))
-
-    where:
-
-        f:  function
-        p:  property
+	Event Store:
+	
+	  f:  init(function(err));
+	  f:  getNewId(function (err, id));
+	  f:  on(evtName, function (err));
+	  f:  getFromSnapshot(query, revMax, function(err, snapshot, stream));
+	  f:  createSnapshot(obj, function (err));
+	  f:  setEventToDispatched(evt, function (err));
+	
+	Event Stream (returned by getFromSnapshot through the callback):
+	
+	  p:  events
+	  p:  lastRevision
+	  p:  eventsToDispatch
+	  f:  addEvents(evts)
+	  f:  commit(function (err, stream));
+	
+	Aggregate Lock:
+	
+	  f: connect(function(err, lock))
+	  f:  disconnect(function(err))
+	  f:  getNewId(function(err, id))
+	  f:  reserve(workerId, aggregateId, function(err))
+	  f:  getAll(aggregateId, function(err, workerIds))
+	  f:  resolve(aggregateId, function(err))
+	
+	where:
+	
+	  f:  function
+	  p:  property
 
 
 ## Exposed errors

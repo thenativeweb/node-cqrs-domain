@@ -1,3 +1,6 @@
+## [v1.4.10](https://github.com/adrai/node-cqrs-domain/compare/v1.4.9...v1.4.10)
+- factory methods for event store and aggregate lock [#35](https://github.com/adrai/node-cqrs-domain/pull/#35) thanks to [nizachon](https://github.com/nizachon)
+
 ## [v1.4.9](https://github.com/adrai/node-cqrs-domain/compare/v1.4.6...v1.4.9)
 - optimize structureParser
 - allow setting values on aggregateModel only in event handle function
