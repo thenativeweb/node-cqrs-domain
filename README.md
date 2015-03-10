@@ -193,26 +193,26 @@ You can use this for example in you custom command handlers.
 	domain.eventStore.on('connect', function() {
 	  console.log('eventStore connected');
 	});
-
+	
 	domain.eventStore.on('disconnect', function() {
 	  console.log('eventStore disconnected');
 	});
-
+	
 	// aggregateLock
 	domain.aggregateLock.on('connect', function() {
 	  console.log('aggregateLock connected');
 	});
-
+	
 	domain.aggregateLock.on('disconnect', function() {
 	  console.log('aggregateLock disconnected');
 	});
-
-
+	
+	
 	// anything (eventStore or aggregateLock)
 	domain.on('connect', function() {
 	  console.log('something connected');
 	});
-
+	
 	domain.on('disconnect', function() {
 	  console.log('something disconnected');
 	});
@@ -224,30 +224,30 @@ The values describes the path to that property in the command message.
 	domain.defineCommand({
 	  // optional, default is 'id'
 	  id: 'id',
-
+	
 	  // optional, default is 'name'
 	  name: 'name',
-
+	
 	  // optional, default is 'aggregate.id'
 	  // if an aggregate id is not defined in the command, the command handler will create a new aggregate instance
 	  aggregateId: 'aggregate.id',
-
+	
 	  // optional, only makes sense if contexts are defined in the 'domainPath' structure
 	  context: 'context.name',
-
+	
 	  // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
 	  aggregate: 'aggregate.name',
-
+	
 	  // optional, but recommended
 	  payload: 'payload',
-
+	
 	  // optional, if defined the command handler will check if the command can be handled
 	  // if you want the command to be handled in a secure/transactional way pass a revision value that matches the current aggregate revision
 	  revision: 'revision',
-
+	
 	  // optional, if defined the command handler will search for a handle that matches command name and version number
 	  version: 'version',
-
+	
 	  // optional, if defined theses values will be copied to the event (can be used to transport information like userId, etc..)
 	  meta: 'meta'
 	});
@@ -260,32 +260,32 @@ The values describes the path to that property in the event message.
 	  // optional, default is 'correlationId'
 	  // will use the command id as correlationId, so you can match it in the sender
 	  correlationId: 'correlationId',
-
+	
 	  // optional, default is 'id'
 	  id: 'id',
-
+	
 	  // optional, default is 'name'
 	  name: 'name',
-
+	
 	  // optional, default is 'aggregate.id'
 	  aggregateId: 'aggregate.id',
-
+	
 	  // optional, only makes sense if contexts are defined in the 'domainPath' structure
 	  context: 'context.name',
-
+	
 	  // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
 	  aggregate: 'aggregate.name',
-
+	
 	  // optional, default is 'payload'
 	  payload: 'payload',
-
+	
 	  // optional, default is 'revision'
 	  // will represent the aggregate revision, can be used in next command
 	  revision: 'revision',
-
+	
 	  // optional
 	  version: 'version',
-
+	
 	  // optional, if defined the values of the command will be copied to the event (can be used to transport information like userId, etc..)
 	  meta: 'meta'
 	});
@@ -332,9 +332,9 @@ The values describes the path to that property in the event message.
 	domain.init(function (err) {
 	  // this callback is called when all is ready...
 	});
-
+	
 	// or
-
+	
 	domain.init(); // callback is optional
 
 
@@ -447,14 +447,14 @@ The values describes the path to that property in the event message.
 	}, function (err, events, aggregateData, metaInfos) {
 	  // this callback is called when command is handled successfully or unsuccessfully
 	  // err: is the same as described before
-
+	
 	  // events: same as passed in 'onEvent' function
 	  // events: in case of no error here is the array of all events that should be published
 	  // events: in case of error are the one of these Errors (ValidationError, BusinessRuleError, AggregateDestroyedError, AggregateConcurrencyError)
 	  // converted in an event with the event name defined in the options (default is 'commandRejected')
-
+	
 	  // aggregateData: represents the aggregateData after applying the resulting events
-
+	
 	  // metaInfos: { aggregateId: '3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70', aggregate: 'person', context: 'context' }
 	});
 
@@ -476,15 +476,18 @@ After the initialization you can request the domain information:
 	  //          "commands": [
 	  //            {
 	  //              "name": "enterNewPerson",
-	  //              "version": 0
+	  //              "version": 0,
+	  //							"preconditions": [...]
 	  //            },
 	  //            {
 	  //              "name": "unregisterAllContactInformation",
-	  //              "version": 2
+	  //              "version": 2,
+	  //							"preconditions": [...]
 	  //            },
 	  //            {
 	  //              "name": "unregisterAllContactInformation",
-	  //              "version": 1
+	  //              "version": 1,
+	  //							"preconditions": [...]
 	  //            }
 	  //          ],
 	  //          "events": [
@@ -507,12 +510,6 @@ After the initialization you can request the domain information:
 	  //            {
 	  //              "name": "unregisteredPhoneNumber",
 	  //              "version": 0
-	  //            }
-	  //          ],
-	  //          "preConditions": [
-	  //            {
-	  //              "name": "",
-	  //              "description": "authorization"
 	  //            }
 	  //          ],
 	  //          "businessRules": [
@@ -547,26 +544,26 @@ After the initialization you can request the domain information:
 	module.exports = require('cqrs-domain').defineAggregate({
 	  // optional, default is last part of path name
 	  name: 'person',
-
+	
 	  // optional, default 0
 	  version: 3,
-
+	
 	  // optional, default ''
 	  defaultCommandPayload: 'payload',
-
+	
 	  // optional, default ''
 	  defaultEventPayload: 'payload',
-
+	
 	  // optional, default ''
 	  defaultPreConditionPayload: 'payload'
 	},
-
+	
 	// optionally, define some initialization data...
 	{
 	  emails: ['default@mycomp.org'],
 	  phoneNumbers: []
 	})
-
+	
 	// optionally, define snapshot need algorithm...
 	.defineSnapshotNeed(function (loadingTime, events, aggregateData) {
 	  // loadingTime is the loading time in ms of the eventstore data
@@ -574,7 +571,7 @@ After the initialization you can request the domain information:
 	  // aggregateData represents the aggregateData after applying the resulting events
 	  return events.length >= 200;
 	})
-
+	
 	// optionally, define conversion algorithm for older snapshots
 	// always convert directly to newest version...
 	// when loaded a snapshot and it's an older snapshot, a new snapshot with same revision but with newer aggregate version will be created
@@ -625,24 +622,25 @@ A Command can have multiple pre-conditions.
 	  // the command name
 	  // optional, default is file name without extension,
 	  // if name is '' it will handle all commands that matches the appropriate aggregate
+	  // if name is an array of strings it will handle all commands that matches the appropriate name
 	  name: 'unregisterAllContactInformation',
-
+	
 	  // optional, default 0
 	  version: 2,
-
+	
 	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
 	  payload: 'payload',
-
+	
 	  // optional
 	  description: 'firstname should always be set',
-
+	
 	  // optional, default Infinity, all pre-conditions will be sorted by this value
 	  priority: 1
 	}, function (data, aggregate, callback) {
 	  // data is the command data
 	  // aggregate is the aggregate object
 	  // callback is optional, if not defined as function argument you can throw errors or return errors here (sync way)
-
+	
 	  if (!agg.has('firstname')) {
 	    return callback('not personalized');
 	    // or
@@ -651,7 +649,7 @@ A Command can have multiple pre-conditions.
 	    // return callback(new Error()); // if no error message is defined then the description will be taken
 	  }
 	  callback(null);
-
+	
 	  // or if callback is not defined as function argument
 	  // if (!agg.has('firstname')) {
     //   return 'not personalized';
@@ -677,13 +675,13 @@ Do NOT manipulate the aggregate here!
 	module.exports = require('cqrs-domain').defineCommand({
 	  // optional, default is file name without extension
 	  name: 'enterNewPerson',
-
+	
 	  // optional, default 0
 	  version: 1,
-
+	
 	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
 	  payload: 'payload',
-
+	
 	  // optional, default undefined
 	  // if true, ensures the aggregate to exists already before this command was handled
 	  // if false, ensures the aggregate to not exists already before this command was handled
@@ -691,9 +689,9 @@ Do NOT manipulate the aggregate here!
 	}, function (data, aggregate) {
 	  // data is the command data
 	  // aggregate is the aggregate object
-
+	
 	  // if (aggregate.get('someAttr') === 'someValue' && aggregate.has('special')) { ... }
-
+	
 	  aggregate.apply('enteredNewPerson', data);
 	  // or
 	  // aggregate.apply({
@@ -709,10 +707,10 @@ This is the place where you should manipulate your aggregate.
 	module.exports = require('cqrs-domain').defineEvent({
 	  // optional, default is file name without extension
 	  name: 'enteredNewPerson',
-
+	
 	  // optional, default 0
 	  version: 3,
-
+	
 	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole event...
 	  payload: 'payload'
 	},
@@ -720,7 +718,7 @@ This is the place where you should manipulate your aggregate.
 	function (data, aggregate) {
 	  // data is the event data
 	  // aggregate is the aggregate object
-
+	
 	  aggregate.set('firstname', data.firstname);
 	  aggregate.set('lastname', data.lastname);
 	  // or
@@ -733,10 +731,10 @@ This is the place where you should manipulate your aggregate.
 	module.exports = require('cqrs-domain').defineBusinessRule({
 	  // optional, default is file name without extension
 	  name: 'nameEquality',
-
+	
 	  // optional
 	  description: 'firstname should never be equal lastname',
-
+	
 	  // optional, default Infinity, all business rules will be sorted by this value
 	  priority: 1
 	}, function (changed, previous, events, command, callback) {
@@ -745,7 +743,7 @@ This is the place where you should manipulate your aggregate.
 	  // events is the array with the resulting events
 	  // command the handling command
 	  // callback is optional, if not defined as function argument you can throw errors or return errors here (sync way)
-
+	
 	  if (changed.get('firstname') === changed.get('lastname')) {
 	    return callback('names not valid');
 	    // or
@@ -754,7 +752,7 @@ This is the place where you should manipulate your aggregate.
 	    // return callback(new Error()); // if no error message is defined then the description will be taken
 	  }
 	  callback(null);
-
+	
 	  // or if callback is not defined as function argument
 	  // if (changed.get('firstname') === changed.get('lastname')) {
     //   return 'names not valid';
@@ -776,23 +774,23 @@ Is your use case not solvable without a custom command handling? Sagas? Micro-Se
 	module.exports = require('cqrs-domain').defineCommandHandler({
 	  // optional, default is file name without extension
 	  name: 'enterNewSpecialPerson',
-
+	
 	  // optional, default 0
 	  version: 1,
-
+	
 	  // optional, if not defined it will pass the whole command...
 	  payload: 'payload'
 	}, function (aggId, cmd, commandHandler, callback) {
 	  // aggId is the aggregate id
 	  // cmd is the command data
-
+	
 	  commandHandler.loadAggregate(aggId, function (err, aggregate, stream) {
 	    if (err) {
 	      return callback(err);
 	    }
-
+	
 	    callback(null, [{ my: 'special', ev: 'ent' }]);
-
+	
 	//    // check if destroyed, check revision, validate command
 	//    var err = commandHandler.verifyAggregate(aggregate, cmd);
 	//    if (err) {

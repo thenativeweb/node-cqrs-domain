@@ -1,3 +1,7 @@
+## [v1.5.0](https://github.com/adrai/node-cqrs-domain/compare/v1.4.10...v1.5.0)
+- attach aggregate preConditions to all commands [#28](https://github.com/adrai/node-cqrs-domain/issues/#28)
+- fix priority of preConditions
+
 ## [v1.4.10](https://github.com/adrai/node-cqrs-domain/compare/v1.4.9...v1.4.10)
 - factory methods for event store and aggregate lock [#35](https://github.com/adrai/node-cqrs-domain/pull/#35) thanks to [nizachon](https://github.com/nizachon)
 

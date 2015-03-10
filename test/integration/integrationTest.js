@@ -66,7 +66,6 @@ describe('integration', function () {
           expect(info.contexts[0].aggregates[0].events.length).to.eql(1);
           expect(info.contexts[0].aggregates[0].events[0].name).to.eql('enteredNewPerson');
           expect(info.contexts[0].aggregates[0].events[0].version).to.eql(3);
-          expect(info.contexts[0].aggregates[0].preConditions.length).to.eql(0);
           expect(info.contexts[0].aggregates[0].businessRules.length).to.eql(0);
 
           expect(info.contexts[1].name).to.eql('hr');
@@ -76,10 +75,37 @@ describe('integration', function () {
           expect(info.contexts[1].aggregates[0].commands.length).to.eql(3);
           expect(info.contexts[1].aggregates[0].commands[0].name).to.eql('enterNewPerson');
           expect(info.contexts[1].aggregates[0].commands[0].version).to.eql(0);
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions.length).to.eql(2);
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[0].description).to.eql('authorization');
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[0].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].description).to.eql('Fails if firstname is rumpelstilz');
+          expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].priority).to.eql(1);
           expect(info.contexts[1].aggregates[0].commands[1].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[1].version).to.eql(2);
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions.length).to.eql(3);
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[0].description).to.eql('authorization');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[0].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[1].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[1].description).to.eql('Fails if firstname is rumpelstilz');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[1].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].name).to.eql('unregisterAllContactInformation');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].description).to.eql('firstname should always be set');
+          expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].priority).to.eql(2);
           expect(info.contexts[1].aggregates[0].commands[2].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[2].version).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions.length).to.eql(3);
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[0].description).to.eql('authorization');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[0].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[1].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[1].description).to.eql('Fails if firstname is rumpelstilz');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[1].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].name).to.eql('unregisterAllContactInformation');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].description).to.eql('firstname should always be set');
+          expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].priority).to.eql(2);
           expect(info.contexts[1].aggregates[0].events.length).to.eql(5);
           expect(info.contexts[1].aggregates[0].events[0].name).to.eql('enteredNewPerson');
           expect(info.contexts[1].aggregates[0].events[0].version).to.eql(3);
@@ -91,9 +117,6 @@ describe('integration', function () {
           expect(info.contexts[1].aggregates[0].events[3].version).to.eql(0);
           expect(info.contexts[1].aggregates[0].events[4].name).to.eql('unregisteredPhoneNumber');
           expect(info.contexts[1].aggregates[0].events[4].version).to.eql(0);
-          expect(info.contexts[1].aggregates[0].preConditions.length).to.eql(1);
-          expect(info.contexts[1].aggregates[0].preConditions[0].name).to.eql('');
-          expect(info.contexts[1].aggregates[0].preConditions[0].description).to.eql('authorization');
           expect(info.contexts[1].aggregates[0].businessRules.length).to.eql(2);
           expect(info.contexts[1].aggregates[0].businessRules[0].name).to.eql('atLeast1EMail');
           expect(info.contexts[1].aggregates[0].businessRules[0].description).to.eql('at least one character should be in email address');
@@ -717,6 +740,41 @@ describe('integration', function () {
 
           });
 
+        });
+
+      });
+
+      describe('pre-condition ordering with priority', function () {
+
+        it('should evaluate precondition with priority 1 first', function (done) {
+
+          var cmd = {
+            id: 'cmdId',
+            name: 'enterNewPerson',
+            aggregate: {
+              id: 'aggregateId1234',
+              name: 'person'
+            },
+            context: {
+              name: 'hr'
+            },
+            payload: {
+              firstname: 'rumpelstilz', // triggers test precondition error
+              lastname: 'some',
+              email: 'test@rumpestilz.org'
+            },
+            revision: 0,
+            version: 0,
+            meta: {
+              userId: 'userId'
+            }
+          };
+
+          domain.handle(cmd, function (err) {
+            expect(err).to.be.ok();
+            expect(err.message).to.be('Precondition with prio 1 failed (all commands)');
+            done();
+          });
         });
 
       });

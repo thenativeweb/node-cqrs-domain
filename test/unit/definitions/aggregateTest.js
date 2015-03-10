@@ -498,60 +498,6 @@ describe('aggregate definition', function () {
 
     });
 
-    describe('calling addPreCondition', function () {
-
-      describe('with a wrong object', function () {
-
-        it('it should throw an error', function () {
-
-          var aggr = api.defineAggregate();
-
-          expect(function () {
-            aggr.addPreCondition();
-          }).to.throwError(/preCondition/);
-
-        });
-
-      });
-
-      describe('with a correct object', function () {
-
-        it('it should work as expected', function () {
-
-          var aggr = api.defineAggregate();
-
-          aggr.addPreCondition({ description: 'my condition' });
-
-          expect(aggr.preConditions.length).to.eql(1);
-          expect(aggr.preConditions[0].description).to.eql('my condition');
-
-        });
-
-      });
-
-      describe('working with priority', function () {
-
-        it('it should order it correctly', function () {
-
-          var aggr = api.defineAggregate();
-
-          aggr.addPreCondition({ description: 'myRule2', priority: 3 });
-          aggr.addPreCondition({ description: 'myRule4', priority: Infinity });
-          aggr.addPreCondition({ description: 'myRule1', priority: 1 });
-          aggr.addPreCondition({ description: 'myRule3', priority: 5 });
-
-          expect(aggr.preConditions.length).to.eql(4);
-          expect(aggr.preConditions[0].description).to.eql('myRule1');
-          expect(aggr.preConditions[1].description).to.eql('myRule2');
-          expect(aggr.preConditions[2].description).to.eql('myRule3');
-          expect(aggr.preConditions[3].description).to.eql('myRule4');
-
-        });
-
-      });
-
-    });
-
     describe('calling addCommandHandler', function () {
 
       describe('with a wrong object', function () {
@@ -1553,22 +1499,10 @@ describe('aggregate definition', function () {
             applyCalled = true;
           }});
 
-          var aggrPcCalled = false;
-          aggr.addPreCondition({
-            check: function (cmd, aggregateModel, clb) {
-              expect(cmd).to.eql(cmdToUse);
-              expect(aggregateModel).to.eql(aggModel);
-              expect(aggregateModel.apply).not.to.be.ok();
-              aggrPcCalled = true;
-              clb(null);
-            }
-          });
-
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
             expect(rev).to.eql(1);
             expect(pcCalled).to.eql(true);
-            expect(aggrPcCalled).to.eql(true);
             expect(applyCalled).to.eql(true);
 
             done();
@@ -1652,20 +1586,8 @@ describe('aggregate definition', function () {
           aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
           aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
 
-          var aggrPcCalled = false;
-          aggr.addPreCondition({
-            check: function (cmd, aggregateModel, clb) {
-              expect(cmd).to.eql(cmdToUse);
-              expect(aggregateModel).to.eql(aggModel);
-              expect(aggregateModel.apply).not.to.be.ok();
-              aggrPcCalled = true;
-              clb(null);
-            }
-          });
-
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
-            expect(aggrPcCalled).to.eql(true);
             expect(pcCalled).to.eql(true);
             expect(handleCalled).to.eql(true);
 
@@ -1706,88 +1628,6 @@ describe('aggregate definition', function () {
             expect(rev).to.eql(6);
 
             expect(checkBRCalled).to.eql(true);
-          });
-
-        });
-
-        describe('if the aggregate precondition fails', function () {
-
-          it('it should work as expected', function (done) {
-
-            var rev = 0;
-            var uncommittedEvts = [];
-            var applyCalled = false;
-            var aggModel = {
-              id: 'aggId',
-              set: function (k, v) {
-                expect(k).to.eql('applied');
-                expect(v).to.eql(true);
-              },
-              get: function () {
-              },
-              setRevision: function (r) { rev = r; },
-              getRevision: function () { return rev; },
-              toJSON: function () {},
-              addUncommittedEvent: function (e) { uncommittedEvts.push(e); },
-              getUncommittedEvents: function () { return uncommittedEvts; }
-            };
-
-            var cmdToUse = { cmdName: 'cmd', v: 2, with: 'payload' };
-
-            var aggr = api.defineAggregate();
-
-            aggr.defineCommand({
-              name: 'cmdName',
-              version: 'v'
-            });
-
-            aggr.defineEvent({
-              name: 'evtName',
-              version: 'v'
-            });
-
-            var pcCalled = false;
-            var checkPreConditions = function (cmd, aggregateModel, clb) {
-              expect(cmd).to.eql(cmdToUse);
-              expect(aggregateModel).to.eql(aggModel);
-              expect(aggregateModel.apply).not.to.be.ok();
-              pcCalled = true;
-              clb(null);
-            };
-
-            var handle = function (cmd, aggregateModel) {
-              expect(cmd).to.eql(cmdToUse);
-              expect(aggregateModel).to.eql(aggModel);
-              aggregateModel.apply({ evtName: 'evt', with: 'payloadOfEvt' });
-            };
-
-            aggr.addCommand({ name: 'cmd', version: 2, defineAggregate: function () {}, validate: function () { return null; }, handle: handle, checkPreConditions: checkPreConditions });
-
-            aggr.addEvent({ name: 'evt', version: 0, apply: function (e, a) {
-              a.set('applied', true);
-              applyCalled = true;
-            }});
-
-            var aggrPcCalled = false;
-            aggr.addPreCondition({
-              check: function (cmd, aggregateModel, clb) {
-                expect(cmd).to.eql(cmdToUse);
-                expect(aggregateModel).to.eql(aggModel);
-                expect(aggregateModel.apply).not.to.be.ok();
-                aggrPcCalled = true;
-                clb('errFromAggPc');
-              }
-            });
-
-            aggr.handle(aggModel, cmdToUse, function (err) {
-              expect(err).to.eql('errFromAggPc');
-              expect(rev).to.eql(0);
-              expect(pcCalled).to.eql(false);
-              expect(aggrPcCalled).to.eql(true);
-              expect(applyCalled).to.eql(false);
-
-              done();
-            });
           });
 
         });
