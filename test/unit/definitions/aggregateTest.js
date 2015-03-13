@@ -1639,27 +1639,29 @@ describe('aggregate definition', function () {
             var evts = [];
             var prevValues = { '_revision': 3 };
 
-            var aggModel = {
-              id: 'myAggId',
-              reset: function (r) {
+            var aggModel = new AggregateModel('myAggId', prevValues);
+            aggModel.reset = function (r) {
+              if (r.attributes) {
+                prevValues = r.attributes;
+              } else {
                 prevValues = r;
-              },
-              set: function (v) {
-                prevValues = v;
-              },
-              toJSON: function () {
-                return _.cloneDeep(prevValues);
-              },
-              getRevision: function () {
-                return prevValues['_revision'];
-              },
-              setRevision: function (r) {
-                prevValues['_revision'] = r;
-              },
-              addUncommittedEvent: function (e) { evts.push(e); },
-              getUncommittedEvents: function () { return evts; },
-              clearUncommittedEvents: function () { evts = []; }
+              }
             };
+            aggModel.set = function (v) {
+              prevValues = v;
+            };
+            aggModel.toJSON = function () {
+              return _.cloneDeep(prevValues);
+            };
+            aggModel.getRevision = function () {
+              return prevValues['_revision'];
+            };
+            aggModel.setRevision = function (r) {
+              prevValues['_revision'] = r;
+            };
+            aggModel.addUncommittedEvent = function (e) { evts.push(e); };
+            aggModel.getUncommittedEvents = function () { return evts; };
+            aggModel.clearUncommittedEvents = function () { evts = []; };
 
             var cmdToUse = { cmdId: '111222333', cmdName: 'cmd', v: 2, with: 'payload', head: { m: 'mmm' } };
 
