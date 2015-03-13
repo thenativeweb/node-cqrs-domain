@@ -7,7 +7,7 @@ var expect = require('expect.js'),
 describe('event definition', function () {
 
   describe('creating a new event definition', function () {
-    
+
     describe('without any arguments', function () {
 
       it('it should not throw an error', function () {
@@ -17,7 +17,7 @@ describe('event definition', function () {
         }).not.to.throwError();
 
       });
-      
+
     });
 
     describe('without event function', function () {
@@ -69,9 +69,9 @@ describe('event definition', function () {
         expect(evt.defineCommand).to.be.a('function');
         expect(evt.defineEvent).to.be.a('function');
         expect(evt.defineOptions).to.be.a('function');
-        
+
         expect(evt.apply).to.be.a('function');
-        
+
       });
 
     });
@@ -102,15 +102,15 @@ describe('event definition', function () {
         expect(evt.defineCommand).to.be.a('function');
         expect(evt.defineEvent).to.be.a('function');
         expect(evt.defineOptions).to.be.a('function');
-        
+
         expect(evt.apply).to.be.a('function');
 
       });
 
     });
-    
+
     describe('applying an event', function () {
-      
+
       describe('with default payload', function () {
 
         it('it should work as expected', function (done) {
@@ -127,7 +127,7 @@ describe('event definition', function () {
 
           evt.apply(evtObj, aggregateObj);
         });
-        
+
       });
 
       describe('with custom payload', function () {
@@ -139,21 +139,18 @@ describe('event definition', function () {
           var evtFn = function (evt, aggregateModel) {
             expect(evt).to.eql(evtObj.with);
             expect(aggregateModel).to.eql(aggregateObj);
-            evt.deep = 'duup';
             done();
           };
 
           var evt = api.defineEvent({ payload: 'with' }, evtFn);
 
           evt.apply(evtObj, aggregateObj);
-
-          expect(evtObj.with.deep).to.eql('value');
         });
 
       });
-      
+
     });
-    
+
   });
 
 });
