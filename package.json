@@ -15,11 +15,11 @@
     "debug": "2.0.0",
     "dotty": "0.0.2",
     "eventstore": "1.1.7",
+    "is-my-json-valid": "2.10.0",
     "jsondate": "0.0.1",
     "lodash": "2.4.1",
     "node-uuid": "1.4.1",
-    "tolerance": "1.0.0",
-    "tv4": "1.1.4"
+    "tolerance": "1.0.0"
   },
   "devDependencies": {
     "cradle": ">=0.6.7",
