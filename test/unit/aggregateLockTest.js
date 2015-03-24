@@ -165,7 +165,7 @@ describe('AggregateLock', function() {
             describe('calling disconnect', function() {
 
               beforeEach(function(done) {
-                var lock = aggregatelock.create({ type: type });
+                lock = aggregatelock.create({ type: type });
                 lock.connect(done);
               });
 
