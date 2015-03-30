@@ -16,7 +16,7 @@
     "dotty": "0.0.2",
     "eventstore": "1.2.0",
     "jsondate": "0.0.1",
-    "lodash": "3.5.0",
+    "lodash": "3.6.0",
     "node-uuid": "1.4.3",
     "tolerance": "1.0.0",
     "tv4": "1.1.9"
