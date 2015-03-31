@@ -8,11 +8,11 @@ describe('defaultCommandHandler', function () {
   describe('creating a new instance', function () {
 
     var cmdHnd;
-    
+
     beforeEach(function () {
       cmdHnd = new DefaultCommandHandler();
     });
-    
+
     it('it should return a correct object', function () {
 
       expect(cmdHnd).to.be.a(DefinitionBase);
@@ -42,19 +42,19 @@ describe('defaultCommandHandler', function () {
       expect(cmdHnd.commit).to.be.a('function');
       expect(cmdHnd.workflow).to.be.a('function');
       expect(cmdHnd.handle).to.be.a('function');
-      
+
     });
-    
+
     describe('calling useAggregate', function () {
-      
+
       it('it should work as expected', function () {
 
         var aggregate = { agg: 'regate' };
         cmdHnd.useAggregate(aggregate);
         expect(cmdHnd.aggregate).to.eql(aggregate);
-        
+
       });
-      
+
     });
 
     describe('calling useEventStore', function () {
@@ -130,7 +130,7 @@ describe('defaultCommandHandler', function () {
         cmdHnd.queueCommand('123', cmd3, clb3);
 
         var next = cmdHnd.getNextCommandInQueue('123');
-        
+
         expect(cmdHnd.queue['123']).to.be.an('array');
         expect(cmdHnd.queue['123'].length).to.eql(2);
         expect(next.command).to.eql(cmd);
@@ -183,7 +183,7 @@ describe('defaultCommandHandler', function () {
     describe('calling lockAggregate', function () {
 
       it('it should work as expected', function (done) {
-        
+
         var calledBack = false;
         var aggLock = {
           reserve: function (workerId, aggregateId, callback) {
@@ -300,7 +300,7 @@ describe('defaultCommandHandler', function () {
     });
 
     describe('calling isAggregateDestroyed', function () {
-      
+
       describe('if false', function () {
 
         it('it should work as expected', function () {
@@ -315,7 +315,7 @@ describe('defaultCommandHandler', function () {
           expect(res).to.eql(null);
 
         });
-        
+
       });
 
       describe('if true', function () {
@@ -342,20 +342,20 @@ describe('defaultCommandHandler', function () {
       });
 
     });
-    
+
     describe('calling isRevisionWrong', function () {
-      
+
       describe('without having defined a revision', function () {
-        
+
         it('it should work as expected', function () {
-          
+
           var aggr = {};
           var cmd = {};
           var res = cmdHnd.isRevisionWrong(aggr, cmd);
           expect(res).to.eql(null);
-          
+
         });
-        
+
       });
 
       describe('with a command revision is less then the aggregate revision', function () {
@@ -417,13 +417,13 @@ describe('defaultCommandHandler', function () {
         });
 
       });
-      
+
     });
-    
+
     describe('calling validateCommand', function () {
-      
+
       it('it should work as expected', function (done) {
-        
+
         var cmd = { my: 'cmd' };
         var aggr = {
           validateCommand: function (c) {
@@ -433,9 +433,9 @@ describe('defaultCommandHandler', function () {
         };
         cmdHnd.useAggregate(aggr);
         cmdHnd.validateCommand(cmd);
-        
+
       });
-      
+
     });
 
     describe('calling verifyAggregate', function () {
@@ -455,7 +455,7 @@ describe('defaultCommandHandler', function () {
           expect(c).to.eql(cmd);
           return null;
         };
-        
+
         cmdHnd.verifyAggregate(aggr, cmd);
 
       });
@@ -469,7 +469,7 @@ describe('defaultCommandHandler', function () {
         var cmd = { my: 'cmd' };
         var aggr = { my: 'aggr' };
         var called = false;
-        
+
         cmdHnd.useAggregate({
           handle: function (a, c, clb) {
             expect(a).to.eql(aggr);
@@ -489,7 +489,7 @@ describe('defaultCommandHandler', function () {
     });
 
     describe('calling checkAggregateLock', function () {
-      
+
       describe('having an error', function () {
 
         it('it should work as expected', function (done) {
@@ -510,13 +510,13 @@ describe('defaultCommandHandler', function () {
           });
 
         });
-        
+
       });
 
       describe('having more workers as expected', function () {
 
         it('it should work as expected', function (done) {
-          
+
           var called = false;
 
           cmdHnd.useAggregateLock({
@@ -539,7 +539,7 @@ describe('defaultCommandHandler', function () {
       describe('having exactly my worker', function () {
 
         it('it should work as expected', function (done) {
-          
+
           var called = false;
 
           cmdHnd.useAggregateLock({
@@ -600,7 +600,7 @@ describe('defaultCommandHandler', function () {
             clb(null, this);
           }
         };
-        
+
         cmdHnd.commit(agg, stream, function (err, uncommitedEvts) {
           expect(err).not.to.be.ok();
           expect(uncommitedEvts).to.eql(evts);
@@ -613,19 +613,19 @@ describe('defaultCommandHandler', function () {
     });
 
     describe('calling workflow', function () {
-      
+
       it('it should work as expected', function (done) {
-        
+
         var cmd = { my: 'cmd', aggId: '8931' };
-        
+
         cmdHnd.defineCommand({
           aggregateId: 'aggId'
         });
 
         cmdHnd.useAggregate({ name: 'aggName', context: { name: 'ctxName' } });
-        
+
         var step = 1;
-        
+
         cmdHnd.validateCommand = function (c) {
           expect(c).to.eql(cmd);
           expect(step).to.eql(1);
@@ -689,7 +689,7 @@ describe('defaultCommandHandler', function () {
           step++;
           clb(null, [{ evt1: 'one' }, { evt2: 'two' }]);
         };
-        
+
 
         cmdHnd.workflow('8931', cmd, function (err, evts, aggData, meta) {
           expect(err).not.to.be.ok();
@@ -704,11 +704,11 @@ describe('defaultCommandHandler', function () {
           expect(meta.context).to.eql('ctxName');
           done();
         });
-        
+
       });
-      
+
     });
-    
+
     describe('calling handle', function () {
 
       describe('with a command without aggregate id', function () {
@@ -779,8 +779,84 @@ describe('defaultCommandHandler', function () {
 
         });
 
+        describe('having an aggregate that has defined a getNewAggregateId function', function () {
+
+          it('it should work as expected', function (done) {
+
+            var cmd = { my: 'cmd' };
+            var queueCalled = false;
+            var nextCalled = false;
+            var removeCalled = false;
+            var workflowCalled = false;
+            var aggregateId;
+
+            cmdHnd.defineCommand({
+              aggregateId: 'aggId'
+            });
+
+            cmdHnd.useEventStore({
+              getNewId: function (clb) {
+                clb(null, 'newIdFromStore');
+              }
+            });
+
+            cmdHnd.useAggregate({
+              getNewAggregateId: function (clb) {
+                clb(null, 'newIdFromAggregate');
+              }
+            });
+
+            var queued;
+
+            cmdHnd.queueCommand = function (aggId, c, clb) {
+              expect(aggId).to.eql('newIdFromAggregate');
+              expect(c).to.eql(cmd);
+              queueCalled = true;
+              queued = { command: c, callback: clb };
+            };
+
+            var removed = false;
+            cmdHnd.getNextCommandInQueue = function (aggId) {
+              expect(aggId).to.eql('newIdFromAggregate');
+              if (removed) {
+                return null;
+              }
+              nextCalled = true;
+              return queued;
+            };
+
+            cmdHnd.removeCommandFromQueue = function (aggId, c) {
+              expect(aggId).to.eql('newIdFromAggregate');
+              expect(c).to.eql(cmd);
+              removed = true;
+              removeCalled = true;
+            };
+
+            cmdHnd.workflow = function (aggId, c, clb) {
+              expect(c).to.eql(cmd);
+              workflowCalled = true;
+              clb(null, 'evts', 'aggData', 'meta');
+            };
+
+            cmdHnd.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).not.to.be.ok();
+              expect(evts).to.eql('evts');
+              expect(aggData).to.eql('aggData');
+              expect(meta).to.eql('meta');
+              expect(cmd.aggId).not.to.be.ok();
+              expect(queueCalled).to.eql(true);
+              expect(nextCalled).to.eql(true);
+              expect(removeCalled).to.eql(true);
+              expect(workflowCalled).to.eql(true);
+              done();
+            });
+
+          });
+
+        });
+
       });
-      
+
       describe('with a command with aggregate id', function () {
 
         it('it should work as expected', function (done) {
@@ -800,16 +876,16 @@ describe('defaultCommandHandler', function () {
               clb(null, 'newId');
             }
           });
-          
+
           var queued;
-          
+
           cmdHnd.queueCommand = function (aggId, c, clb) {
             expect(aggId).to.eql('1421');
             expect(c).to.eql(cmd);
             queueCalled = true;
             queued = { command: c, callback: clb };
           };
-          
+
           var removed = false;
           cmdHnd.getNextCommandInQueue = function (aggId) {
             expect(aggId).to.eql('1421');
@@ -848,7 +924,7 @@ describe('defaultCommandHandler', function () {
           });
 
         });
-        
+
       });
 
       describe('with a command with aggregate id, an aggregate and a context', function () {
@@ -922,9 +998,9 @@ describe('defaultCommandHandler', function () {
         });
 
       });
-      
+
     });
-    
+
   });
 
 });

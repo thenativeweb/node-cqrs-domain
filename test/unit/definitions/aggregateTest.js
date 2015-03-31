@@ -34,6 +34,7 @@ describe('aggregate definition', function () {
       expect(aggr.defineSnapshotNeed).to.be.a('function');
 
       expect(aggr.idGenerator).to.be.a('function');
+      expect(aggr.defineAggregateIdGenerator).to.be.a('function');
       expect(aggr.defineContext).to.be.a('function');
       expect(aggr.addCommand).to.be.a('function');
       expect(aggr.addEvent).to.be.a('function');
@@ -175,6 +176,55 @@ describe('aggregate definition', function () {
           });
 
           aggr.getNewId(function (err, id) {
+            expect(id).to.be.a('string');
+            done();
+          });
+
+        });
+
+      });
+
+    });
+
+    describe('defining an id generator function for aggregate id', function() {
+
+      var aggr;
+
+      beforeEach(function () {
+        aggr = api.defineAggregate();
+        aggr.getNewAggregateId = null;
+      });
+
+      describe('in a synchronous way', function() {
+
+        it('it should be transformed internally to an asynchronous way', function(done) {
+
+          aggr.defineAggregateIdGenerator(function () {
+            var id = require('node-uuid').v4().toString();
+            return id;
+          });
+
+          aggr.getNewAggregateId(function (err, id) {
+            expect(id).to.be.a('string');
+            done();
+          });
+
+        });
+
+      });
+
+      describe('in an synchronous way', function() {
+
+        it('it should be taken as it is', function(done) {
+
+          aggr.defineAggregateIdGenerator(function (callback) {
+            setTimeout(function () {
+              var id = require('node-uuid').v4().toString();
+              callback(null, id);
+            }, 10);
+          });
+
+          aggr.getNewAggregateId(function (err, id) {
             expect(id).to.be.a('string');
             done();
           });
