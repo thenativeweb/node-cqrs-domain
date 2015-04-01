@@ -1,4 +1,4 @@
-## [v1.5.4](https://github.com/adrai/node-cqrs-domain/compare/v1.5.3...v1.5.4)
+## [v1.6.0](https://github.com/adrai/node-cqrs-domain/compare/v1.5.3...v1.6.0)
 - added defineAggregateIdGenerator
 - update eventstore
 
