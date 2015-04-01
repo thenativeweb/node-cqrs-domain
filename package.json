@@ -14,7 +14,7 @@
     "async": "0.9.0",
     "debug": "2.1.3",
     "dotty": "0.0.2",
-    "eventstore": "1.3.0",
+    "eventstore": "1.3.1",
     "jsondate": "0.0.1",
     "lodash": "3.6.0",
     "node-uuid": "1.4.3",
