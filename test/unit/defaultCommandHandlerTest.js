@@ -779,6 +779,86 @@ describe('defaultCommandHandler', function () {
 
         });
 
+        describe('having a commandHandler that has defined a getNewAggregateId function', function () {
+
+          it('it should work as expected', function (done) {
+
+            var cmd = { my: 'cmd' };
+            var queueCalled = false;
+            var nextCalled = false;
+            var removeCalled = false;
+            var workflowCalled = false;
+            var aggregateId;
+
+            cmdHnd.defineCommand({
+              aggregateId: 'aggId'
+            });
+
+            cmdHnd.useEventStore({
+              getNewId: function (clb) {
+                clb(null, 'newIdFromStore');
+              }
+            });
+
+            cmdHnd.aggregateIdGenerator(function (clb) {
+              clb(null, 'newIdFromCmdHandler');
+            });
+
+            cmdHnd.useAggregate({
+              //getNewAggregateId: function (clb) {
+              //  clb(null, 'newIdFromAggregate');
+              //}
+            });
+
+            var queued;
+
+            cmdHnd.queueCommand = function (aggId, c, clb) {
+              expect(aggId).to.eql('newIdFromCmdHandler');
+              expect(c).to.eql(cmd);
+              queueCalled = true;
+              queued = { command: c, callback: clb };
+            };
+
+            var removed = false;
+            cmdHnd.getNextCommandInQueue = function (aggId) {
+              expect(aggId).to.eql('newIdFromCmdHandler');
+              if (removed) {
+                return null;
+              }
+              nextCalled = true;
+              return queued;
+            };
+
+            cmdHnd.removeCommandFromQueue = function (aggId, c) {
+              expect(aggId).to.eql('newIdFromCmdHandler');
+              expect(c).to.eql(cmd);
+              removed = true;
+              removeCalled = true;
+            };
+
+            cmdHnd.workflow = function (aggId, c, clb) {
+              expect(c).to.eql(cmd);
+              workflowCalled = true;
+              clb(null, 'evts', 'aggData', 'meta');
+            };
+
+            cmdHnd.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).not.to.be.ok();
+              expect(evts).to.eql('evts');
+              expect(aggData).to.eql('aggData');
+              expect(meta).to.eql('meta');
+              expect(cmd.aggId).not.to.be.ok();
+              expect(queueCalled).to.eql(true);
+              expect(nextCalled).to.eql(true);
+              expect(removeCalled).to.eql(true);
+              expect(workflowCalled).to.eql(true);
+              done();
+            });
+
+          });
+
+        });
+
         describe('having an aggregate that has defined a getNewAggregateId function', function () {
 
           it('it should work as expected', function (done) {
@@ -798,6 +878,10 @@ describe('defaultCommandHandler', function () {
               getNewId: function (clb) {
                 clb(null, 'newIdFromStore');
               }
+            });
+
+            cmdHnd.aggregateIdGenerator(function (clb) {
+              clb(null, 'newIdFromCmdHandler');
             });
 
             cmdHnd.useAggregate({
