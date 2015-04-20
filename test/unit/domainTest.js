@@ -63,6 +63,7 @@ describe('domain', function () {
         expect(domain.defineCommand).to.be.a('function');
         expect(domain.defineEvent).to.be.a('function');
         expect(domain.idGenerator).to.be.a('function');
+        expect(domain.aggregateIdGenerator).to.be.a('function');
         expect(domain.onEvent).to.be.a('function');
         expect(domain.init).to.be.a('function');
         expect(domain.handle).to.be.a('function');
@@ -137,6 +138,7 @@ describe('domain', function () {
           expect(domain.defineCommand).to.be.a('function');
           expect(domain.defineEvent).to.be.a('function');
           expect(domain.idGenerator).to.be.a('function');
+          expect(domain.aggregateIdGenerator).to.be.a('function');
           expect(domain.onEvent).to.be.a('function');
           expect(domain.init).to.be.a('function');
           expect(domain.handle).to.be.a('function');
@@ -204,6 +206,7 @@ describe('domain', function () {
           expect(domain.defineCommand).to.be.a('function');
           expect(domain.defineEvent).to.be.a('function');
           expect(domain.idGenerator).to.be.a('function');
+          expect(domain.aggregateIdGenerator).to.be.a('function');
           expect(domain.onEvent).to.be.a('function');
           expect(domain.init).to.be.a('function');
           expect(domain.handle).to.be.a('function');
@@ -211,6 +214,55 @@ describe('domain', function () {
           expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
           expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
           expect(domain.options.snapshotThreshold).to.eql(100);
+        });
+
+      });
+
+    });
+
+    describe('defining an aggregagte id generator function', function() {
+
+      var domain;
+
+      beforeEach(function () {
+        domain = api({ domainPath: __dirname });
+        domain.getNewAggregateId = null;
+      });
+
+      describe('in a synchronous way', function() {
+
+        it('it should be transformed internally to an asynchronous way', function(done) {
+
+          domain.aggregateIdGenerator(function () {
+            var id = require('node-uuid').v4().toString();
+            return id;
+          });
+
+          domain.getNewAggregateId(function (err, id) {
+            expect(id).to.be.a('string');
+            done();
+          });
+
+        });
+
+      });
+
+      describe('in an synchronous way', function() {
+
+        it('it should be taken as it is', function(done) {
+
+          domain.aggregateIdGenerator(function (callback) {
+            setTimeout(function () {
+              var id = require('node-uuid').v4().toString();
+              callback(null, id);
+            }, 10);
+          });
+
+          domain.getNewAggregateId(function (err, id) {
+            expect(id).to.be.a('string');
+            done();
+          });
+
         });
 
       });

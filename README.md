@@ -309,6 +309,24 @@ The values describes the path to that property in the event message.
 	});
 
 
+## Define the aggregate id generator function [optional]
+### you can define a synchronous function
+
+	domain.aggregateIdGenerator(function () {
+	  var id = require('node-uuid').v4().toString();
+	  return id;
+	});
+
+### or you can define an asynchronous function
+
+	domain.aggregateIdGenerator(function (callback) {
+	  setTimeout(function () {
+	    var id = require('node-uuid').v4().toString();
+	    callback(null, id);
+	  }, 50);
+	});
+
+
 ## Wire up events [optional]
 ### you can define a synchronous function
 
