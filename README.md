@@ -1,3 +1,4 @@
+
 # Introduction
 
 [![travis](https://img.shields.io/travis/adrai/node-cqrs-domain.svg)](https://travis-ci.org/adrai/node-cqrs-domain) [![npm](https://img.shields.io/npm/v/cqrs-domain.svg)](https://npmjs.org/package/cqrs-domain)
@@ -5,6 +6,42 @@
 Node-cqrs-domain is a node.js module based on [node-eventstore](http://adrai.github.com/node-eventstore/).
 It can be very useful as domain component if you work with (d)ddd, cqrs, eventdenormalizer, host, etc.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Introduction](#introduction)
+- [Workflow](#workflow)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Using factory methods for event store or / and aggregate lock in domain definition](#using-factory-methods-for-event-store-or--and-aggregate-lock-in-domain-definition)
+  - [Exposed errors](#exposed-errors)
+  - [Catch connect ad disconnect events](#catch-connect-ad-disconnect-events)
+  - [Define the command structure](#define-the-command-structure)
+  - [Define the event structure](#define-the-event-structure)
+  - [Define the id generator function [optional]](#define-the-id-generator-function-optional)
+    - [you can define a synchronous function](#you-can-define-a-synchronous-function)
+    - [or you can define an asynchronous function](#or-you-can-define-an-asynchronous-function)
+  - [Wire up events [optional]](#wire-up-events-optional)
+    - [you can define a synchronous function](#you-can-define-a-synchronous-function-1)
+    - [or you can define an asynchronous function](#or-you-can-define-an-asynchronous-function-1)
+  - [Initialization](#initialization)
+  - [Handling a command](#handling-a-command)
+    - [or](#or)
+    - [more infos, can be useful if testing](#more-infos-can-be-useful-if-testing)
+  - [Request domain information](#request-domain-information)
+- [Components definition](#components-definition)
+  - [Context](#context)
+  - [Aggregate](#aggregate)
+  - [Command validation](#command-validation)
+  - [Pre-Condition](#pre-condition)
+  - [Command](#command)
+  - [Event](#event)
+  - [Business Rule](#business-rule)
+  - [Command Handler (Be careful!!!)](#command-handler-be-careful)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 # Workflow
 
 ```
