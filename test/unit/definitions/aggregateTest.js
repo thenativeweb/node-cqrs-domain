@@ -1621,6 +1621,7 @@ describe('aggregate definition', function () {
             aggregateModel.apply('evt1', { value: 'data1' });
             aggregateModel.apply({ evtName: 'evt2', p: { value: 'data2' } });
             aggregateModel.apply('evt3');
+            aggregateModel.apply('evt4', { value: 'data4' }, 3);
             handleCalled = true;
           };
 
@@ -1635,6 +1636,9 @@ describe('aggregate definition', function () {
           aggr.addEvent({ name: 'evt1', version: 0, apply: function (e, a) {}});
           aggr.addEvent({ name: 'evt2', version: 0, apply: function (e, a) {}});
           aggr.addEvent({ name: 'evt3', version: 0, apply: function (e, a) {}});
+          aggr.addEvent({ name: 'evt4', version: 0, apply: function (e, a) {}});
+          aggr.addEvent({ name: 'evt4', version: 3, apply: function (e, a) {}});
+          aggr.addEvent({ name: 'evt4', version: 4, apply: function (e, a) {}});
 
           aggr.handle(aggModel, cmdToUse, function (err) {
             expect(err).not.to.be.ok();
@@ -1675,7 +1679,18 @@ describe('aggregate definition', function () {
             expect(evts[2].c).to.eql('ctxName');
             expect(evts[2].p.m).to.eql('mmm');
 
-            expect(rev).to.eql(6);
+            expect(evts[3].evtName).to.eql('evt4');
+            expect(evts[3].iii).to.be.a('string');
+            expect(evts[3].v).to.eql(3);
+            expect(evts[3].r).to.eql(7);
+            expect(evts[3].p.value).to.eql('data4');
+            expect(evts[3].commandId).to.eql(cmdToUse.cmdId);
+            expect(evts[3].a).to.eql('myAggId');
+            expect(evts[3].aName).to.eql('aggName');
+            expect(evts[3].c).to.eql('ctxName');
+            expect(evts[3].p.m).to.eql('mmm');
+
+            expect(rev).to.eql(7);
 
             expect(checkBRCalled).to.eql(true);
           });

@@ -761,6 +761,8 @@ Do NOT manipulate the aggregate here!
 
 	  aggregate.apply('enteredNewPerson', data);
 	  // or
+	  // aggregate.apply('enteredNewPerson', data, version);
+	  // or
 	  // aggregate.apply({
 	  //   event: 'enteredNewPerson',
 	  //   payload: data
