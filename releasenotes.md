@@ -1,3 +1,6 @@
+## [v1.7.3](https://github.com/adrai/node-cqrs-domain/compare/v1.7.2...v1.7.3)
+- refactored reorderValidationRules
+
 ## [v1.7.2](https://github.com/adrai/node-cqrs-domain/compare/v1.7.1...v1.7.2)
 - extend apply function to pass version
 
