@@ -1,3 +1,6 @@
+## [v1.7.1](https://github.com/adrai/node-cqrs-domain/compare/v1.7.0...v1.7.1)
+- little fix in structureLoader, general preConditions
+
 ## [v1.7.0](https://github.com/adrai/node-cqrs-domain/compare/v1.6.1...v1.7.0)
 - added aggregateIdGenerator
 
