@@ -1,3 +1,6 @@
+## [v1.8.0](https://github.com/adrai/node-cqrs-domain/compare/v1.7.3...v1.8.0)
+- added more detailed infos for some ValidationErrors
+
 ## [v1.7.3](https://github.com/adrai/node-cqrs-domain/compare/v1.7.2...v1.7.3)
 - refactored reorderValidationRules
 
