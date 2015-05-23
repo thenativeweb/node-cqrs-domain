@@ -1,3 +1,6 @@
+## [v1.8.1](https://github.com/adrai/node-cqrs-domain/compare/v1.8.0...v1.8.1)
+- update eventstore and make use of its commitStamp functionality
+
 ## [v1.8.0](https://github.com/adrai/node-cqrs-domain/compare/v1.7.3...v1.8.0)
 - added more detailed infos for some ValidationErrors
 
