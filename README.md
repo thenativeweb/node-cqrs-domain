@@ -326,8 +326,8 @@ The values describes the path to that property in the event message.
 	  // optional, if defined the values of the command will be copied to the event (can be used to transport information like userId, etc..)
 	  meta: 'meta',
 
-		// optional, if defined the commit date of the eventstore will be saved in this value
-		commitStamp: 'commitStamp'
+	  // optional, if defined the commit date of the eventstore will be saved in this value
+	  commitStamp: 'commitStamp'
 	});
 
 
