@@ -77,7 +77,7 @@ describe('AggregateLock', function() {
 
     describe('with options containing a type property with the value of', function() {
 
-      var types = ['inmemory', 'mongodb', 'tingodb', 'redis', 'couchdb'/*, 'azuretable'*/];
+      var types = ['inmemory', 'mongodb', 'tingodb', 'redis'/*, 'couchdb', 'azuretable'*/];
 
       types.forEach(function(type) {
 
