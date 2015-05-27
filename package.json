@@ -14,9 +14,9 @@
     "async": "1.0.0",
     "debug": "2.2.0",
     "dotty": "0.0.2",
-    "eventstore": "adrai/node-eventstore",
+    "eventstore": "1.4.0",
     "jsondate": "0.0.1",
-    "lodash": "3.9.2",
+    "lodash": "3.9.3",
     "node-uuid": "1.4.3",
     "tolerance": "1.0.0",
     "tv4": "1.1.9"
