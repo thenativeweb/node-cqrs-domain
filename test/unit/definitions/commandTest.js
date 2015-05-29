@@ -2,6 +2,7 @@ var expect = require('expect.js'),
   _ = require('lodash'),
   DefinitionBase = require('../../../lib/definitionBase'),
   Command = require('../../../lib/definitions/command'),
+  BusinessRuleError = require('../../../lib/errors/businessRuleError'),
   api = require('../../../');
 
 describe('command definition', function () {
@@ -299,7 +300,7 @@ describe('command definition', function () {
 
       it('it should work as expected', function (done) {
         var cmdObj = { my: 'command', with: { deep: 'value' } };
-        var aggregateObj = { get: function () { return 0; }, has: function () {} };
+        var aggregateObj = { id: 'myId', get: function () { return 0; }, has: function () {} };
 
 
         var cmd = api.defineCommand({ existing: true }, function () {});
@@ -308,7 +309,11 @@ describe('command definition', function () {
 
         cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).to.be.ok();
+          expect(err).to.be.a(BusinessRuleError);
           expect(err.message).to.match(/already existing/);
+          expect(err.more.aggregateId).to.eql('myId');
+          expect(err.more.aggregateRevision).to.eql(0);
+          expect(err.more.type).to.eql('AggregateNotExisting');
           done();
         });
       });
@@ -319,7 +324,7 @@ describe('command definition', function () {
 
       it('it should work as expected', function (done) {
         var cmdObj = { my: 'command', with: { deep: 'value' } };
-        var aggregateObj = { get: function () { return 1; }, has: function () {} };
+        var aggregateObj = { id: 'myId', get: function () { return 1; }, has: function () {} };
 
 
         var cmd = api.defineCommand({ existing: false }, function () {});
@@ -328,7 +333,11 @@ describe('command definition', function () {
 
         cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).to.be.ok();
+          expect(err).to.be.a(BusinessRuleError);
           expect(err.message).to.match(/not existing/);
+          expect(err.more.aggregateId).to.eql('myId');
+          expect(err.more.aggregateRevision).to.eql(1);
+          expect(err.more.type).to.eql('AggregateAlreadyExisting');
           done();
         });
       });

@@ -181,6 +181,26 @@ describe('pre-condition definition', function () {
 
           });
 
+          describe('but throws a BusinessRuleError with more', function () {
+
+            it('it should callback as expected', function (done) {
+
+              var pcFn = function (agg, command) {
+                throw new BusinessRuleError('my message', 'more stuff');
+              };
+              var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla' }, pcFn);
+
+              pc.check({ changed: 'changed' }, { cmd: 'cmd1' }, function (err) {
+                expect(err).to.be.a(BusinessRuleError);
+                expect(err.message).to.eql('my message');
+                expect(err.more).to.eql('more stuff');
+                done();
+              });
+
+            });
+
+          });
+
           describe('but returns an error', function () {
 
             describe('as error with message', function () {
@@ -276,6 +296,26 @@ describe('pre-condition definition', function () {
                 pc.check({ changed: 'changed' }, { cmd: 'cmd1' }, function (err) {
                   expect(err).to.be.a(BusinessRuleError);
                   expect(err.message).to.eql('errorMsg');
+                  done();
+                });
+
+              });
+
+            });
+
+            describe('as BusinessRuleError with more', function () {
+
+              it('it should callback as expected', function (done) {
+
+                var pcFn = function (agg, command, callback) {
+                  callback(new BusinessRuleError('errorMsg', 'moreStuff'));
+                };
+                var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla' }, pcFn);
+
+                pc.check({ changed: 'changed' }, { cmd: 'cmd1' }, function (err) {
+                  expect(err).to.be.a(BusinessRuleError);
+                  expect(err.message).to.eql('errorMsg');
+                  expect(err.more).to.eql('moreStuff');
                   done();
                 });
 

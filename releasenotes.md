@@ -1,3 +1,6 @@
+## [v1.8.2](https://github.com/adrai/node-cqrs-domain/compare/v1.8.1...v1.8.2)
+- added possibility to use real BusinessRuleError object in pre-conditions and business rules
+
 ## [v1.8.1](https://github.com/adrai/node-cqrs-domain/compare/v1.8.0...v1.8.1)
 - update eventstore and make use of its commitStamp functionality
 
