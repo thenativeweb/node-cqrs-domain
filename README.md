@@ -458,7 +458,8 @@ The values describes the path to that property in the event message.
 	  // - BusinessRuleError
 	  //   {
 	  //     name: 'BusinessRuleError',
-	  //     message: 'some message'
+	  //     message: 'some message',
+	  //     more: { /* more infos */ }
 	  //   }
 	  // - AggregateDestroyedError
 	  //   {
@@ -717,6 +718,8 @@ A Command can have multiple pre-conditions.
 	    // return callback(new Error('not personalized'));
 	    // or
 	    // return callback(new Error()); // if no error message is defined then the description will be taken
+	    // or
+	    // return callback(new require('cqrs-domain').BusinessRuleError('not personalized', { /* more infos */ }));
 	  }
 	  callback(null);
 
@@ -731,6 +734,8 @@ A Command can have multiple pre-conditions.
     //   // throw new Error(); // if no error message is defined then the description will be taken
     //   // or
     //   // throw new Error('not personalized');
+    //   // or
+    //   // throw new require('cqrs-domain').BusinessRuleError('not personalized', { /* more infos */ });
     // }
 	});
 
@@ -822,6 +827,8 @@ This is the place where you should manipulate your aggregate.
 	    // return callback(new Error('names not valid'));
 	    // or
 	    // return callback(new Error()); // if no error message is defined then the description will be taken
+	    // or
+	    // return callback(new require('cqrs-domain').BusinessRuleError('names not valid', { /* more infos */ }));
 	  }
 	  callback(null);
 
@@ -836,6 +843,8 @@ This is the place where you should manipulate your aggregate.
     //   // throw new Error(); // if no error message is defined then the description will be taken
     //   // or
     //   // throw new Error('names not valid');
+    //   // or
+    //   // throw new require('cqrs-domain').BusinessRuleError('names not valid', { /* more infos */ });
     // }
 	});
 

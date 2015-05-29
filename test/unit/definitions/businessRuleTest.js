@@ -169,6 +169,26 @@ describe('business rule definition', function () {
             
           });
 
+          describe('but throws an BusinessRuleRrror with more infos', function () {
+
+            it('it should callback as expected', function (done) {
+
+              var brFn = function (changed, previous, events, command) {
+                throw new BusinessRuleError('my message', 'more stuff');
+              };
+              var br = api.defineBusinessRule({ priority: 3, description: 'bla bla bla' }, brFn);
+
+              br.check({ changed: 'changed' }, { previous: 'previous' }, [{ evt: 'evt1' }], { cmd: 'cmd1' }, function (err) {
+                expect(err).to.be.a(BusinessRuleError);
+                expect(err.message).to.eql('my message');
+                expect(err.more).to.eql('more stuff');
+                done();
+              });
+
+            });
+
+          });
+
           describe('but returns an error', function () {
             
             describe('as error with message', function () {
@@ -264,6 +284,26 @@ describe('business rule definition', function () {
                 br.check({ changed: 'changed' }, { previous: 'previous' }, [{ evt: 'evt1' }], { cmd: 'cmd1' }, function (err) {
                   expect(err).to.be.a(BusinessRuleError);
                   expect(err.message).to.eql('errorMsg');
+                  done();
+                });
+
+              });
+
+            });
+
+            describe('as BusinessRuleError with more', function () {
+
+              it('it should callback as expected', function (done) {
+
+                var brFn = function (changed, previous, events, command, callback) {
+                  callback(new BusinessRuleError('errorMsg', 'moreStuff'));
+                };
+                var br = api.defineBusinessRule({ priority: 3, description: 'bla bla bla' }, brFn);
+
+                br.check({ changed: 'changed' }, { previous: 'previous' }, [{ evt: 'evt1' }], { cmd: 'cmd1' }, function (err) {
+                  expect(err).to.be.a(BusinessRuleError);
+                  expect(err.message).to.eql('errorMsg');
+                  expect(err.more).to.eql('moreStuff');
                   done();
                 });
 
