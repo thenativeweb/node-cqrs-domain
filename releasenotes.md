@@ -1,3 +1,6 @@
+## [v1.8.3](https://github.com/adrai/node-cqrs-domain/compare/v1.8.2...v1.8.3)
+- fix calculation of snapshots
+
 ## [v1.8.2](https://github.com/adrai/node-cqrs-domain/compare/v1.8.1...v1.8.2)
 - added possibility to use real BusinessRuleError object in pre-conditions and business rules
 

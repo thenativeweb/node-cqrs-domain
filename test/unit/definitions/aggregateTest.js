@@ -1289,7 +1289,7 @@ describe('aggregate definition', function () {
                 expect(d).to.eql(snap.data);
               },
               setRevision: function (r) {
-                expect(r).to.eql(5);
+                expect(r).to.eql(6);
               }
             };
 
@@ -1323,7 +1323,7 @@ describe('aggregate definition', function () {
               set: function () {
               },
               setRevision: function (r) {
-                expect(r).to.eql(5);
+                expect(r).to.eql(6);
               }
             };
 
