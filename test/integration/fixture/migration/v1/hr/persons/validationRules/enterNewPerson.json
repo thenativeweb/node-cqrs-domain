@@ -1,0 +1,30 @@
+{
+  "title": "enterNewPerson",
+  "allOf": [
+    { "$ref": "/command/hr/persons" },
+    {
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "enterNewPerson"
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "firstname": {
+              "type": "string"
+            },
+            "lastname": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          },
+          "required": ["firstname", "lastname", "email"]
+        }
+      },
+      "required": ["payload"]
+    }
+  ]
+}

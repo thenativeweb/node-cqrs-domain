@@ -1,0 +1,19 @@
+{
+  "title": "command/hr/persons",
+  "allOf": [
+    { "$ref": "/command/hr" },
+    {
+      "properties": {
+        "aggregate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "pattern": "persons"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
