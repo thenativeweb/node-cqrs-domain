@@ -12,4 +12,13 @@ module.exports = require('../../../../../../../').defineAggregate({
 })
 .defineSnapshotNeed(function (loadingTime, events, aggregate) {
   return events.length >= 2;
+})
+.defineSnapshotConversion({
+  context: 'hr',
+  aggregate: 'persons',
+  version: 0
+}, function (data, aggregate) {
+  data.persons.forEach(function (p) {
+    aggregate.get('mails').push(p.email);
+  });
 });

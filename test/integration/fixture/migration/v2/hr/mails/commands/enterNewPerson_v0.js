@@ -8,5 +8,18 @@ module.exports = require('../../../../../../../../').defineCommand({
     context: 'hr'         // old command location
   }
 }, function (data, aggregate) {
-  aggregate.apply('enteredNewPerson', data);
+  aggregate.apply('enteredNewPerson', data, 0);
+})
+.defineOldEventStreamsToLoad(function (cmd) {
+  return {
+    context: 'hr',
+    aggregate: 'persons',
+    aggregateId: cmd.aggregate.id
+  };
+  // or
+  //return [{
+  //  context: 'hr',
+  //  aggregate: 'persons',
+  //  aggregateId: cmd.aggregate.id
+  //}];
 });

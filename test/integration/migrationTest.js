@@ -181,7 +181,7 @@ describe.only('migration of domain', function () {
         lastname: 'for old version',
         email: 'newForOld@version.com'
       },
-      revision: 6,
+      revision: 5,
       version: 0,
       meta: {
         userId: 'userId'
@@ -386,6 +386,8 @@ describe.only('migration of domain', function () {
 
                 return callback();
               }
+
+              expect(aggData.persons).not.to.be.ok();
 
               expect(err).not.to.be.ok();
               expect(evts.length).to.eql(1);
