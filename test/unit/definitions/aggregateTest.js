@@ -92,13 +92,14 @@ describe('aggregate definition', function () {
 
         it('it should save them as expected', function () {
 
-          var aggr = api.defineAggregate();
+          var aggr = api.defineAggregate({ name: 'a' });
           var fn1 = function () {};
           var fn2 = function () {};
           aggr.defineSnapshotConversion({ version: 2 }, fn1);
           aggr.defineSnapshotConversion({ version: 3 }, fn2);
-          expect(aggr.snapshotConversions[2]).to.eql(fn1);
-          expect(aggr.snapshotConversions[3]).to.eql(fn2);
+          aggr.defineContext({ name: 'c' });
+          expect(aggr.snapshotConversions['c.a.2']).to.eql(fn1);
+          expect(aggr.snapshotConversions['c.a.3']).to.eql(fn2);
 
         });
 
@@ -784,6 +785,12 @@ describe('aggregate definition', function () {
 
       beforeEach(function () {
         aggr = api.defineAggregate();
+        aggr.addCommand({ name: 'someCmdHndl', version: 0, defineAggregate: function () {} });
+        aggr.addCommand({ name: 'cmdHndl1', version: 0, defineAggregate: function () {} });
+        aggr.addCommand({ name: 'cmdHndl2', version: 0, defineAggregate: function () {} });
+        aggr.addCommand({ name: 'cmdHndl2', version: 1, defineAggregate: function () {} });
+        aggr.addCommand({ name: 'cmdHndl2', version: 2, defineAggregate: function () {} });
+        aggr.addCommand({ name: 'cmdHndl3', version: 0, defineAggregate: function () {} });
         aggr.addCommandHandler({ name: 'cmdHndl1', version: 0, useAggregate: function () {} });
         aggr.addCommandHandler({ name: 'cmdHndl2', version: 0, useAggregate: function () {} });
         aggr.addCommandHandler({ name: 'cmdHndl2', version: 1, useAggregate: function () {} });
@@ -1232,7 +1239,7 @@ describe('aggregate definition', function () {
             name: 'evtName'
           });
 
-          var res = aggr.loadFromHistory(aggModel, null, evts);
+          var res = aggr.loadFromHistory(aggModel, null, evts, 4, {});
 
           expect(res).to.eql(true);
 
@@ -1262,7 +1269,7 @@ describe('aggregate definition', function () {
             name: 'evtName'
           });
 
-          var res = aggr.loadFromHistory(aggModel, null, evts);
+          var res = aggr.loadFromHistory(aggModel, null, evts, 4, {});
 
           expect(res).to.eql(false);
 
@@ -1288,18 +1295,19 @@ describe('aggregate definition', function () {
               set: function (d) {
                 expect(d).to.eql(snap.data);
               },
-              setRevision: function (r) {
+              setRevision: function (info, r) {
                 expect(r).to.eql(6);
               }
             };
 
             var aggr = api.defineAggregate({ version: 4 });
+            aggr.context = { name: undefined };
 
             aggr.defineSnapshotNeed(function (time, evts, model) {
               return evts.length >= 2;
             });
 
-            var res = aggr.loadFromHistory(aggModel, snap, null);
+            var res = aggr.loadFromHistory(aggModel, snap, null, 4, {});
 
             expect(res).to.eql(false);
 
@@ -1322,7 +1330,7 @@ describe('aggregate definition', function () {
             var aggModel = {
               set: function () {
               },
-              setRevision: function (r) {
+              setRevision: function (info, r) {
                 expect(r).to.eql(6);
               }
             };
@@ -1337,8 +1345,9 @@ describe('aggregate definition', function () {
             aggr.defineSnapshotNeed(function (time, evts, model) {
               return evts.length >= 2;
             });
+            aggr.defineContext({ name: undefined });
 
-            var res = aggr.loadFromHistory(aggModel, snap, null);
+            var res = aggr.loadFromHistory(aggModel, snap, null, 4, {});
 
             expect(res).to.eql(true);
 
@@ -1356,7 +1365,7 @@ describe('aggregate definition', function () {
           var rev;
           var aggModel = {
             set: function () {},
-            setRevision: function (r) { rev = r;},
+            setRevision: function (info, r) { rev = r;},
             toJSON: function () { return 'json'; }
           };
 
@@ -1375,8 +1384,9 @@ describe('aggregate definition', function () {
             name: 'evtName',
             revision: 'r'
           });
+          aggr.context = { name: undefined };
 
-          aggr.loadFromHistory(aggModel, null, evts);
+          aggr.loadFromHistory(aggModel, null, evts, 4, {});
 
           expect(rev).to.eql(3);
 
@@ -1401,7 +1411,7 @@ describe('aggregate definition', function () {
           var aggModel = {
             set: function () {
             },
-            setRevision: function (r) {
+            setRevision: function (info, r) {
               rev = r;
             },
             toJSON: function () { return 'json'; }
@@ -1428,7 +1438,9 @@ describe('aggregate definition', function () {
             revision: 'r'
           });
 
-          aggr.loadFromHistory(aggModel, null, evts);
+          aggr.defineContext({ name: undefined });
+
+          aggr.loadFromHistory(aggModel, null, evts, 4, {});
 
           expect(rev).to.eql(8);
 
@@ -1503,7 +1515,7 @@ describe('aggregate definition', function () {
             },
             get: function () {
             },
-            setRevision: function (r) { rev = r; },
+            setRevision: function (info, r) { rev = r; },
             getRevision: function () { return rev; },
             toJSON: function () {},
             addUncommittedEvent: function (e) { uncommittedEvts.push(e); },
@@ -1523,6 +1535,7 @@ describe('aggregate definition', function () {
             name: 'evtName',
             version: 'v'
           });
+          aggr.defineContext({ name: undefined });
 
           var pcCalled = false;
           var checkPreConditions = function (cmd, aggregateModel, clb) {
@@ -1570,7 +1583,7 @@ describe('aggregate definition', function () {
             getRevision: function () {
               return rev;
             },
-            setRevision: function (r) {
+            setRevision: function (i, r) {
               rev = r;
             },
             addUncommittedEvent: function (e) { evts.push(e); },
