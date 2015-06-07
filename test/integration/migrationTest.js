@@ -5,11 +5,13 @@ var expect = require('expect.js'),
   _ = require('lodash'),
   uuid = require('node-uuid').v4;
 
-describe.only('migration of domain', function () {
+describe('migration of domain', function () {
 
   var oldEventStore;
 
   var personsAggregateId = uuid().toString();
+
+  var mailsAggregateId = uuid().toString();
 
   var v1Events = [];
 
@@ -185,6 +187,144 @@ describe.only('migration of domain', function () {
       version: 0,
       meta: {
         userId: 'userId'
+      }
+    }
+  ];
+
+  var v2Commands = [
+    {
+      id: uuid().toString(),
+      name: 'addEmail',
+      aggregate: {
+        id: mailsAggregateId,
+        name: 'mails'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'already',
+        lastname: 'in old stream',
+        email: 'mister@t.com'
+      },
+      revision: 0,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        oldAggId: personsAggregateId,
+        shouldFail: true
+      }
+    },
+    {
+      id: uuid().toString(),
+      name: 'addEmail',
+      aggregate: {
+        id: mailsAggregateId,
+        name: 'mails'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'new',
+        lastname: 'for new version',
+        email: 'newForNew@version.com'
+      },
+      revision: 0,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        oldAggId: personsAggregateId
+      }
+    },
+    {
+      id: uuid().toString(),
+      name: 'addEmail',
+      aggregate: {
+        id: mailsAggregateId,
+        name: 'mails'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'another new',
+        lastname: 'for new version',
+        email: 'newForNew2@version.com'
+      },
+      revision: 1,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        oldAggId: personsAggregateId
+      }
+    },
+    {
+      id: uuid().toString(),
+      name: 'enterNewPerson',
+      aggregate: {
+        id: personsAggregateId,
+        name: 'persons'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'another new',
+        lastname: 'for new version',
+        email: 'newForNew2@version.com'
+      },
+      revision: 6,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        newAggId: mailsAggregateId,
+        shouldFail: true
+      }
+    },
+    {
+      id: uuid().toString(),
+      name: 'enterNewPerson',
+      aggregate: {
+        id: personsAggregateId,
+        name: 'persons'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'another new old',
+        lastname: 'for old version',
+        email: 'newForNew3@version.com'
+      },
+      revision: 6,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        newAggId: mailsAggregateId
+      }
+    },
+    {
+      id: uuid().toString(),
+      name: 'addEmail',
+      aggregate: {
+        id: mailsAggregateId,
+        name: 'mails'
+      },
+      context: {
+        name: 'hr'
+      },
+      payload: {
+        firstname: 'another new',
+        lastname: 'for new version',
+        email: 'newForNew3@version.com'
+      },
+      revision: 2,
+      version: 0,
+      meta: {
+        userId: 'userId',
+        oldAggId: personsAggregateId,
+        shouldFail: true
       }
     }
   ];
@@ -374,35 +514,81 @@ describe.only('migration of domain', function () {
 
       describe('and continuing with the v2 domain', function () {
 
-        it('it should work as expected', function (done) {
+        describe('sending old commands', function () {
 
-          async.eachSeries(v1CommandsForV2, function (cmd, callback) {
-            domain.handle(cmd, function (err, evts, aggData, meta) {
+          it('it should work as expected', function (done) {
 
-              if (cmd.meta.shouldFail) {
-                expect(err).to.be.ok();
-                expect(err.name).to.eql('BusinessRuleError');
-                expect(err.message).to.eql('email already used');
+            async.eachSeries(v1CommandsForV2, function (cmd, callback) {
+              domain.handle(cmd, function (err, evts, aggData, meta) {
 
-                return callback();
-              }
+                if (cmd.meta.shouldFail) {
+                  expect(err).to.be.ok();
+                  expect(err.name).to.eql('BusinessRuleError');
+                  expect(err.message).to.eql('email already used');
 
-              expect(aggData.persons).not.to.be.ok();
+                  return callback();
+                }
 
-              expect(err).not.to.be.ok();
-              expect(evts.length).to.eql(1);
-              expect(evts[0].name).to.eql('enteredNewPerson');
-              expect(evts[0].payload).to.eql(cmd.payload);
-              expect(evts[0].meta).to.eql(cmd.meta);
-              expect(evts[0].revision).to.eql(cmd.revision + 1);
+                expect(aggData.persons).not.to.be.ok();
+                expect(aggData.mails).to.be.ok();
 
-              expect(meta.aggregateId).to.eql(cmd.aggregate.id);
-              expect(meta.aggregate).to.eql(cmd.aggregate.name);
-              expect(meta.context).to.eql(cmd.context.name);
+                expect(err).not.to.be.ok();
+                expect(evts.length).to.eql(1);
+                expect(evts[0].name).to.eql('enteredNewPerson');
+                expect(evts[0].payload).to.eql(cmd.payload);
+                expect(evts[0].meta).to.eql(cmd.meta);
+                expect(evts[0].revision).to.eql(cmd.revision + 1);
 
-              callback();
+                expect(meta.aggregateId).to.eql(cmd.aggregate.id);
+                expect(meta.aggregate).to.eql('mails');
+                expect(meta.context).to.eql('hr');
+
+                callback();
+              });
+            }, done);
+
+          });
+
+          describe('and then new commands', function () {
+
+            it('it should work as expected', function (done) {
+
+              async.eachSeries(v2Commands, function (cmd, callback) {
+                domain.handle(cmd, function (err, evts, aggData, meta) {
+
+                  if (cmd.meta.shouldFail) {
+                    expect(err).to.be.ok();
+                    expect(err.name).to.eql('BusinessRuleError');
+                    expect(err.message).to.eql('email already used');
+
+                    return callback();
+                  }
+
+                  expect(aggData.persons).not.to.be.ok();
+                  expect(aggData.mails).to.be.ok();
+
+                  expect(err).not.to.be.ok();
+                  expect(evts.length).to.eql(1);
+                  if (cmd.name === 'enterNewPerson') {
+                    expect(evts[0].name).to.eql('enteredNewPerson');
+                  } else {
+                    expect(evts[0].name).to.eql('emailAdded');
+                  }
+                  expect(evts[0].payload).to.eql(cmd.payload);
+                  expect(evts[0].meta).to.eql(cmd.meta);
+                  expect(evts[0].revision).to.eql(cmd.revision + 1);
+
+                  expect(meta.aggregateId).to.eql(cmd.aggregate.id);
+                  expect(meta.aggregate).to.eql('mails');
+                  expect(meta.context).to.eql(cmd.context.name);
+
+                  callback();
+                });
+              }, done);
+
             });
-          }, done);
+
+          });
 
         });
 

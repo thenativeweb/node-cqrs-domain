@@ -10,16 +10,14 @@ module.exports = require('../../../../../../../../').defineCommand({
 }, function (data, aggregate) {
   aggregate.apply('enteredNewPerson', data, 0);
 })
-.defineOldEventStreamsToLoad(function (cmd) {
-  return {
+.defineEventStreamsToLoad(function (cmd) {
+  return [{
+    context: 'hr',
+    aggregate: 'mails',
+    aggregateId: cmd.meta.newAggId
+  },{
     context: 'hr',
     aggregate: 'persons',
     aggregateId: cmd.aggregate.id
-  };
-  // or
-  //return [{
-  //  context: 'hr',
-  //  aggregate: 'persons',
-  //  aggregateId: cmd.aggregate.id
-  //}];
+  }];
 });

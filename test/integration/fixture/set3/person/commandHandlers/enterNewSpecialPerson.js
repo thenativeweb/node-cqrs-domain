@@ -10,7 +10,7 @@ module.exports = require('../../../../../../').defineCommandHandler({
 
   var id = cmd.aggregate && cmd.aggregate.id ? cmd.aggregate.id : cmd.payload.id;
   
-  commandHandler.loadAggregate(id, function (err, aggregate, stream) {
+  commandHandler.loadAggregate(cmd, id, function (err, aggregate, stream) {
     if (err) {
       return callback(err);
     }
