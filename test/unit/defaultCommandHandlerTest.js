@@ -229,26 +229,41 @@ describe('defaultCommandHandler', function () {
           aggregate: 'agg',
           context: 'c'
         });
+
+        var firstTime = true;
         cmdHnd.useEventStore(eventStore);
         cmdHnd.useAggregate({ name: 'aggName',
           context: { name: 'ctx' },
           create: function (id) { return { id: id }; },
           loadFromHistory: function (aggregate, snapshot, events, time) {
-            expect(aggregate.id).to.eql('myAggId');
-            expect(snapshot.data).to.eql('my data');
-            expect(events.length).to.eql(1);
-            expect(events[0]).to.eql(stream.events[0].payload);
-            expect(time).to.be.greaterThan(5);
+            if (firstTime) {
+              expect(aggregate.id).to.eql('myAggId');
+              expect(snapshot.data).to.eql('my data');
+              expect(events.length).to.eql(0);
+              expect(time).to.be.greaterThan(5);
+
+              firstTime = false;
+            } else {
+              expect(aggregate.id).to.eql('myAggId');
+              expect(snapshot).not.to.be.ok();
+              expect(events.length).to.eql(1);
+              expect(events[0]).to.eql(stream.events[0].payload);
+              expect(time).to.be.greaterThan(5);
+            }
+
             calledLoad = true;
-            return true;
+            return false;
           },
           shouldIgnoreSnapshot: function (snapshot) {
             expect(snapshot.data).to.eql('my data');
             return false;
+          },
+          getLoadInfo: function (cmd) {
+            return [{ context: 'ctx', aggregate: 'aggName' }];
           }
         });
 
-        cmdHnd.loadAggregate('myAggId', function (err) {
+        cmdHnd.loadAggregate({}, 'myAggId', function (err) {
           expect(err).not.to.be.ok();
           expect(calledBackSnap).to.eql(true);
           expect(calledLoad).to.eql(true);
@@ -379,7 +394,7 @@ describe('defaultCommandHandler', function () {
             }
           };
 
-          var res = cmdHnd.isAggregateDestroyed(aggr);
+          var res = cmdHnd.isAggregateDestroyed(aggr, {});
           expect(res).to.eql(null);
 
         });
@@ -400,7 +415,7 @@ describe('defaultCommandHandler', function () {
             }
           };
 
-          var res = cmdHnd.isAggregateDestroyed(aggr);
+          var res = cmdHnd.isAggregateDestroyed(aggr, {});
           expect(res.name).to.eql('AggregateDestroyedError');
           expect(res.more.aggregateId).to.eql('234');
           expect(res.more.aggregateRevision).to.eql(4);
@@ -657,19 +672,32 @@ describe('defaultCommandHandler', function () {
       it('it should work as expected', function (done) {
 
         var called = false;
-        var evts = [{ my: 'first' }, { my: 'second' }];
+        var evts = [{ my: 'first', context: 'c', aggregate: 'a', aggregateId: 'aId' }, { my: 'second', context: 'c', aggregate: 'a', aggregateId: 'aId' }];
         var agg = { getUncommittedEvents: function () { return evts; } };
         var stream = {
+          eventsToDispatch: [],
           addEvents: function (u) {
             this.eventsToDispatch = u;
+          },
+          addEvent: function (u) {
+            this.eventsToDispatch.push(u);
           },
           commit: function (clb) {
             called = true;
             clb(null, this);
-          }
+          },
+          context: 'c',
+          aggregate: 'a',
+          aggregateId: 'aId'
         };
 
-        cmdHnd.commit(agg, stream, function (err, uncommitedEvts) {
+        cmdHnd.defineEvent({
+          context: 'context',
+          aggregate: 'aggregate',
+          aggregateId: 'aggregateId'
+        });
+
+        cmdHnd.commit(agg, [stream], function (err, uncommitedEvts) {
           expect(err).not.to.be.ok();
           expect(uncommitedEvts).to.eql(evts);
           expect(called).to.eql(true);
@@ -707,53 +735,46 @@ describe('defaultCommandHandler', function () {
           clb(null);
         };
 
-        cmdHnd.loadAggregate = function (a, clb) {
+        cmdHnd.loadAggregate = function (cmd, a, clb) {
           expect(a).to.eql('8931');
           expect(step).to.eql(3);
           step++;
-          clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, 'stream', true);
-        };
-
-        cmdHnd.createSnapshot = function (a, s) {
-          expect(a.my).to.eql('aggregate');
-          expect(s).to.eql('stream');
-          expect(step).to.eql(4);
-          step++;
+          clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, ['stream']);
         };
 
         cmdHnd.verifyAggregate = function (a, c) {
           expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
-          expect(step).to.eql(5);
+          expect(step).to.eql(4);
           step++;
         };
 
         cmdHnd.letHandleCommandByAggregate = function (a, c, clb) {
           expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
-          expect(step).to.eql(6);
+          expect(step).to.eql(5);
           step++;
           clb(null, a, 'stream');
         };
 
         cmdHnd.checkAggregateLock = function (a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(7);
+          expect(step).to.eql(6);
           step++;
           clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, 'stream');
         };
 
         cmdHnd.commit = function (a, s, clb) {
           expect(a.my).to.eql('aggregate');
-          expect(s).to.eql('stream');
-          expect(step).to.eql(8);
+          expect(s).to.eql(['stream']);
+          expect(step).to.eql(7);
           step++;
           clb(null, [{ evt1: 'one' }, { evt2: 'two' }]);
         };
 
         cmdHnd.resolveAggregateLock = function (a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(9);
+          expect(step).to.eql(8);
           step++;
           clb(null, [{ evt1: 'one' }, { evt2: 'two' }]);
         };
@@ -761,7 +782,7 @@ describe('defaultCommandHandler', function () {
 
         cmdHnd.workflow('8931', cmd, function (err, evts, aggData, meta) {
           expect(err).not.to.be.ok();
-          expect(step).to.eql(10);
+          expect(step).to.eql(9);
           expect(evts).to.be.an('array');
           expect(evts.length).to.eql(2);
           expect(evts[0].evt1).to.eql('one');
