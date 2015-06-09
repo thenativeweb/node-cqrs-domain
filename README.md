@@ -814,7 +814,14 @@ Do NOT manipulate the aggregate here!
 	  // optional, default undefined
 	  // if true, ensures the aggregate to exists already before this command was handled
 	  // if false, ensures the aggregate to not exists already before this command was handled
-	  existing: true
+	  existing: true,
+
+	  // optional, default {}
+	  // useful if making bigger redesigns in domain and you need to handle a command on a new aggregate
+	  source: {
+	    aggregate: 'person',
+	    context: 'hr'
+	  }
 	}, function (data, aggregate) {
 	  // data is the command data
 	  // aggregate is the aggregate object
@@ -829,8 +836,21 @@ Do NOT manipulate the aggregate here!
 	  //   event: 'enteredNewPerson',
 	  //   payload: data
 	  // });
-	});
+	})
 
+	// if defined it will load all the requested event streams
+	// useful if making bigger redesigns in domain and you need to handle a command on a new aggregate
+	.defineEventStreamsToLoad(function (cmd) {
+	  return [{
+	    context: 'hr',
+	    aggregate: 'mails',
+	    aggregateId: cmd.meta.newAggId
+	  },{
+	    context: 'hr',
+	    aggregate: 'persons',
+	    aggregateId: cmd.aggregate.id
+	  }];
+	});
 
 ## Event
 This is the place where you should manipulate your aggregate.
