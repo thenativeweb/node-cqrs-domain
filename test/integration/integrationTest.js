@@ -1,4 +1,5 @@
 var expect = require('expect.js'),
+  uuid = require('node-uuid').v4,
   api = require('../../index');
 
 describe('integration', function () {
@@ -10,7 +11,7 @@ describe('integration', function () {
       var domain;
 
       before(function (done) {
-        domain = api({ domainPath: __dirname + '/fixture/set1', commandRejectedEventName: 'rejectedCommand' });
+        domain = api({ domainPath: __dirname + '/fixture/set1', commandRejectedEventName: 'rejectedCommand', deduplication: {} });
         domain.defineCommand({
           id: 'id',
           name: 'name',
@@ -161,7 +162,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
 //            name: 'cmdName',
             aggregate: {
               id: 'aggregateId',
@@ -202,7 +203,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'cmdName',
             aggregate: {
               id: 'aggregateId',
@@ -243,7 +244,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -284,7 +285,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -382,7 +383,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewPerson',
               aggregate: {
                 id: 'aggregateId',
@@ -433,7 +434,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'unregisterAllContactInformation',
               aggregate: {
                 id: 'aggregateIdNew',
@@ -486,7 +487,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'unregisterAllContactInformation',
               aggregate: {
                 id: 'aggregateIdNew',
@@ -540,7 +541,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewPerson',
               aggregate: {
                 id: 'aggregateId',
@@ -584,6 +585,79 @@ describe('integration', function () {
 
         });
 
+        describe('that fails because already seen', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'cmdIdForDuplication',
+              name: 'enterNewPerson',
+              aggregate: {
+                id: 'aggregateIdForDuplication',
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              payload: {
+                firstname: 'jack',
+                lastname: 'doe',
+                email: 'jack'
+              },
+              revision: 0,
+              version: 0,
+              meta: {
+                userId: 'userId'
+              }
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).not.to.be.ok();
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('enteredNewPerson');
+              expect(evts[0].payload).to.eql(cmd.payload);
+              expect(evts[0].meta).to.eql(cmd.meta);
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('enteredNewPerson');
+              expect(publishedEvents[0].payload).to.eql(cmd.payload);
+              expect(publishedEvents[0].meta).to.eql(cmd.meta);
+
+              expect(aggData.lastname).to.eql('doe');
+              expect(meta.aggregateId).to.eql('aggregateIdForDuplication');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              domain.handle(cmd, function (err, evts, aggData, meta) {
+                expect(err).to.be.ok();
+                expect(err.name).to.eql('DuplicateCommandError');
+                expect(evts).to.be.an('array');
+                expect(evts.length).to.eql(1);
+                expect(evts[0].name).to.eql('rejectedCommand');
+                expect(evts[0].payload.reason.name).to.eql('DuplicateCommandError');
+                expect(publishedEvents.length).to.eql(2);
+                expect(publishedEvents[0].name).to.eql('enteredNewPerson');
+                expect(publishedEvents[0].payload).to.eql(cmd.payload);
+                expect(publishedEvents[0].meta).to.eql(cmd.meta);
+                expect(publishedEvents[1].name).to.eql('rejectedCommand');
+                expect(publishedEvents[1].payload.reason.name).to.eql('DuplicateCommandError');
+
+                expect(aggData).to.eql(null);
+                expect(meta).to.eql(null);
+
+                done();
+              });
+            });
+
+          });
+
+        });
+
         describe('that is completely valid', function () {
 
           it('it should publish a the resulting event and it should callback without an error and with events', function (done) {
@@ -595,7 +669,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewPerson',
               aggregate: {
                 id: 'aggregateId',
@@ -650,7 +724,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'unregisterAllContactInformation',
               aggregate: {
                 id: 'aggregateId',
@@ -708,7 +782,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewSpecialPerson',
               aggregate: {
                 id: 'aggregateId',
@@ -749,7 +823,7 @@ describe('integration', function () {
         it('should evaluate precondition with priority 1 first', function (done) {
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId1234',
@@ -817,7 +891,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             command: 'cmdName',
             payload: {
               id: 'aggregateId',
@@ -963,7 +1037,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             command: 'cmdName',
             payload: {
               id: 'aggregateId',
@@ -1092,7 +1166,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'unregisterAllContactInformation',
               payload: {
                 id: 'aggregateIdNew'
@@ -1137,7 +1211,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'enterNewPerson',
               payload: {
                 id: 'aggregateId',
@@ -1184,7 +1258,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'enterNewPerson',
               payload: {
                 id: 'aggregateId',
@@ -1229,7 +1303,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'unregisterAllContactInformation',
               payload: {
                 id: 'aggregateId'
@@ -1350,7 +1424,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'cmdName',
             aggregate: {
               id: 'aggregateId',
@@ -1391,7 +1465,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -1432,7 +1506,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -1529,7 +1603,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewSpecialPerson',
               aggregate: {
                 id: 'aggregateId',
@@ -1609,7 +1683,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             command: 'cmdName',
             agg: 'aggName',
             payload: {
@@ -1741,7 +1815,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'enterNewPerson',
               agg: 'person',
               payload: {
@@ -1789,7 +1863,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'enterNewPerson',
               agg: 'person',
               payload: {
@@ -1835,7 +1909,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               command: 'unregisterAllContactInformation',
               agg: 'person',
               payload: {
@@ -1958,7 +2032,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'cmdName',
             aggregate: {
               id: 'aggregateId',
@@ -1999,7 +2073,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -2040,7 +2114,7 @@ describe('integration', function () {
           });
 
           var cmd = {
-            id: 'cmdId',
+            id: uuid().toString(),
             name: 'enterNewPerson',
             aggregate: {
               id: 'aggregateId',
@@ -2137,7 +2211,7 @@ describe('integration', function () {
             });
 
             var cmd = {
-              id: 'cmdId',
+              id: uuid().toString(),
               name: 'enterNewSpecialPerson',
               aggregate: {
                 id: 'aggregateId',

@@ -233,13 +233,13 @@ describe('command definition', function () {
 
         var cmdFn = function () {};
         var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
+        var aggr = { name: 'myAggr', defaultPreConditionPayload: 'fromAggr' };
+        cmd.defineAggregate(aggr);
 
-        cmd.defineAggregate({ name: 'myAggr', defaultPreConditionPayload: 'fromAggr' });
-
-        cmd.addPreCondition({ name: 'myRule2', priority: 3 });
-        cmd.addPreCondition({ name: 'myRule4', priority: Infinity });
-        cmd.addPreCondition({ name: 'myRule1', priority: 1, payload: 'mySpec' });
-        cmd.addPreCondition({ name: 'myRule3', priority: 5 });
+        cmd.addPreCondition({ name: 'myRule2', priority: 3, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+        cmd.addPreCondition({ name: 'myRule4', priority: Infinity, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+        cmd.addPreCondition({ name: 'myRule1', priority: 1, payload: 'mySpec', defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+        cmd.addPreCondition({ name: 'myRule3', priority: 5, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
 
         expect(cmd.preConditions.length).to.eql(4);
         expect(cmd.preConditions[0].name).to.eql('myRule1');

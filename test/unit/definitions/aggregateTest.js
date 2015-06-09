@@ -516,7 +516,7 @@ describe('aggregate definition', function () {
 
           var aggr = api.defineAggregate();
 
-          aggr.addBusinessRule({ name: 'myRule' });
+          aggr.addBusinessRule({ name: 'myRule', defineAggregate: function (a) { expect(a).to.eql(aggr); } });
 
           expect(aggr.businessRules.length).to.eql(1);
           expect(aggr.businessRules[0].name).to.eql('myRule');
@@ -531,10 +531,10 @@ describe('aggregate definition', function () {
 
           var aggr = api.defineAggregate();
 
-          aggr.addBusinessRule({ name: 'myRule2', priority: 3 });
-          aggr.addBusinessRule({ name: 'myRule4', priority: Infinity });
-          aggr.addBusinessRule({ name: 'myRule1', priority: 1 });
-          aggr.addBusinessRule({ name: 'myRule3', priority: 5 });
+          aggr.addBusinessRule({ name: 'myRule2', priority: 3, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+          aggr.addBusinessRule({ name: 'myRule4', priority: Infinity, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+          aggr.addBusinessRule({ name: 'myRule1', priority: 1, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
+          aggr.addBusinessRule({ name: 'myRule3', priority: 5, defineAggregate: function (a) { expect(a).to.eql(aggr); } });
 
           expect(aggr.businessRules.length).to.eql(4);
           expect(aggr.businessRules[0].name).to.eql('myRule1');
@@ -1033,7 +1033,7 @@ describe('aggregate definition', function () {
             expect(command).to.eql(cmd);
             called++;
             callback(null);
-          }
+          }, defineAggregate: function (a) { expect(a).to.eql(aggr); }
         };
 
         var br2 = {
@@ -1044,7 +1044,7 @@ describe('aggregate definition', function () {
             expect(command).to.eql(cmd);
             called++;
             callback(null);
-          }
+          }, defineAggregate: function (a) { expect(a).to.eql(aggr); }
         };
 
         aggr.addBusinessRule(br1);

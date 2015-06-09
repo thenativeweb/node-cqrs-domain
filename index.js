@@ -6,6 +6,7 @@ var Domain = require('./lib/domain'),
   AggregateConcurrencyError = require('./lib/errors/aggregateConcurrencyError'),
   AggregateDestroyedError = require('./lib/errors/aggregateDestroyedError'),
   ConcurrencyError = require('./lib/errors/concurrencyError'),
+  DuplicateCommandError = require('./lib/errors/duplicateCommandError'),
   _ = require('lodash'),
   fs = require('fs'),
   path = require('path');
@@ -43,7 +44,8 @@ domain.errors = {
   BusinessRuleError: BusinessRuleError,
   AggregateConcurrencyError: AggregateConcurrencyError,
   AggregateDestroyedError: AggregateDestroyedError,
-  ConcurrencyError: ConcurrencyError
+  ConcurrencyError: ConcurrencyError,
+  DuplicateCommandError: DuplicateCommandError
 };
 
 module.exports = domain;
