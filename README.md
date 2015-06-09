@@ -195,9 +195,9 @@ Using the factory methods, the example above might become:
 	  },
    
 	  deduplication: : function () {
-		return myCommandBumper({
-		   // ....
-		});
+			return myCommandBumper({
+			   // ....
+			});
 	  }
 	});
 
