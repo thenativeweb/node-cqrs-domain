@@ -153,14 +153,14 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  // currently supports: mongodb, redis, tingodb and inmemory
 	  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
 	  deduplication: {
-		type: 'redis',
-		ttl: 1000 * 60 * 60 * 1, // 1 hour          // optional
-		host: 'localhost',                          // optional
-		port: 6379,                                 // optional
-		db: 0,                                      // optional
-		prefix: 'domain_aggregate_lock',            // optional
-		timeout: 10000                              // optional
-		// password: 'secret'                          // optional
+			type: 'redis',
+			ttl: 1000 * 60 * 60 * 1, // 1 hour          // optional
+			host: 'localhost',                          // optional
+			port: 6379,                                 // optional
+			db: 0,                                      // optional
+			prefix: 'domain_aggregate_lock',            // optional
+			timeout: 10000                              // optional
+			// password: 'secret'                          // optional
 	  }
 	});
 
