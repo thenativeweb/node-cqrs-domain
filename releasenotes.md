@@ -1,3 +1,6 @@
+## [v1.9.0](https://github.com/adrai/node-cqrs-domain/compare/v1.8.3...v1.9.0)
+- added optional command de-duplication
+
 ## [v1.8.3](https://github.com/adrai/node-cqrs-domain/compare/v1.8.2...v1.8.3)
 - fix calculation of snapshots
 

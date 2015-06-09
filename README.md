@@ -146,6 +146,21 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	    prefix: 'domain_aggregate_lock',            // optional
 	    timeout: 10000                              // optional
 	    // password: 'secret'                          // optional
+	  },
+   
+	  // optional, default is not set
+	  // checks if command was already seen in the last time -> ttl
+	  // currently supports: mongodb, redis, tingodb and inmemory
+	  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
+	  deduplication: {
+		type: 'redis',
+		ttl: 1000 * 60 * 60 * 1, // 1 hour          // optional
+		host: 'localhost',                          // optional
+		port: 6379,                                 // optional
+		db: 0,                                      // optional
+		prefix: 'domain_aggregate_lock',            // optional
+		timeout: 10000                              // optional
+		// password: 'secret'                          // optional
 	  }
 	});
 
@@ -177,6 +192,12 @@ Using the factory methods, the example above might become:
 	    return myLock({
 	       // ....
 	    });
+	  },
+   
+	  deduplication: : function () {
+		return myCommandBumper({
+		   // ....
+		});
 	  }
 	});
 
@@ -202,16 +223,23 @@ When using factory methods, the objects they return are required to implement th
 	Aggregate Lock:
 
 	  f: connect(function(err, lock))
-	  f:  disconnect(function(err))
-	  f:  getNewId(function(err, id))
-	  f:  reserve(workerId, aggregateId, function(err))
-	  f:  getAll(aggregateId, function(err, workerIds))
-	  f:  resolve(aggregateId, function(err))
+	  f: disconnect(function(err))
+	  f: getNewId(function(err, id))
+	  f: reserve(workerId, aggregateId, function(err))
+	  f: getAll(aggregateId, function(err, workerIds))
+	  f: resolve(aggregateId, function(err))
+
+	Command Bumper:
+
+	  f: connect(function(err, lock))
+	  f: disconnect(function(err))
+	  f: getNewId(function(err, id))
+	  f: add(key, ttl, function(err, added))
 
 	where:
 
-	  f:  function
-	  p:  property
+	  f: function
+	  p: property
 
 
 ## Exposed errors
@@ -222,6 +250,7 @@ You can use this for example in you custom command handlers.
 	require('cqrs-domain').errors.AggregateDestroyedError
 	require('cqrs-domain').errors.AggregateConcurrencyError
 	require('cqrs-domain').errors.ConcurrencyError
+	require('cqrs-domain').errors.DuplicateCommandError
 
 
 ## Catch connect ad disconnect events
@@ -244,8 +273,17 @@ You can use this for example in you custom command handlers.
 	  console.log('aggregateLock disconnected');
 	});
 
+	// commandBumper
+	domain.commandBumper.on('connect', function() {
+	  console.log('commandBumper connected');
+	});
 
-	// anything (eventStore or aggregateLock)
+	domain.commandBumper.on('disconnect', function() {
+	  console.log('commandBumper disconnected');
+	});
+
+
+	// anything (eventStore or aggregateLock or commandBumper)
 	domain.on('connect', function() {
 	  console.log('something connected');
 	});
