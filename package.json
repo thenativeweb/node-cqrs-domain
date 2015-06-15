@@ -19,7 +19,7 @@
     "lodash": "3.9.3",
     "node-uuid": "1.4.3",
     "tolerance": "1.0.0",
-    "tv4": "1.1.9"
+    "tv4": "^1.1.12"
   },
   "devDependencies": {
     "cradle": ">=0.6.7",
