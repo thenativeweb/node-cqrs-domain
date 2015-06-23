@@ -1,3 +1,6 @@
+## [v1.10.1](https://github.com/adrai/node-cqrs-domain/compare/v1.10.0...v1.10.1)
+- update eventstore
+
 ## [v1.10.0](https://github.com/adrai/node-cqrs-domain/compare/v1.9.0...v1.10.0)
 - introduce defineIgnoreSnapshot function on aggregate
 
