@@ -15,6 +15,17 @@ module.exports = require('../../../../../../').defineAggregate({
 .defineSnapshotNeed(function (loadingTime, events, aggregate) {
   return events.length >= 20;
 })
+.defineIgnoreSnapshot({
+  version: 0
+}, function (data) {
+  return true;
+})
+//.defineIgnoreSnapshot({
+//  version: 0
+//}, true)
+//.defineIgnoreSnapshot({
+//  version: 0
+//}) // default true
 // always convert directly to newest version...
 .defineSnapshotConversion({
   version: 2
