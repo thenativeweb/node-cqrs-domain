@@ -241,6 +241,10 @@ describe('defaultCommandHandler', function () {
             expect(time).to.be.greaterThan(5);
             calledLoad = true;
             return true;
+          },
+          shouldIgnoreSnapshot: function (snapshot) {
+            expect(snapshot.data).to.eql('my data');
+            return false;
           }
         });
 
@@ -249,6 +253,70 @@ describe('defaultCommandHandler', function () {
           expect(calledBackSnap).to.eql(true);
           expect(calledLoad).to.eql(true);
           done();
+        });
+
+      });
+
+      describe('ignoring loading of snapshot', function () {
+
+        it('it should work as expected', function (done) {
+
+          var snap = { version: 2, data: 'my data' };
+          var stream = { events: [ { payload: { the: 'event' } } ] };
+          var streamAll = { events: [ { payload: { the: 'eventOld' } }, { payload: { the: 'event' } } ] };
+          var calledBackSnap = false;
+          var calledLoad = false;
+          var eventStore = {
+            getFromSnapshot: function (query, callback) {
+              setTimeout(function () {
+                expect(query.aggregateId).to.eql('myAggId');
+                expect(query.aggregate).to.eql('aggName');
+                expect(query.context).to.eql('ctx');
+                calledBackSnap = true;
+                callback(null, snap, stream);
+              }, 6);
+            },
+            getEventStream: function (query, callback) {
+              setTimeout(function () {
+                expect(query.aggregateId).to.eql('myAggId');
+                expect(query.aggregate).to.eql('aggName');
+                expect(query.context).to.eql('ctx');
+                calledBackSnap = true;
+                callback(null, streamAll);
+              }, 10);
+            }
+          };
+          cmdHnd.defineCommand({
+            aggregate: 'agg',
+            context: 'c'
+          });
+          cmdHnd.useEventStore(eventStore);
+          cmdHnd.useAggregate({ name: 'aggName',
+            context: { name: 'ctx' },
+            create: function (id) { return { id: id }; },
+            loadFromHistory: function (aggregate, snapshot, events, time) {
+              expect(aggregate.id).to.eql('myAggId');
+              expect(snapshot).not.to.be.ok();
+              expect(events.length).to.eql(2);
+              expect(events[0]).to.eql(streamAll.events[0].payload);
+              expect(events[1]).to.eql(streamAll.events[1].payload);
+              expect(time).to.be.greaterThan(7);
+              calledLoad = true;
+              return true;
+            },
+            shouldIgnoreSnapshot: function (snapshot) {
+              expect(snapshot.data).to.eql('my data');
+              return true;
+            }
+          });
+
+          cmdHnd.loadAggregate('myAggId', function (err) {
+            expect(err).not.to.be.ok();
+            expect(calledBackSnap).to.eql(true);
+            expect(calledLoad).to.eql(true);
+            done();
+          });
+
         });
 
       });

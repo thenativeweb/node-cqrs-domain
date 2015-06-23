@@ -1,3 +1,6 @@
+## [v1.10.0](https://github.com/adrai/node-cqrs-domain/compare/v1.9.0...v1.10.0)
+- introduce defineIgnoreSnapshot function on aggregate
+
 ## [v1.9.0](https://github.com/adrai/node-cqrs-domain/compare/v1.8.3...v1.9.0)
 - added optional command de-duplication
 
