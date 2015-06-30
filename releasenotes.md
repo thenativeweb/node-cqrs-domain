@@ -1,3 +1,6 @@
+## [v1.10.2](https://github.com/adrai/node-cqrs-domain/compare/v1.10.1...v1.10.2)
+- expose warnings during initialization
+
 ## [v1.10.1](https://github.com/adrai/node-cqrs-domain/compare/v1.10.0...v1.10.1)
 - update eventstore
 
