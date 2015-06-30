@@ -44,7 +44,10 @@ describe('integration', function () {
           domain.getTv4();
         }).to.throwError('/init');
 
-        domain.init(done);
+        domain.init(function (err, warns) {
+          expect(warns).not.to.be.ok();
+          done(err);
+        });
       });
 
       describe('requesting information', function () {

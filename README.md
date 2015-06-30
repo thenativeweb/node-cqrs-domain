@@ -425,8 +425,9 @@ The values describes the path to that property in the event message.
 
 ## Initialization
 
-	domain.init(function (err) {
+	domain.init(function (err, warnings) {
 	  // this callback is called when all is ready...
+	  // warnings: if no warnings warnings is null, else it's an array containing errors during require of files
 	});
 
 	// or
