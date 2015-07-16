@@ -1,3 +1,6 @@
+## [v1.10.3](https://github.com/adrai/node-cqrs-domain/compare/v1.10.2...v1.10.3)
+- catch throwing errors when calling callback
+
 ## [v1.10.2](https://github.com/adrai/node-cqrs-domain/compare/v1.10.1...v1.10.2)
 - expose warnings during initialization
 
