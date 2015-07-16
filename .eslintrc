@@ -1,15 +1,77 @@
-{
-  "env": {
-    "node": true
-  },
-  "rules": {
-    "no-underscore-dangle": 0,
-    "camelcase": 1,
-    "no-console": 2,
-    "strict": 2,
-    "quotes": [2, "single"],
-    "no-mixed-requires": 0
-  },
-  "globals": {
-  }
-}
+---
+
+env:
+  node: true
+
+globals:
+  __resourceQuery: false
+  describe: false
+  describeSaga: false
+  describeEvent: false
+  describeCommand: false
+  before: false
+  it: false
+  xit: false
+  window : false
+  beforeEach : false
+  afterEach : false
+  after : false
+  before : false
+  beforeEachChapter: false
+  describeScenario: false
+  describeChapter: false
+  describeStep: false
+  document : false
+  window: false
+  File : false
+  FormData: false
+  QCodeDecoder: false
+  $: false
+  L: false
+  btoa: false
+  escape: false
+  angular: false
+  jQuery: false
+
+rules:
+  # ERRORS
+  no-unused-vars: [2, {vars: all, args: none}]
+  curly: [2, "multi-line"]
+
+  # WARNINGS
+  semi-spacing: 1
+  no-empty: 1
+  handle-callback-err: 1
+  eqeqeq: 1
+  quotes: [1, 'single']
+  no-unused-expressions: 1
+  no-throw-literal: 1
+  semi: 1
+  block-scoped-var: 1
+  no-alert: 1
+  no-console: 1
+  new-cap: 1
+
+  # DISABLED
+  space-after-keywords: 0
+  dot-notation: 0
+  consistent-return: 0
+  brace-style: 0
+  no-multi-spaces: 0
+  no-underscore-dangle: 0
+  key-spacing: 0
+  comma-spacing: 0
+  no-shadow: 0
+  no-mixed-requires: 0
+  space-infix-ops: 0
+  strict: 0
+  camelcase: 0
+  no-wrap-func: 0
+  comma-dangle: 0
+  no-extra-semi: 0
+  no-use-before-define: [0, "nofunc"]
+
+  # AUTOMATED BY EDITORCONFIG
+  eol-last: 0
+  no-trailing-spaces: 0
+  indent: 0
