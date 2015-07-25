@@ -1,3 +1,6 @@
+## [v1.10.5](https://github.com/adrai/node-cqrs-domain/compare/v1.10.4...v1.10.5)
+- improved a little bit the performance whan applying a lot of history events
+
 ## [v1.10.4](https://github.com/adrai/node-cqrs-domain/compare/v1.10.2...v1.10.4)
 - catch throwing errors when calling callback
 
