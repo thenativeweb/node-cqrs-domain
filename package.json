@@ -14,15 +14,17 @@
     "async": "1.4.0",
     "debug": "2.2.0",
     "dotty": "0.0.2",
-    "eventstore": "1.4.1",
+    "eventstore": "1.4.2",
     "jsondate": "0.0.1",
     "lodash": "3.10.0",
     "node-uuid": "1.4.3",
+    "parent-require": "1.0.0",
     "tolerance": "1.0.0",
     "tv4": "1.1.12"
   },
   "devDependencies": {
     "cradle": ">=0.6.7",
+    "eslint": "^0.24.1",
     "expect.js": ">= 0.1.2",
     "mocha": ">= 1.0.1",
     "mongodb": ">= 0.0.1",

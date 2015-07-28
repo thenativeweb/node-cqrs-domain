@@ -1,3 +1,6 @@
+## [v1.10.7](https://github.com/adrai/node-cqrs-domain/compare/v1.10.6...v1.10.7)
+- optimization for `npm link`'ed development
+
 ## [v1.10.6](https://github.com/adrai/node-cqrs-domain/compare/v1.10.4...v1.10.6)
 - improved a little bit the performance whan applying a lot of history events
 
