@@ -25,7 +25,7 @@
   "devDependencies": {
     "azure-storage": ">=0.3.0",
     "cradle": ">=0.6.7",
-    "eslint": "^1.0.0",
+    "eslint": ">=1.0.0",
     "expect.js": ">= 0.1.2",
     "mocha": ">= 1.0.1",
     "mongodb": ">= 0.0.1",
