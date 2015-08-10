@@ -11,12 +11,12 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "async": "^1.4.2",
+    "async": "1.4.2",
     "debug": "2.2.0",
     "dotty": "0.0.2",
     "eventstore": "1.4.2",
     "jsondate": "0.0.1",
-    "lodash": "^3.10.1",
+    "lodash": "3.10.1",
     "node-uuid": "1.4.3",
     "parent-require": "1.0.0",
     "tolerance": "1.0.0",
