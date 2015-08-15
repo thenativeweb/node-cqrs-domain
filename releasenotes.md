@@ -1,3 +1,6 @@
+## [v1.10.8](https://github.com/adrai/node-cqrs-domain/compare/v1.10.7...v1.10.8)
+- update eventstore
+
 ## [v1.10.7](https://github.com/adrai/node-cqrs-domain/compare/v1.10.6...v1.10.7)
 - optimization for `npm link`'ed development
 
