@@ -20,7 +20,7 @@
     "node-uuid": "1.4.3",
     "parent-require": "1.0.0",
     "tolerance": "1.0.0",
-    "tv4": "^1.2.5"
+    "tv4": "1.2.5"
   },
   "devDependencies": {
     "azure-storage": ">=0.3.0",
