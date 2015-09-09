@@ -1,3 +1,6 @@
+## [v1.10.9](https://github.com/adrai/node-cqrs-domain/compare/v1.10.8...v1.10.9)
+- give possibility to use mongodb with authSource
+
 ## [v1.10.8](https://github.com/adrai/node-cqrs-domain/compare/v1.10.7...v1.10.8)
 - update eventstore
 

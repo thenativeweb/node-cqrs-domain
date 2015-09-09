@@ -131,6 +131,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	    snapshotsCollectionName: 'snapshots',       // optional
 	    transactionsCollectionName: 'transactions', // optional
 	    timeout: 10000                              // optional
+      // authSource: 'authedicationDatabase',        // optional
 	    // username: 'technicalDbUser',                // optional
 	    // password: 'secret'                          // optional
 	  },
@@ -147,7 +148,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	    timeout: 10000                              // optional
 	    // password: 'secret'                          // optional
 	  },
-   
+
 	  // optional, default is not set
 	  // checks if command was already seen in the last time -> ttl
 	  // currently supports: mongodb, redis, tingodb and inmemory
@@ -193,7 +194,7 @@ Using the factory methods, the example above might become:
 	       // ....
 	    });
 	  },
-   
+
 	  deduplication: : function () {
 			return myCommandBumper({
 			   // ....
@@ -550,9 +551,9 @@ The values describes the path to that property in the event message.
 	  // events: in case of no error here is the array of all events that should be published
 	  // events: in case of error are the one of these Errors (ValidationError, BusinessRuleError, AggregateDestroyedError, AggregateConcurrencyError)
 	  // converted in an event with the event name defined in the options (default is 'commandRejected')
-	
+
 	  // aggregateData: represents the aggregateData after applying the resulting events
-	
+
 	  // metaInfos: { aggregateId: '3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70', aggregate: 'person', context: 'context' }
 	});
 
@@ -655,13 +656,13 @@ After the initialization you can request the domain information:
 	  // optional, default ''
 	  defaultPreConditionPayload: 'payload'
 	},
-	
+
 	// optionally, define some initialization data...
 	{
 	  emails: ['default@mycomp.org'],
 	  phoneNumbers: []
 	})
-	
+
 	// optionally, define snapshot need algorithm...
 	.defineSnapshotNeed(function (loadingTime, events, aggregateData) {
 	  // loadingTime is the loading time in ms of the eventstore data
@@ -669,7 +670,7 @@ After the initialization you can request the domain information:
 	  // aggregateData represents the aggregateData after applying the resulting events
 	  return events.length >= 200;
 	})
-	
+
 	// optionally, define if snapshot should be ignored
 	// if true, the whole event stream will be loaded
 	.defineIgnoreSnapshot({
@@ -683,7 +684,7 @@ After the initialization you can request the domain information:
 	//.defineIgnoreSnapshot({
 	//  version: 0
 	//}) // default true
-	
+
 	// optionally, define conversion algorithm for older snapshots
 	// always convert directly to newest version...
 	// when loaded a snapshot and it's an older snapshot, a new snapshot with same revision but with newer aggregate version will be created
