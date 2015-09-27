@@ -45,15 +45,15 @@ describe('integration', function () {
         }).to.throwError();
 
         domain.extendValidator(function (validator) {
+          // expect(validator.addFormat('mySpecialFormat', function (data) {
+          //   return data === 'special';
+          // }));
           expect(validator.addFormat('mySpecialFormat', function (data) {
-            return data === 'special';
+           if (data === 'special') {
+             return null;
+           }
+           return 'wrong format for special';
           }));
-          //expect(validator.addFormat('mySpecialFormat', function (data) {
-          //  if (data === 'special') {
-          //    return null;
-          //  }
-          //  return 'wrong format for special';
-          //}));
         });
 
         domain.init(function (err, warns) {
