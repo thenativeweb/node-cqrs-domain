@@ -2,8 +2,8 @@
 //module.exports = require('cqrs-domain').defineEvent({
 module.exports = require('../../../../../../../../').defineEvent({
   name: 'enteredNewPerson',
-  version: 1
+  version: 0
 }, function (data, aggregate) {
-  // console.log('NNNNEEEEEWWWWWWW');
+  // console.log('OOOOLLLLLDDDDDDD');
   aggregate.get('persons').push(data);
 });

@@ -274,7 +274,7 @@ describe('migration of domain', function () {
         lastname: 'for new version',
         email: 'newForNew2@version.com'
       },
-      revision: 6,
+      revision: 5,
       version: 0,
       meta: {
         userId: 'userId',
@@ -294,14 +294,14 @@ describe('migration of domain', function () {
       },
       payload: {
         firstname: 'another new old',
-        lastname: 'for old version',
-        email: 'newForNew3@version.com'
+        lastname: 'for old version'
       },
-      revision: 6,
-      version: 0,
+      revision: 5,
+      version: 1,
       meta: {
         userId: 'userId',
-        newAggId: mailsAggregateId
+        newAggId: mailsAggregateId,
+        isLastOfPersons: true
       }
     },
     {
@@ -323,8 +323,7 @@ describe('migration of domain', function () {
       version: 0,
       meta: {
         userId: 'userId',
-        oldAggId: personsAggregateId,
-        shouldFail: true
+        oldAggId: personsAggregateId
       }
     }
   ];
@@ -445,6 +444,13 @@ describe('migration of domain', function () {
         async.eachSeries(v1Commands, function (cmd, callback) {
           domain.handle(cmd, function (err, evts, aggData, meta) {
 
+            if (cmd.name === 'enterNewPerson') {
+              expect(err).to.be.ok();
+              expect(err.message).to.contain('found');
+
+              return callback();
+            }
+
             if (cmd.meta.shouldFail) {
               expect(err).to.be.ok();
               expect(err.name).to.eql('BusinessRuleError');
@@ -521,6 +527,13 @@ describe('migration of domain', function () {
             async.eachSeries(v1CommandsForV2, function (cmd, callback) {
               domain.handle(cmd, function (err, evts, aggData, meta) {
 
+                if (cmd.name === 'enterNewPerson') {
+                  expect(err).to.be.ok();
+                  expect(err.message).to.contain('found');
+
+                  return callback();
+                }
+
                 if (cmd.meta.shouldFail) {
                   expect(err).to.be.ok();
                   expect(err.name).to.eql('BusinessRuleError');
@@ -556,6 +569,13 @@ describe('migration of domain', function () {
               async.eachSeries(v2Commands, function (cmd, callback) {
                 domain.handle(cmd, function (err, evts, aggData, meta) {
 
+                  if (cmd.name === 'enterNewPerson' && cmd.version === 0) {
+                    expect(err).to.be.ok();
+                    expect(err.message).to.contain('found');
+
+                    return callback();
+                  }
+
                   if (cmd.meta.shouldFail) {
                     expect(err).to.be.ok();
                     expect(err.name).to.eql('BusinessRuleError');
@@ -564,8 +584,13 @@ describe('migration of domain', function () {
                     return callback();
                   }
 
-                  expect(aggData.persons).not.to.be.ok();
-                  expect(aggData.mails).to.be.ok();
+                  if (cmd.name === 'enterNewPerson') {
+                    expect(aggData.persons).to.be.ok();
+                    expect(aggData.mails).not.to.be.ok();
+                  } else {
+                    expect(aggData.persons).not.to.be.ok();
+                    expect(aggData.mails).to.be.ok();
+                  }
 
                   expect(err).not.to.be.ok();
                   expect(evts.length).to.eql(1);
@@ -579,8 +604,16 @@ describe('migration of domain', function () {
                   expect(evts[0].revision).to.eql(cmd.revision + 1);
 
                   expect(meta.aggregateId).to.eql(cmd.aggregate.id);
-                  expect(meta.aggregate).to.eql('mails');
+                  if (cmd.name === 'enterNewPerson') {
+                    expect(meta.aggregate).to.eql('persons');
+                  } else {
+                    expect(meta.aggregate).to.eql('mails');
+                  }
                   expect(meta.context).to.eql(cmd.context.name);
+
+                  if (cmd.meta.isLastOfPersons) {
+                    expect(aggData.persons.length).to.eql(6);
+                  }
 
                   callback();
                 });

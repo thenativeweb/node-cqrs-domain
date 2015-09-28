@@ -305,27 +305,41 @@ describe('defaultCommandHandler', function () {
             aggregate: 'agg',
             context: 'c'
           });
+
+          var firstTime = true;
           cmdHnd.useEventStore(eventStore);
           cmdHnd.useAggregate({ name: 'aggName',
             context: { name: 'ctx' },
             create: function (id) { return { id: id }; },
             loadFromHistory: function (aggregate, snapshot, events, time) {
+            if (firstTime) {
+              expect(aggregate.id).to.eql('myAggId');
+              expect(snapshot.data).to.eql('my data');
+              expect(events.length).to.eql(0);
+              expect(time).to.be.greaterThan(5);
+
+              firstTime = false;
+            } else {
               expect(aggregate.id).to.eql('myAggId');
               expect(snapshot).not.to.be.ok();
-              expect(events.length).to.eql(2);
-              expect(events[0]).to.eql(streamAll.events[0].payload);
-              expect(events[1]).to.eql(streamAll.events[1].payload);
-              expect(time).to.be.greaterThan(7);
-              calledLoad = true;
-              return true;
-            },
+              expect(events.length).to.eql(1);
+              expect(events[0]).to.eql(stream.events[0].payload);
+              expect(time).to.be.greaterThan(5);
+            }
+
+            calledLoad = true;
+            return false;
+          },
+          getLoadInfo: function (cmd) {
+            return [{ context: 'ctx', aggregate: 'aggName' }];
+          },
             shouldIgnoreSnapshot: function (snapshot) {
               expect(snapshot.data).to.eql('my data');
               return true;
             }
           });
 
-          cmdHnd.loadAggregate('myAggId', function (err) {
+          cmdHnd.loadAggregate({}, 'myAggId', function (err) {
             expect(err).not.to.be.ok();
             expect(calledBackSnap).to.eql(true);
             expect(calledLoad).to.eql(true);

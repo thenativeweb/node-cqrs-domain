@@ -5,7 +5,7 @@ module.exports = require('../../../../../../../../').defineCommand({
   aggregate.apply('emailAdded', data);
 })
 .defineEventStreamsToLoad(function (cmd) {
-  return [{
+  return [{ // order is new to old
     context: 'hr',
     aggregate: 'mails',
     aggregateId: cmd.aggregate.id

@@ -45,6 +45,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 # Workflow
 
 ```
+
         │
        cmd
         │
@@ -814,14 +815,7 @@ Do NOT manipulate the aggregate here!
 	  // optional, default undefined
 	  // if true, ensures the aggregate to exists already before this command was handled
 	  // if false, ensures the aggregate to not exists already before this command was handled
-	  existing: true,
-
-	  // optional, default {}
-	  // useful if making bigger redesigns in domain and you need to handle a command on a new aggregate
-	  source: {
-	    aggregate: 'person',
-	    context: 'hr'
-	  }
+	  existing: true
 	}, function (data, aggregate) {
 	  // data is the command data
 	  // aggregate is the aggregate object
@@ -841,7 +835,7 @@ Do NOT manipulate the aggregate here!
 	// if defined it will load all the requested event streams
 	// useful if making bigger redesigns in domain and you need to handle a command on a new aggregate
 	.defineEventStreamsToLoad(function (cmd) {
-	  return [{
+	  return [{ // order is new to old
 	    context: 'hr',
 	    aggregate: 'mails',
 	    aggregateId: cmd.meta.newAggId
