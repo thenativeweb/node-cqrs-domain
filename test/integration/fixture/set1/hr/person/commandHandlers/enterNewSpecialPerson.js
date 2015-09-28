@@ -8,7 +8,7 @@ module.exports = require('../../../../../../../').defineCommandHandler({
   // payload: 'payload' // if not defined it will pass the whole command...
 }, function (aggId, cmd, commandHandler, callback) {
   
-  commandHandler.loadAggregate(aggId, function (err, aggregate, stream) {
+  commandHandler.loadAggregate(cmd, aggId, function (err, aggregate, stream) {
     if (err) {
       return callback(err);
     }

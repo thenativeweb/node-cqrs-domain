@@ -107,7 +107,7 @@ describe('commandDispatcher', function () {
 
             var cmdDisp = new CommandDispatcher({ getCommandHandler: function () {
               return null;
-            }}, { name: 'cmdName', aggregateId: 'aggId' });
+            }, getCommandHandlerByOldTarget: function () { return null;}}, { name: 'cmdName', aggregateId: 'aggId' });
             cmdDisp.dispatch({ cmdName: 'cmdNameSpec', aggId: 'aggIdSpec' }, function (err) {
               expect(err).to.be.ok();
               expect(err.message).to.match(/no command/i);

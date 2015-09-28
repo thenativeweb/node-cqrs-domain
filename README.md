@@ -45,6 +45,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 # Workflow
 
 ```
+
         │
        cmd
         │
@@ -857,8 +858,21 @@ Do NOT manipulate the aggregate here!
 	  //   event: 'enteredNewPerson',
 	  //   payload: data
 	  // });
-	});
+	})
 
+	// if defined it will load all the requested event streams
+	// useful if making bigger redesigns in domain and you need to handle a command on a new aggregate
+	.defineEventStreamsToLoad(function (cmd) {
+	  return [{ // order is new to old
+	    context: 'hr',
+	    aggregate: 'mails',
+	    aggregateId: cmd.meta.newAggId
+	  },{
+	    context: 'hr',
+	    aggregate: 'persons',
+	    aggregateId: cmd.aggregate.id
+	  }];
+	});
 
 ## Event
 This is the place where you should manipulate your aggregate.

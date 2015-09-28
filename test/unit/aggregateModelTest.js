@@ -219,7 +219,7 @@ describe('aggregate model', function () {
         it('it should return all attributes as Javascript object', function() {
 
           var agg = new AggregateModel('123456');
-          agg.setRevision(3);
+          agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 3);
           
           agg.set('data', 'other stuff');
           agg.set('deeper', { a: 'b' });
@@ -233,6 +233,7 @@ describe('aggregate model', function () {
           expect(json.deeper.a).to.eql('b');
 
           expect(json._revision).to.eql(3);
+          expect(json._revisions['c.a.id']).to.eql(3);
           expect(json._destroyed).to.eql(true);
 
         });
@@ -249,9 +250,9 @@ describe('aggregate model', function () {
         
         expect(agg.getRevision()).to.eql(0);
         
-        agg.setRevision(8);
+        agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 8);
 
-        expect(agg.getRevision()).to.eql(8);
+        expect(agg.getRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' })).to.eql(8);
         
       });
       
@@ -336,11 +337,11 @@ describe('aggregate model', function () {
 
         agg.set('my', 'value');
 
-        agg.setRevision(8);
+        agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 8);
         
-        agg.reset({ other: 'value', _revision: 8 });
+        agg.reset({ other: 'value', _revision: 8, _revisions: { 'c.a.id': 8 } });
 
-        expect(agg.getRevision()).to.eql(8);
+        expect(agg.getRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' })).to.eql(8);
         
         expect(agg.get('my')).not.to.be.ok();
         expect(agg.get('other')).to.eql('value');

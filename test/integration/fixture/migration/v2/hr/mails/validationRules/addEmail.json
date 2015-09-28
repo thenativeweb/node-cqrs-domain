@@ -1,0 +1,29 @@
+{
+  "title": "addEmail",
+  "allOf": [
+  { "$ref": "/command/hr/mails" },
+  {
+    "properties": {
+      "version": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 0
+      },
+      "name": {
+        "type": "string",
+        "pattern": "addEmail"
+      },
+      "payload": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": ["firstname", "lastname", "email"]
+      }
+    },
+    "required": ["payload"]
+  }
+]
+}
