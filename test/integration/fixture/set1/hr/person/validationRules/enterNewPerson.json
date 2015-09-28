@@ -8,20 +8,11 @@
           "type": "string",
           "pattern": "enterNewPerson"
         },
+        "special": {
+          "format": "mySpecialFormat"
+        },
         "payload": {
-          "type": "object",
-          "properties": {
-            "firstname": {
-              "type": "string"
-            },
-            "lastname": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            }
-          },
-          "required": ["firstname", "lastname", "email"]
+          "$ref": "/command/hr/person/personProperties"
         }
       },
       "required": ["payload"]

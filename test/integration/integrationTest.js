@@ -41,8 +41,20 @@ describe('integration', function () {
         }).to.throwError('/init');
 
         expect(function () {
-          domain.getTv4();
-        }).to.throwError('/init');
+          domain.extendValidator(function () {});
+        }).to.throwError();
+
+        domain.extendValidator(function (validator) {
+          // expect(validator.addFormat('mySpecialFormat', function (data) {
+          //   return data === 'special';
+          // }));
+          expect(validator.addFormat('mySpecialFormat', function (data) {
+           if (data === 'special') {
+             return null;
+           }
+           return 'wrong format for special';
+          }));
+        });
 
         domain.init(function (err, warns) {
           expect(warns).not.to.be.ok();
@@ -53,10 +65,6 @@ describe('integration', function () {
       describe('requesting information', function () {
 
         it('it should return the expected information', function () {
-
-          expect(function () {
-            domain.getTv4();
-          }).not.to.throwError();
 
           var info = domain.getInfo();
           expect(info.contexts.length).to.eql(2);
@@ -343,6 +351,62 @@ describe('integration', function () {
               payload: {
                 firstname: 'jack',
                 lastname: 'doe',
+                email: 'jack'
+              },
+              revision: 0,
+              version: 0,
+              meta: {
+                userId: 'userId'
+              }
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('ValidationError');
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('ValidationError');
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('ValidationError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that fails on the validation rules of a custom format', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: uuid().toString(),
+              name: 'enterNewPerson',
+              aggregate: {
+                id: 'aggregateId',
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              special: 'spec',
+              payload: {
+                firstname: 'jack',
+                lastname: 'jack',
                 email: 'jack'
               },
               revision: 0,

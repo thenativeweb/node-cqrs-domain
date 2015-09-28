@@ -1,21 +1,20 @@
 var expect = require('expect.js'),
-  validator = require('../../lib/validator'),
-  tv4 = require('tv4');
+  validator = require('../../lib/validator');
 
 describe('validator', function () {
-  
+
   describe('executing', function () {
-    
+
     describe('without any arguments', function () {
-      
+
       it('it should throw an error', function () {
 
         expect(function () {
           validator();
-        }).to.throwError(/tv4/);
-        
+        }).to.throwError(/schema/);
+
       });
-      
+
     });
 
     describe('with wrong tv4 argument', function () {
@@ -24,18 +23,6 @@ describe('validator', function () {
 
         expect(function () {
           validator({});
-        }).to.throwError(/tv4/);
-
-      });
-
-    });
-
-    describe('without schema argument', function () {
-
-      it('it should throw an error', function () {
-
-        expect(function () {
-          validator({ validateMultiple: function () {} });
         }).to.throwError(/schema/);
 
       });
@@ -44,24 +31,9 @@ describe('validator', function () {
 
     describe('with all correct arguments', function () {
 
-      it('it should not throw an error', function () {
-
-        expect(function () {
-          validator({ validateMultiple: function () {}, addFormat: function () {} }, {});
-        }).not.to.throwError();
-
-      });
-
-      it('it should return a function', function () {
-
-        var fn = validator({ validateMultiple: function () {}, addFormat: function() { } }, {});
-        expect(fn).to.be.a('function');
-        
-      });
-
       describe('validating', function () {
 
-        var val = validator(tv4, {
+        var val = validator({}, {
           "type": "object",
           "properties": {
             "firstName": {
@@ -102,17 +74,17 @@ describe('validator', function () {
           });
 
         });
-        
+
       });
 
     });
-    
+
     describe('with additional tv4 formats', function() {
 
-      tv4.addFormat(require('tv4-formats'));
-      
+      var formats = require('tv4-formats');
+
       describe('validating an email address with format property', function() {
-        var emailValidation = validator(tv4, {
+        var emailValidation = validator({ formats: formats }, {
           type: 'object',
           properties: {
             email: {
@@ -121,16 +93,16 @@ describe('validator', function () {
             }
           }
         });
-        
+
         it('should reject invalid email addresses', function() {
           var result = emailValidation({ email: 'test@example'});
-          
+
           expect(result.name).to.eql('ValidationError');
         });
-        
+
         it('should accept valid email addresses', function() {
           var result = emailValidation({ email: 'test-address+extension@example.com' });
-          
+
           expect(result).to.eql(null);
         });
       });
