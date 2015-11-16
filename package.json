@@ -17,7 +17,7 @@
     "eventstore": "1.5.1",
     "jsondate": "0.0.1",
     "lodash": "3.10.1",
-    "node-uuid": "1.4.3",
+    "node-uuid": "^1.4.7",
     "parent-require": "1.0.0",
     "tolerance": "1.0.0",
     "tv4": "1.2.7"
