@@ -1,6 +1,9 @@
+## [v2.0.1](https://github.com/adrai/node-cqrs-domain/compare/v2.0.0...v2.0.1)
+- fix event check before setting the event to undispatched
+
 ## [v2.0.0](https://github.com/adrai/node-cqrs-domain/compare/v1.10.9...v2.0.0)
 - IMPORTANT: extending the validator (tv4) is done differently, getTv4() not working anymore
-- added migration api: defineEventStreamsToLoad for command to ensure business rules 
+- added migration api: defineEventStreamsToLoad for command to ensure business rules
 
 ## [v1.10.9](https://github.com/adrai/node-cqrs-domain/compare/v1.10.8...v1.10.9)
 - give possibility to use mongodb with authSource
