@@ -53,7 +53,7 @@ describe('domain', function () {
 
       it('it should return as expected', function () {
 
-        var domain = api({ domainPath: __dirname });
+        var domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         expect(domain).to.be.a('object');
         expect(domain.on).to.be.a('function');
         expect(domain.eventStore).to.be.an('object');
@@ -84,7 +84,7 @@ describe('domain', function () {
 
           expect(function () {
             api({
-              domainPath: __dirname,
+              domainPath: __dirname + '/../integration/fixture/set1',
               eventStore: function () {
                 return {
                   init: function (callback) { },
@@ -106,7 +106,7 @@ describe('domain', function () {
         it('it should return as expected', function () {
 
           var domain = api({
-            domainPath: __dirname,
+            domainPath: __dirname + '/../integration/fixture/set1',
             eventStore: function () {
               return {
                 init: function (callback) {
@@ -160,7 +160,7 @@ describe('domain', function () {
 
           expect(function () {
             api({
-              domainPath: __dirname,
+              domainPath: __dirname + '/../integration/fixture/set1',
               aggregateLock: function () {
                 return {
                   connect: function (callback) { },
@@ -183,7 +183,7 @@ describe('domain', function () {
         it('it should return as expected', function () {
 
           var domain = api({
-            domainPath: __dirname,
+            domainPath: __dirname + '/../integration/fixture/set1',
             aggregateLock: function () {
               return {
                 connect: function (callback) { },
@@ -225,7 +225,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         domain.getNewAggregateId = null;
       });
 
@@ -274,7 +274,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         domain.getNewId = null;
       });
 
@@ -323,7 +323,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
       });
 
       describe('using the defaults', function () {
@@ -409,7 +409,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
       });
 
       describe('using the defaults', function () {
@@ -500,7 +500,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         domain.onEventHandle = null;
       });
 
@@ -554,7 +554,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname, commandRejectedEventName: 'cmdRej' });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1', commandRejectedEventName: 'cmdRej' });
         domain.defineCommand({
           id: 'i',
           name: 'n',
@@ -745,7 +745,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         domain.defineCommand({
           id: 'i',
           name: 'n',
@@ -832,7 +832,7 @@ describe('domain', function () {
       var domain;
 
       beforeEach(function () {
-        domain = api({ domainPath: __dirname });
+        domain = api({ domainPath: __dirname + '/../integration/fixture/set1' });
         domain.defineCommand({
           id: 'i',
           name: 'n',
