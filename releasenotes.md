@@ -1,3 +1,6 @@
+## [v2.0.2](https://github.com/adrai/node-cqrs-domain/compare/v2.0.1...v2.0.2)
+- fix initialization of generalContext
+
 ## [v2.0.1](https://github.com/adrai/node-cqrs-domain/compare/v2.0.0...v2.0.1)
 - fix event check before setting the event to undispatched
 
