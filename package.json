@@ -14,7 +14,7 @@
     "async": "1.5.0",
     "debug": "2.2.0",
     "dotty": "0.0.2",
-    "eventstore": "1.5.2",
+    "eventstore": "1.5.3",
     "jsondate": "0.0.1",
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
@@ -29,7 +29,7 @@
     "expect.js": ">= 0.1.2",
     "mocha": ">= 1.0.1",
     "mongodb": ">= 0.0.1",
-    "redis": "2.3.x >= 0.10.1",
+    "redis": ">= 0.10.1",
     "tingodb": ">= 0.0.1",
     "tv4-formats": ">=1.0.0"
   },

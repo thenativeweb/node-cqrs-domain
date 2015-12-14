@@ -1,3 +1,6 @@
+## [v2.0.4](https://github.com/adrai/node-cqrs-domain/compare/v2.0.3...v2.0.4)
+- redis: fix for new redis lib
+
 ## [v2.0.3](https://github.com/adrai/node-cqrs-domain/compare/v2.0.2...v2.0.3)
 - mongodb: added optional heartbeat
 
