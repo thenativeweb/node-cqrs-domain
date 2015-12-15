@@ -1,3 +1,6 @@
+## [v2.0.5](https://github.com/adrai/node-cqrs-domain/compare/v2.0.4...v2.0.5)
+- fix for usage without an aggregate name
+
 ## [v2.0.4](https://github.com/adrai/node-cqrs-domain/compare/v2.0.3...v2.0.4)
 - redis: fix for new redis lib
 
