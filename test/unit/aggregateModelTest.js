@@ -4,17 +4,17 @@ var expect = require('expect.js'),
 describe('aggregate model', function () {
 
   describe('creating a new instance', function () {
-    
+
     describe('without any arguments', function () {
-      
+
       it('it should throw an error', function () {
-        
+
         expect(function () {
           new AggregateModel();
         }).to.throwError(/id/);
-        
+
       });
-      
+
     });
 
     describe('with an id as number', function () {
@@ -28,7 +28,7 @@ describe('aggregate model', function () {
       });
 
     });
-    
+
     describe('with an id as string', function () {
 
       it('it should not throw an error', function () {
@@ -56,7 +56,7 @@ describe('aggregate model', function () {
         expect(agg.addUncommittedEvent).to.be.a('function');
         expect(agg.clearUncommittedEvents).to.be.a('function');
         expect(agg.reset).to.be.a('function');
-        
+
         expect(agg.id).to.eql('1234');
         expect(agg.get('id')).to.eql('1234');
 
@@ -72,7 +72,7 @@ describe('aggregate model', function () {
 
           var agg = new AggregateModel('123456');
           agg.set('a', 'b');
-          
+
           expect(agg.has('id')).to.eql(true);
           expect(agg.has('a')).to.eql(true);
 
@@ -185,9 +185,9 @@ describe('aggregate model', function () {
       it('it should mark the vm as to be deleted', function() {
 
         var agg = new AggregateModel('123456');
-        
+
         expect(agg.isDestroyed()).to.eql(false);
-        
+
         agg.destroy();
 
         expect(agg.isDestroyed()).to.eql(true);
@@ -213,19 +213,19 @@ describe('aggregate model', function () {
         expect(json._destroyed).to.eql(false);
 
       });
-      
+
       describe('having set a revision and having destroyed the aggregate', function () {
 
         it('it should return all attributes as Javascript object', function() {
 
           var agg = new AggregateModel('123456');
           agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 3);
-          
+
           agg.set('data', 'other stuff');
           agg.set('deeper', { a: 'b' });
-          
+
           agg.destroy();
-          
+
           var json = agg.toJSON();
 
           expect(json.id).to.eql('123456');
@@ -233,29 +233,29 @@ describe('aggregate model', function () {
           expect(json.deeper.a).to.eql('b');
 
           expect(json._revision).to.eql(3);
-          expect(json._revisions['c.a.id']).to.eql(3);
+          expect(json._revisions['c_a_id']).to.eql(3);
           expect(json._destroyed).to.eql(true);
 
         });
-        
+
       });
 
     });
-    
+
     describe('setting a revision', function () {
-      
+
       it('it should work as expected', function () {
-        
+
         var agg = new AggregateModel('1234456745');
-        
+
         expect(agg.getRevision()).to.eql(0);
-        
+
         agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 8);
 
         expect(agg.getRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' })).to.eql(8);
-        
+
       });
-      
+
     });
 
     describe('mark aggregate as destroyed', function () {
@@ -280,13 +280,13 @@ describe('aggregate model', function () {
 
         var agg = new AggregateModel('1234456745');
         var evts = agg.getUncommittedEvents();
-        
+
         expect(evts).to.be.an('array');
         expect(evts.length).to.eql(0);
 
         agg.addUncommittedEvent({ my: 'evt' });
         agg.addUncommittedEvent({ my2: 'evt2' });
-        
+
         evts = agg.getUncommittedEvents();
 
         expect(evts).to.be.an('array');
@@ -317,9 +317,9 @@ describe('aggregate model', function () {
         expect(evts.length).to.eql(2);
         expect(evts[0].my).to.eql('evt');
         expect(evts[1].my2).to.eql('evt2');
-        
+
         agg.clearUncommittedEvents();
-        
+
         evts = agg.getUncommittedEvents();
 
         expect(evts).to.be.an('array');
@@ -338,18 +338,18 @@ describe('aggregate model', function () {
         agg.set('my', 'value');
 
         agg.setRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' }, 8);
-        
-        agg.reset({ other: 'value', _revision: 8, _revisions: { 'c.a.id': 8 } });
+
+        agg.reset({ other: 'value', _revision: 8, _revisions: { 'c_a_id': 8 } });
 
         expect(agg.getRevision({ context: 'c', aggregate: 'a', aggregateId: 'id' })).to.eql(8);
-        
+
         expect(agg.get('my')).not.to.be.ok();
         expect(agg.get('other')).to.eql('value');
 
       });
 
     });
-    
+
   });
 
 });
