@@ -1,3 +1,6 @@
+## [v2.1.1](https://github.com/adrai/node-cqrs-domain/compare/v2.1.0...v2.1.1)
+- little optimization for structureLoader
+
 ## [v2.1.0](https://github.com/adrai/node-cqrs-domain/compare/v2.0.5...v2.1.0)
 - fix snapshot mongodb usage (ATTENTION: this could break if you have existing snapshots)
 
