@@ -11,7 +11,7 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "async": "1.5.1",
+    "async": "^1.5.2",
     "debug": "2.2.0",
     "dotty": "0.0.2",
     "eventstore": "1.5.3",
