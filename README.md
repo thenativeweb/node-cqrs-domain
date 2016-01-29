@@ -655,7 +655,11 @@ After the initialization you can request the domain information:
 	  defaultEventPayload: 'payload',
 
 	  // optional, default ''
-	  defaultPreConditionPayload: 'payload'
+	  defaultPreConditionPayload: 'payload',
+
+	  // optional, default false
+    // by skipping the history, only the last event will be loaded and not applyed (just to ensure the revision number increment)
+	  skipHistory: true
 	},
 
 	// optionally, define some initialization data...

@@ -1,3 +1,6 @@
+## [v2.1.3](https://github.com/adrai/node-cqrs-domain/compare/v2.1.2...v2.1.3)
+- introduce skipHistory on aggregate
+
 ## [v2.1.2](https://github.com/adrai/node-cqrs-domain/compare/v2.1.1...v2.1.2)
 - little optimization for old folder structure in structureLoader
 
