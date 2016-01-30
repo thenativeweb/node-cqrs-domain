@@ -1,4 +1,4 @@
-## [v2.1.3](https://github.com/adrai/node-cqrs-domain/compare/v2.1.2...v2.1.3)
+## [v2.1.4](https://github.com/adrai/node-cqrs-domain/compare/v2.1.2...v2.1.4)
 - introduce skipHistory on aggregate
 
 ## [v2.1.2](https://github.com/adrai/node-cqrs-domain/compare/v2.1.1...v2.1.2)
