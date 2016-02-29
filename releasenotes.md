@@ -1,3 +1,6 @@
+## [v2.1.5](https://github.com/adrai/node-cqrs-domain/compare/v2.1.4...v2.1.5)
+- updated eventstore
+
 ## [v2.1.4](https://github.com/adrai/node-cqrs-domain/compare/v2.1.2...v2.1.4)
 - introduce skipHistory on aggregate
 
