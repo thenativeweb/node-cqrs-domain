@@ -1,3 +1,6 @@
+## [v2.2.0](https://github.com/adrai/node-cqrs-domain/compare/v2.1.5...v2.2.0)
+- version property for command validation rules
+
 ## [v2.1.5](https://github.com/adrai/node-cqrs-domain/compare/v2.1.4...v2.1.5)
 - updated eventstore
 

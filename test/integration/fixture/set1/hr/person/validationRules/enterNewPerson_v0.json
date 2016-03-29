@@ -1,5 +1,6 @@
 {
   "title": "enterNewPerson",
+  "version": 0,
   "allOf": [
     { "$ref": "/command/hr/person" },
     {

@@ -1,0 +1,21 @@
+{
+  "title": "unregisterAllContactInformation",
+  "version": 2,
+  "allOf": [
+    { "$ref": "/command/hr/person" },
+    {
+      "version": {
+        "type": "integer",
+        "minimum": 2,
+        "maximum": 2
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "unregisterAllContactInformation"
+        }
+      },
+      "required": ["version"]
+    }
+  ]
+}
