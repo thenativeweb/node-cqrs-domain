@@ -761,10 +761,10 @@ To extend tv4 just catch the validator before having initialized the domain:
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 
-To support mutliple verstion look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
+To support mutliple verstion look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/v2.1.5/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
 
-or: [unregisterAllContactInformation_v1.json](https://github.com/adrai/node-cqrs-domain/blob/2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v1.json#L3)
-[unregisterAllContactInformation_v2.json](https://github.com/adrai/node-cqrs-domain/blob/2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v2.json#L3)
+or: [unregisterAllContactInformation_v1.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v1.json#L3)
+[unregisterAllContactInformation_v2.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v2.json#L3)
 
 
 You can also have an hierarchical command extension look at:
