@@ -14,7 +14,7 @@
     "async": "1.5.2",
     "debug": "2.2.0",
     "dotty": "0.0.2",
-    "eventstore": "1.7.0",
+    "eventstore": "1.7.2",
     "jsondate": "0.0.1",
     "lodash": "3.10.1",
     "node-uuid": "1.4.7",
@@ -23,7 +23,7 @@
     "tv4": "1.2.7"
   },
   "devDependencies": {
-    "azure-storage": ">=0.3.0",
+    "azure-storage": ">=0.10.0",
     "cradle": ">=0.6.7",
     "eslint": ">=1.0.0",
     "expect.js": ">= 0.1.2",
