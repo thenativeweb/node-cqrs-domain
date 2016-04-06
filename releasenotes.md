@@ -1,3 +1,6 @@
+## [v2.2.3](https://github.com/adrai/node-cqrs-domain/compare/v2.2.2...v2.2.3)
+- update eventstore
+
 ## [v2.2.2](https://github.com/adrai/node-cqrs-domain/compare/v2.2.1...v2.2.2)
 - redis: added optional heartbeat
 
