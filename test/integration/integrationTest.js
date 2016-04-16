@@ -94,6 +94,10 @@ describe('integration', function () {
           expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].name).to.eql('');
           expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].description).to.eql('Fails if firstname is rumpelstilz');
           expect(info.contexts[1].aggregates[0].commands[0].preConditions[1].priority).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[0].preLoadConditions.length).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[0].preLoadConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[0].preLoadConditions[0].description).to.eql('just a nice little test');
+          expect(info.contexts[1].aggregates[0].commands[0].preLoadConditions[0].priority).to.eql(1);
           expect(info.contexts[1].aggregates[0].commands[1].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[1].version).to.eql(2);
           expect(info.contexts[1].aggregates[0].commands[1].preConditions.length).to.eql(3);
@@ -106,6 +110,10 @@ describe('integration', function () {
           expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].description).to.eql('firstname should always be set');
           expect(info.contexts[1].aggregates[0].commands[1].preConditions[2].priority).to.eql(2);
+          expect(info.contexts[1].aggregates[0].commands[1].preLoadConditions.length).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[1].preLoadConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[1].preLoadConditions[0].description).to.eql('just a nice little test');
+          expect(info.contexts[1].aggregates[0].commands[1].preLoadConditions[0].priority).to.eql(1);
           expect(info.contexts[1].aggregates[0].commands[2].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[2].version).to.eql(1);
           expect(info.contexts[1].aggregates[0].commands[2].preConditions.length).to.eql(3);
@@ -118,6 +126,10 @@ describe('integration', function () {
           expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].name).to.eql('unregisterAllContactInformation');
           expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].description).to.eql('firstname should always be set');
           expect(info.contexts[1].aggregates[0].commands[2].preConditions[2].priority).to.eql(2);
+          expect(info.contexts[1].aggregates[0].commands[2].preLoadConditions.length).to.eql(1);
+          expect(info.contexts[1].aggregates[0].commands[2].preLoadConditions[0].name).to.eql('');
+          expect(info.contexts[1].aggregates[0].commands[2].preLoadConditions[0].description).to.eql('just a nice little test');
+          expect(info.contexts[1].aggregates[0].commands[2].preLoadConditions[0].priority).to.eql(1);
           expect(info.contexts[1].aggregates[0].events.length).to.eql(5);
           expect(info.contexts[1].aggregates[0].events[0].name).to.eql('enteredNewPerson');
           expect(info.contexts[1].aggregates[0].events[0].version).to.eql(3);
@@ -480,6 +492,60 @@ describe('integration', function () {
 
               expect(aggData).to.eql(null);
               expect(meta.aggregateId).to.eql('aggregateId');
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              done();
+            });
+
+          });
+
+        });
+
+        describe('that fails on a pre-load-condition', function () {
+
+          it('it should publish a command rejected event and it should callback with an error and without events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: uuid().toString(),
+              name: 'unregisterAllContactInformation',
+              aggregate: {
+                id: 'aggregateIdNew',
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              payload: {
+              },
+              revision: 0,
+              version: 2,
+              meta: {
+                userId: 'userId'
+              },
+              failPreLoadCondition: true
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).to.be.ok();
+              expect(err.name).to.eql('BusinessRuleError');
+              expect(err.message).to.eql('precondition failed!');
+              expect(evts).to.be.an('array');
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('rejectedCommand');
+              expect(evts[0].payload.reason.name).to.eql('BusinessRuleError');
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('rejectedCommand');
+              expect(publishedEvents[0].payload.reason.name).to.eql('BusinessRuleError');
+
+              expect(aggData).to.eql(null);
+              expect(meta.aggregateId).to.eql('aggregateIdNew');
               expect(meta.aggregate).to.eql('person');
               expect(meta.context).to.eql('hr');
 
