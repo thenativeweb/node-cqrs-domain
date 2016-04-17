@@ -35,6 +35,7 @@ describe('defaultCommandHandler', function () {
       expect(cmdHnd.isAggregateDestroyed).to.be.a('function');
       expect(cmdHnd.isRevisionWrong).to.be.a('function');
       expect(cmdHnd.validateCommand).to.be.a('function');
+      expect(cmdHnd.checkPreLoadConditions).to.be.a('function');
       expect(cmdHnd.verifyAggregate).to.be.a('function');
       expect(cmdHnd.letHandleCommandByAggregate).to.be.a('function');
       expect(cmdHnd.checkAggregateLock).to.be.a('function');
@@ -742,16 +743,22 @@ describe('defaultCommandHandler', function () {
           step++;
         };
 
+        cmdHnd.checkPreLoadConditions = function (a, clb) {
+          expect(step).to.eql(2);
+          step++;
+          clb(null);
+        };
+
         cmdHnd.lockAggregate = function (a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(2);
+          expect(step).to.eql(3);
           step++;
           clb(null);
         };
 
         cmdHnd.loadAggregate = function (cmd, a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(3);
+          expect(step).to.eql(4);
           step++;
           clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, ['stream']);
         };
@@ -759,21 +766,21 @@ describe('defaultCommandHandler', function () {
         cmdHnd.verifyAggregate = function (a, c) {
           expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
-          expect(step).to.eql(4);
+          expect(step).to.eql(5);
           step++;
         };
 
         cmdHnd.letHandleCommandByAggregate = function (a, c, clb) {
           expect(a.my).to.eql('aggregate');
           expect(c).to.eql(cmd);
-          expect(step).to.eql(5);
+          expect(step).to.eql(6);
           step++;
           clb(null, a, 'stream');
         };
 
         cmdHnd.checkAggregateLock = function (a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(6);
+          expect(step).to.eql(7);
           step++;
           clb(null, { my: 'aggregate', toJSON: function() { return 'aggregateAsJSON'; }, getRevision: function () { return 1; } }, 'stream');
         };
@@ -781,14 +788,14 @@ describe('defaultCommandHandler', function () {
         cmdHnd.commit = function (a, s, clb) {
           expect(a.my).to.eql('aggregate');
           expect(s).to.eql(['stream']);
-          expect(step).to.eql(7);
+          expect(step).to.eql(8);
           step++;
           clb(null, [{ evt1: 'one' }, { evt2: 'two' }]);
         };
 
         cmdHnd.resolveAggregateLock = function (a, clb) {
           expect(a).to.eql('8931');
-          expect(step).to.eql(8);
+          expect(step).to.eql(9);
           step++;
           clb(null, [{ evt1: 'one' }, { evt2: 'two' }]);
         };
@@ -796,7 +803,7 @@ describe('defaultCommandHandler', function () {
 
         cmdHnd.workflow('8931', cmd, function (err, evts, aggData, meta) {
           expect(err).not.to.be.ok();
-          expect(step).to.eql(9);
+          expect(step).to.eql(10);
           expect(evts).to.be.an('array');
           expect(evts.length).to.eql(2);
           expect(evts[0].evt1).to.eql('one');

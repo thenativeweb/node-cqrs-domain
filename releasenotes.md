@@ -1,3 +1,4 @@
+
 ## [v2.2.3](https://github.com/adrai/node-cqrs-domain/compare/v2.2.2...v2.2.3)
 - update eventstore
 

@@ -10,7 +10,6 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [Introduction](#introduction)
 - [Workflow](#workflow)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -22,9 +21,12 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
   - [Define the id generator function [optional]](#define-the-id-generator-function-optional)
     - [you can define a synchronous function](#you-can-define-a-synchronous-function)
     - [or you can define an asynchronous function](#or-you-can-define-an-asynchronous-function)
-  - [Wire up events [optional]](#wire-up-events-optional)
+  - [Define the aggregate id generator function [optional]](#define-the-aggregate-id-generator-function-optional)
     - [you can define a synchronous function](#you-can-define-a-synchronous-function-1)
     - [or you can define an asynchronous function](#or-you-can-define-an-asynchronous-function-1)
+  - [Wire up events [optional]](#wire-up-events-optional)
+    - [you can define a synchronous function](#you-can-define-a-synchronous-function-2)
+    - [or you can define an asynchronous function](#or-you-can-define-an-asynchronous-function-2)
   - [Initialization](#initialization)
   - [Handling a command](#handling-a-command)
     - [or](#or)
@@ -34,6 +36,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
   - [Context](#context)
   - [Aggregate](#aggregate)
   - [Command validation](#command-validation)
+  - [Pre-Load-Condition](#pre-load-condition)
   - [Pre-Condition](#pre-condition)
   - [Command](#command)
   - [Event](#event)
@@ -53,6 +56,13 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
   ╔════════════╗
   ║ validation ║─────────> "rejected"
   ╚════════════╝
+        │
+       cmd
+        │
+        ∨
+╔═════════════════════╗
+║ pre-load-conditions ║─────> "rejected"
+╚═════════════════════╝
         │
        cmd
         │
@@ -255,7 +265,7 @@ You can use this for example in you custom command handlers.
 	require('cqrs-domain').errors.DuplicateCommandError
 
 
-## Catch connect ad disconnect events
+## Catch connect and disconnect events
 
 	// eventStore
 	domain.eventStore.on('connect', function() {
@@ -761,7 +771,7 @@ To extend tv4 just catch the validator before having initialized the domain:
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 
-To support mutliple verstion look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/v2.1.5/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
+To support multiple versions look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/v2.1.5/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
 
 or: [unregisterAllContactInformation_v1.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v1.json#L3)
 [unregisterAllContactInformation_v2.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v2.json#L3)
@@ -774,9 +784,70 @@ You can also have an hierarchical command extension look at:
 - [context](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/command.json)
 - [general](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/command.json)
 
+## Pre-Load-Condition
+Can be used to perform some business rules before handling the command. Contrary to Pre-Conditions, these rules are applied BEFORE the aggregate is loaded.
+
+This allows you to (for example) run checks against external information by using closures.
+
+> **Tip:** Pre-load conditions are especially useful when you have checks that you want to run on an aggregate, but when it is OK for those checks to run on potentially stale data (eg a view model). By doing these checks before the aggregate is locked, you avoid creating a locking bottleneck at the aggregate level, and can keep your aggregate smaller because the information for those checks is externalized to the domain. This helps for performance if the domain you are in is performance critical, and helps you keep focus on the real, strongly consistent invariants in your domain.
+
+A Command can have multiple pre-load-conditions.
+
+    var externalDataLoader = require('some_file');
+
+	module.exports = require('cqrs-domain').definePreLoadCondition({
+	  // the command name
+	  // optional, default is file name without extension,
+	  // if name is '' it will handle all commands that matches the appropriate aggregate
+	  // if name is an array of strings it will handle all commands that matches the appropriate name
+	  name: 'checkSomeViewModel',
+
+	  // optional, default 0
+	  version: 2,
+
+	  // optional, if not defined it will use what is defined as default in aggregate or pass the whole command
+	  payload: 'payload',
+
+	  // optional
+	  description: 'firstname should always be set',
+
+	  // optional, default Infinity, all pre-conditions will be sorted by this value
+	  priority: 1
+	}, function (data, callback) {
+	  // data is the command data
+	  // callback is optional, if not defined as function argument you can throw errors or return errors here (sync way)
+
+      if (externalDataLoader.get(data.id) !== data.value) {
+        return callback('not allowed');
+        // or
+        // return callback(new Error('not allowed'));
+        // or
+        // return callback(new Error()); // if no error message is defined then the description will be taken
+        // or
+        // return callback(new require('cqrs-domain').BusinessRuleError('not allowed', { /* more infos */ }));
+      }
+
+	  callback(null);
+
+	  // or if callback is not defined as function argument
+	  // if (externalDataLoader.get(data.id) !== data.value)
+    //   return 'not allowed';
+    //   // or
+    //   // return new Error('not allowed');
+    //   // or
+    //   // return new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error(); // if no error message is defined then the description will be taken
+    //   // or
+    //   // throw new Error('not allowed');
+    //   // or
+    //   // throw new require('cqrs-domain').BusinessRuleError('not allowed', { /* more infos */ });
+    // }
+	});
+
 
 ## Pre-Condition
-Can be used to perform some business rules before handling the command.
+Can be used to perform some business rules before handling the command. The aggregate is locked and loaded before the pre-condition is applied.
 
 A Command can have multiple pre-conditions.
 
@@ -834,7 +905,7 @@ A Command can have multiple pre-conditions.
 ## Command
 Collect all needed infos from aggregate to generate your event(s).
 
-Move checks out of here, the correct places are "business rules" or "pre-conditions"!
+Move checks out of here, the correct places are "business rules", "pre-conditions" or "pre-load consitions"!
 
 Do NOT manipulate the aggregate here!
 

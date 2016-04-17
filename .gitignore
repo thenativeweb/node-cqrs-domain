@@ -20,3 +20,5 @@ node_modules/**/*
 *.db
 
 dump.rdb
+
+npm-debug.log
