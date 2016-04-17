@@ -5,9 +5,9 @@ var expect = require('expect.js'),
   BusinessRuleError = require('../../../lib/errors/businessRuleError'),
   api = require('../../../');
 
-describe('pre-condition definition', function () {
+describe('pre-load-condition definition', function () {
 
-  describe('creating a new pre-condition definition', function () {
+  describe('creating a new pre-load-condition definition', function () {
 
     describe('without any arguments', function () {
 
@@ -21,7 +21,7 @@ describe('pre-condition definition', function () {
 
     });
 
-    describe('without pre-condition function', function () {
+    describe('without pre-load-condition function', function () {
 
       it('it should throw an error', function () {
 
@@ -33,7 +33,7 @@ describe('pre-condition definition', function () {
 
     });
 
-    describe('with a wrong pre-condition function', function () {
+    describe('with a wrong pre-load-condition function', function () {
 
       it('it should throw an error', function () {
 
@@ -45,7 +45,7 @@ describe('pre-condition definition', function () {
 
     });
 
-    describe('with a correct pre-condition function', function () {
+    describe('with a correct pre-load-condition function', function () {
 
       it('it should not throw an error', function () {
 
@@ -79,7 +79,7 @@ describe('pre-condition definition', function () {
 
     });
 
-    describe('with some meta infos and a correct pre-condition function', function () {
+    describe('with some meta infos and a correct pre-load-condition function', function () {
 
       it('it should not throw an error', function () {
 
@@ -115,7 +115,7 @@ describe('pre-condition definition', function () {
 
     describe('calling check', function () {
 
-      describe('having defined a pre-condition function that', function () {
+      describe('having defined a pre-load-condition function that', function () {
 
         describe('does not use a callback', function () {
 

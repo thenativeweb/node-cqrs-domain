@@ -265,7 +265,7 @@ You can use this for example in you custom command handlers.
 	require('cqrs-domain').errors.DuplicateCommandError
 
 
-## Catch connect ad disconnect events
+## Catch connect and disconnect events
 
 	// eventStore
 	domain.eventStore.on('connect', function() {
@@ -771,7 +771,7 @@ To extend tv4 just catch the validator before having initialized the domain:
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 
-To support mutliple verstion look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/v2.1.5/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
+To support multiple versions look at: [unregisterAllContactInformation.json](https://github.com/adrai/node-cqrs-domain/blob/v2.1.5/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation.json#L10)
 
 or: [unregisterAllContactInformation_v1.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v1.json#L3)
 [unregisterAllContactInformation_v2.json](https://github.com/adrai/node-cqrs-domain/blob/v2.2.0/test/integration/fixture/set1/hr/person/validationRules/unregisterAllContactInformation_v2.json#L3)
@@ -785,11 +785,11 @@ You can also have an hierarchical command extension look at:
 - [general](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/command.json)
 
 ## Pre-Load-Condition
-Can be used to perform some business rules before handling the command.
-
-Contrary to Pre-Conditions, these rules are applied BEFORE the aggregate is loaded.
+Can be used to perform some business rules before handling the command. Contrary to Pre-Conditions, these rules are applied BEFORE the aggregate is loaded.
 
 This allows you to (for example) run checks against external information by using closures.
+
+> **Tip:** Pre-load conditions are especially useful when you have checks that you want to run on an aggregate, but when it is OK for those checks to run on potentially stale data (eg a view model). By doing these checks before the aggregate is locked, you avoid creating a locking bottleneck at the aggregate level, and can keep your aggregate smaller because the information for those checks is externalized to the domain. This helps for performance if the domain you are in is performance critical, and helps you keep focus on the real, strongly consistent invariants in your domain.
 
 A Command can have multiple pre-load-conditions.
 
@@ -847,9 +847,7 @@ A Command can have multiple pre-load-conditions.
 
 
 ## Pre-Condition
-Can be used to perform some business rules before handling the command.
-
-The aggregate is locked and loaded before the pre-condition is applied.
+Can be used to perform some business rules before handling the command. The aggregate is locked and loaded before the pre-condition is applied.
 
 A Command can have multiple pre-conditions.
 
@@ -907,7 +905,7 @@ A Command can have multiple pre-conditions.
 ## Command
 Collect all needed infos from aggregate to generate your event(s).
 
-Move checks out of here, the correct places are "business rules" or "pre-conditions"!
+Move checks out of here, the correct places are "business rules", "pre-conditions" or "pre-load consitions"!
 
 Do NOT manipulate the aggregate here!
 

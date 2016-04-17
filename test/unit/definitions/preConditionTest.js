@@ -61,7 +61,7 @@ describe('pre-condition definition', function () {
         var pc = api.definePreCondition(null, pcFn);
         expect(pc).to.be.a(DefinitionBase);
         expect(pc).to.be.a(PreCondition);
-        expect(pc.preLoadConditionFn).to.eql(pcFn);
+        expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql(undefined);
         expect(pc.version).to.eql(0);
         expect(pc.priority).to.eql(Infinity);
@@ -95,7 +95,7 @@ describe('pre-condition definition', function () {
         var pc = api.definePreCondition({ priority: 3, description: 'bla bla bla' }, pcFn);
         expect(pc).to.be.a(DefinitionBase);
         expect(pc).to.be.a(PreCondition);
-        expect(pc.preLoadConditionFn).to.eql(pcFn);
+        expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql('bla bla bla');
         expect(pc.version).to.eql(0);
         expect(pc.priority).to.eql(3);
