@@ -1,3 +1,6 @@
+## [v2.3.1](https://github.com/adrai/node-cqrs-domain/compare/v2.3.0...v2.3.1)
+- update eventstore
+
 ## [v2.3.0](https://github.com/adrai/node-cqrs-domain/compare/v2.2.3...v2.3.0)
 - Support for custom conditions before aggregates are locked [#76](https://github.com/adrai/node-cqrs-domain/pull/#76) thanks to [hilkeheremans](https://github.com/hilkeheremans)
 
