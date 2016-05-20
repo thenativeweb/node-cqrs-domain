@@ -145,6 +145,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
       // authSource: 'authedicationDatabase',        // optional
 	    // username: 'technicalDbUser',                // optional
 	    // password: 'secret'                          // optional
+      // url: 'mongodb://user:pass@host:port/db?opts // optional
 	  },
 
 	  // optional, default is in-memory
