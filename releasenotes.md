@@ -1,3 +1,6 @@
+## [v2.3.5](https://github.com/adrai/node-cqrs-domain/compare/v2.3.4...v2.3.5)
+- update eventstore
+
 ## [v2.3.4](https://github.com/adrai/node-cqrs-domain/compare/v2.3.3...v2.3.4)
 - update eventstore
 - redis, mongodb: call disconnect on ping error
