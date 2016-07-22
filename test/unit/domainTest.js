@@ -941,6 +941,7 @@ describe('domain', function () {
                 expect(onEventCalled.length).to.eql(2);
                 expect(onEventCalled[0]).to.eql('1');
                 expect(onEventCalled[1]).to.eql('2');
+                eventstoreCalled = []; // just to be sure to exit
 
                 done();
               }
