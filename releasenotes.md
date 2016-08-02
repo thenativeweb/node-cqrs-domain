@@ -1,3 +1,6 @@
+## [v2.3.9](https://github.com/adrai/node-cqrs-domain/compare/v2.3.8...v2.3.9)
+- introduce applyLastEvent in combination with skipHistory on aggregate
+
 ## [v2.3.8](https://github.com/adrai/node-cqrs-domain/compare/v2.3.4...v2.3.8)
 - update eventstore
 

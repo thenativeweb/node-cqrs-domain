@@ -669,8 +669,12 @@ After the initialization you can request the domain information:
 	  defaultPreConditionPayload: 'payload',
 
 	  // optional, default false
-    // by skipping the history, only the last event will be loaded and not applyed (just to ensure the revision number increment)
-	  skipHistory: true
+    // by skipping the history, only the last event will be loaded and defaultly not applyed (just to ensure the revision number increment)
+	  skipHistory: true,
+
+	  // optional, default false
+    // only optionally needed when skipHistory is set to true, only the last event will be loaded and applyed
+	  applyLastEvent: true
 	},
 
 	// optionally, define some initialization data...
