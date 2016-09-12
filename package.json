@@ -1,7 +1,7 @@
 {
   "author": "adrai",
   "name": "cqrs-domain",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "private": false,
   "main": "index.js",
   "engines": {
@@ -14,7 +14,7 @@
     "async": "1.5.2",
     "debug": "2.2.0",
     "dotty": "0.0.2",
-    "eventstore": "1.8.0",
+    "eventstore": "1.8.1",
     "jsondate": "0.0.1",
     "lodash": "4.15.0",
     "node-uuid": "1.4.7",
