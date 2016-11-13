@@ -1,3 +1,6 @@
+## [v2.3.20](https://github.com/adrai/node-cqrs-domain/compare/v2.3.19...v2.3.20)
+- update eventstore
+
 ## [v2.3.19](https://github.com/adrai/node-cqrs-domain/compare/v2.3.18...v2.3.19)
 - Do not overwrite user-provided meta properties [#85](https://github.com/adrai/node-cqrs-domain/pull/#85) thanks to [jwoudenberg](https://github.com/jwoudenberg)
 
