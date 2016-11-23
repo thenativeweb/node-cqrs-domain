@@ -386,7 +386,7 @@ The values describes the path to that property in the event message.
 ### you can define a synchronous function
 
 	domain.idGenerator(function () {
-	  var id = require('node-uuid').v4().toString();
+	  var id = require('uuid').v4().toString();
 	  return id;
 	});
 
@@ -394,7 +394,7 @@ The values describes the path to that property in the event message.
 
 	domain.idGenerator(function (callback) {
 	  setTimeout(function () {
-	    var id = require('node-uuid').v4().toString();
+	    var id = require('uuid').v4().toString();
 	    callback(null, id);
 	  }, 50);
 	});
@@ -404,7 +404,7 @@ The values describes the path to that property in the event message.
 ### you can define a synchronous function
 
 	domain.aggregateIdGenerator(function () {
-	  var id = require('node-uuid').v4().toString();
+	  var id = require('uuid').v4().toString();
 	  return id;
 	});
 
@@ -412,7 +412,7 @@ The values describes the path to that property in the event message.
 
 	domain.aggregateIdGenerator(function (callback) {
 	  setTimeout(function () {
-	    var id = require('node-uuid').v4().toString();
+	    var id = require('uuid').v4().toString();
 	    callback(null, id);
 	  }, 50);
 	});
@@ -724,12 +724,12 @@ After the initialization you can request the domain information:
 	// optionally, define idGenerator function for new aggregate ids
 	// sync
 	.defineAggregateIdGenerator(function () {
-	  return require('node-uuid').v4().toString();
+	  return require('uuid').v4().toString();
 	});
 	// or async
 	.defineAggregateIdGenerator(function (callback) {
 	  setTimeout(function () {
-	    var id = require('node-uuid').v4().toString();
+	    var id = require('uuid').v4().toString();
 	    callback(null, id);
 	  }, 50);
 	});

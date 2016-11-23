@@ -1,5 +1,5 @@
 var expect = require('expect.js'),
-  uuid = require('node-uuid').v4,
+  uuid = require('uuid').v4,
   api = require('../../index');
 
 describe('integration', function () {

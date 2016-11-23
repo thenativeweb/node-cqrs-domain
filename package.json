@@ -17,10 +17,10 @@
     "eventstore": "1.10.2",
     "jsondate": "0.0.1",
     "lodash": "4.16.6",
-    "node-uuid": "1.4.7",
     "parent-require": "1.0.0",
     "tolerance": "1.0.0",
-    "tv4": "1.2.7"
+    "tv4": "1.2.7",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "azure-storage": ">=0.10.0",

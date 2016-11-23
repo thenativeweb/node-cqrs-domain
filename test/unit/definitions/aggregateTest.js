@@ -152,7 +152,7 @@ describe('aggregate definition', function () {
         it('it should be transformed internally to an asynchronous way', function(done) {
 
           aggr.idGenerator(function () {
-            var id = require('node-uuid').v4().toString();
+            var id = require('uuid').v4().toString();
             return id;
           });
 
@@ -171,7 +171,7 @@ describe('aggregate definition', function () {
 
           aggr.idGenerator(function (callback) {
             setTimeout(function () {
-              var id = require('node-uuid').v4().toString();
+              var id = require('uuid').v4().toString();
               callback(null, id);
             }, 10);
           });
@@ -201,7 +201,7 @@ describe('aggregate definition', function () {
         it('it should be transformed internally to an asynchronous way', function(done) {
 
           aggr.defineAggregateIdGenerator(function () {
-            var id = require('node-uuid').v4().toString();
+            var id = require('uuid').v4().toString();
             return id;
           });
 
@@ -220,7 +220,7 @@ describe('aggregate definition', function () {
 
           aggr.defineAggregateIdGenerator(function (callback) {
             setTimeout(function () {
-              var id = require('node-uuid').v4().toString();
+              var id = require('uuid').v4().toString();
               callback(null, id);
             }, 10);
           });
