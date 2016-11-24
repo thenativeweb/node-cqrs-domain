@@ -3,7 +3,7 @@ var expect = require('expect.js'),
   api = require('../../index'),
   async = require('async'),
   _ = require('lodash'),
-  uuid = require('node-uuid').v4;
+  uuid = require('uuid').v4;
 
 describe('migration of domain', function () {
 

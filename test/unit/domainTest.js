@@ -235,7 +235,7 @@ describe('domain', function () {
         it('it should be transformed internally to an asynchronous way', function(done) {
 
           domain.aggregateIdGenerator(function () {
-            var id = require('node-uuid').v4().toString();
+            var id = require('uuid').v4().toString();
             return id;
           });
 
@@ -254,7 +254,7 @@ describe('domain', function () {
 
           domain.aggregateIdGenerator(function (callback) {
             setTimeout(function () {
-              var id = require('node-uuid').v4().toString();
+              var id = require('uuid').v4().toString();
               callback(null, id);
             }, 10);
           });
@@ -284,7 +284,7 @@ describe('domain', function () {
         it('it should be transformed internally to an asynchronous way', function(done) {
 
           domain.idGenerator(function () {
-            var id = require('node-uuid').v4().toString();
+            var id = require('uuid').v4().toString();
             return id;
           });
 
@@ -303,7 +303,7 @@ describe('domain', function () {
 
           domain.idGenerator(function (callback) {
             setTimeout(function () {
-              var id = require('node-uuid').v4().toString();
+              var id = require('uuid').v4().toString();
               callback(null, id);
             }, 10);
           });
