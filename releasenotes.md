@@ -1,3 +1,6 @@
+## [v2.3.21](https://github.com/adrai/node-cqrs-domain/compare/v2.3.20...v2.3.21)
+- update deps
+
 ## [v2.3.20](https://github.com/adrai/node-cqrs-domain/compare/v2.3.19...v2.3.20)
 - update eventstore
 

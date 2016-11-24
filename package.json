@@ -12,15 +12,15 @@
   },
   "dependencies": {
     "async": "1.5.2",
-    "debug": "2.3.2",
+    "debug": "2.3.3",
     "dotty": "0.0.2",
-    "eventstore": "1.10.2",
+    "eventstore": "1.10.3",
     "jsondate": "0.0.1",
-    "lodash": "4.16.6",
+    "lodash": "4.17.2",
     "parent-require": "1.0.0",
     "tolerance": "1.0.0",
     "tv4": "1.2.7",
-    "uuid": "^3.0.0"
+    "uuid": "3.0.0"
   },
   "devDependencies": {
     "azure-storage": ">=0.10.0",
