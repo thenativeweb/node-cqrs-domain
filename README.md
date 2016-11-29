@@ -674,7 +674,11 @@ After the initialization you can request the domain information:
 
 	  // optional, default false
 	  // only optionally needed when skipHistory is set to true, only the last event will be loaded and applyed
-	  applyLastEvent: true
+	  applyLastEvent: true,
+
+	  // optional, default false
+	  // will publish the events but will not commit them to the eventstore
+	  disablePersistence: false
 	},
 
 	// optionally, define some initialization data...
