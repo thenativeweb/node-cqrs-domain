@@ -706,6 +706,8 @@ describe('defaultCommandHandler', function () {
           aggregateId: 'aId'
         };
 
+        cmdHnd.useAggregate({ name: 'aggName', context: { name: 'ctxName' } });
+
         cmdHnd.defineEvent({
           context: 'context',
           aggregate: 'aggregate',
