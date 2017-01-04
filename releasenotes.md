@@ -1,3 +1,6 @@
+## [v2.4.5](https://github.com/adrai/node-cqrs-domain/compare/v2.4.4...v2.4.5)
+- update deps
+
 ## [v2.4.4](https://github.com/adrai/node-cqrs-domain/compare/v2.3.21...v2.4.4)
 - possibility to disable persistence on an aggregate
 
