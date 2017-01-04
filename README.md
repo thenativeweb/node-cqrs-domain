@@ -1072,7 +1072,7 @@ Is your use case not solvable without a custom command handling? Sagas? Micro-Se
 
 # License
 
-Copyright (c) 2016 Adriano Raiano
+Copyright (c) 2017 Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
