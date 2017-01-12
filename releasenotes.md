@@ -1,3 +1,6 @@
+## [v2.4.6](https://github.com/adrai/node-cqrs-domain/compare/v2.4.5...v2.4.6)
+- possibility to set payload to '' if there is a defaultPayload in handlers
+
 ## [v2.4.5](https://github.com/adrai/node-cqrs-domain/compare/v2.4.4...v2.4.5)
 - update deps
 
