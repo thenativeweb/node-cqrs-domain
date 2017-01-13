@@ -14,7 +14,7 @@
     "async": "1.5.2",
     "debug": "2.6.0",
     "dotty": "0.0.2",
-    "eventstore": "1.11.0",
+    "eventstore": "1.11.1",
     "jsondate": "0.0.1",
     "lodash": "4.17.4",
     "parent-require": "1.0.0",

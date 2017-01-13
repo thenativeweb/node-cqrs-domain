@@ -1,3 +1,6 @@
+## [v2.4.7](https://github.com/adrai/node-cqrs-domain/compare/v2.4.6...v2.4.7)
+- update eventstore
+
 ## [v2.4.6](https://github.com/adrai/node-cqrs-domain/compare/v2.4.5...v2.4.6)
 - possibility to set payload to '' if there is a defaultPayload in handlers
 
