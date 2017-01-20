@@ -1,3 +1,6 @@
+## [v2.4.8](https://github.com/adrai/node-cqrs-domain/compare/v2.4.7...v2.4.8)
+- fix preLoadConditions check
+
 ## [v2.4.7](https://github.com/adrai/node-cqrs-domain/compare/v2.4.6...v2.4.7)
 - update eventstore
 
