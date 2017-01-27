@@ -278,8 +278,8 @@ describe('defaultCommandHandler', function () {
         it('it should work as expected', function (done) {
 
           var snap = { version: 2, data: 'my data' };
-          var stream = { events: [ { payload: { the: 'event' } } ] };
-          var streamAll = { events: [ { payload: { the: 'eventOld' } }, { payload: { the: 'event' } } ] };
+          var stream = { events: [ { payload: { the: 'event' }, streamRevision: 1, id: 'id2' } ] };
+          var streamAll = { events: [ { payload: { the: 'eventOld' }, streamRevision: 0, id: 'id1' }, { payload: { the: 'event' }, streamRevision: 1, id: 'id2' } ] };
           var calledBackSnap = false;
           var calledLoad = false;
           var eventStore = {
@@ -315,16 +315,16 @@ describe('defaultCommandHandler', function () {
             loadFromHistory: function (aggregate, snapshot, events, time) {
             if (firstTime) {
               expect(aggregate.id).to.eql('myAggId');
-              expect(snapshot.data).to.eql('my data');
-              expect(events.length).to.eql(0);
+              expect(snapshot).not.to.be.ok();
+              expect(events.length).to.eql(2);
               expect(time).to.be.greaterThan(5);
 
               firstTime = false;
             } else {
               expect(aggregate.id).to.eql('myAggId');
               expect(snapshot).not.to.be.ok();
-              expect(events.length).to.eql(1);
-              expect(events[0]).to.eql(stream.events[0].payload);
+              expect(events.length).to.eql(2);
+              expect(events[1]).to.eql(stream.events[0].payload);
               expect(time).to.be.greaterThan(5);
             }
 

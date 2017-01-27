@@ -1,3 +1,6 @@
+## [v2.5.0](https://github.com/adrai/node-cqrs-domain/compare/v2.4.8...v2.5.0)
+- reactivate ignoring snapshots
+
 ## [v2.4.8](https://github.com/adrai/node-cqrs-domain/compare/v2.4.7...v2.4.8)
 - fix preLoadConditions check
 
