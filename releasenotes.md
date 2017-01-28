@@ -1,3 +1,6 @@
+## [v2.5.1](https://github.com/adrai/node-cqrs-domain/compare/v2.5.0...v2.5.1)
+- update eventstore
+
 ## [v2.5.0](https://github.com/adrai/node-cqrs-domain/compare/v2.4.8...v2.5.0)
 - reactivate ignoring snapshots
 
