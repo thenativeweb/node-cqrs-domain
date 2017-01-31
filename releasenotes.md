@@ -1,4 +1,4 @@
-## [v2.5.3](https://github.com/adrai/node-cqrs-domain/compare/v2.5.2...v2.5.3)
+## [v2.5.4](https://github.com/adrai/node-cqrs-domain/compare/v2.5.2...v2.5.4)
 - make command handling faster for some use cases
 
 ## [v2.5.2](https://github.com/adrai/node-cqrs-domain/compare/v2.5.1...v2.5.2)
