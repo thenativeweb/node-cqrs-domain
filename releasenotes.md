@@ -1,4 +1,4 @@
-## [v2.5.6](https://github.com/adrai/node-cqrs-domain/compare/v2.5.5...v2.5.6)
+## [v2.5.7](https://github.com/adrai/node-cqrs-domain/compare/v2.5.5...v2.5.7)
 - fix for new mongodb driver
 
 ## [v2.5.5](https://github.com/adrai/node-cqrs-domain/compare/v2.5.2...v2.5.5)
