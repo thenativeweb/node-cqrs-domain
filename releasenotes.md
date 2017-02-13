@@ -1,3 +1,6 @@
+## [v2.5.6](https://github.com/adrai/node-cqrs-domain/compare/v2.5.5...v2.5.6)
+- fix for new mongodb driver
+
 ## [v2.5.5](https://github.com/adrai/node-cqrs-domain/compare/v2.5.2...v2.5.5)
 - make command handling faster for some use cases
 
