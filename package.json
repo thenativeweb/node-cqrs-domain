@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "async": "1.5.2",
-    "debug": "2.6.3",
+    "debug": "2.6.7",
     "dotty": "0.0.2",
     "eventstore": "1.12.2",
     "jsondate": "0.0.1",
