@@ -1,3 +1,6 @@
+## [v2.5.8](https://github.com/adrai/node-cqrs-domain/compare/v2.5.7...v2.5.8)
+- update eventstore
+
 ## [v2.5.7](https://github.com/adrai/node-cqrs-domain/compare/v2.5.5...v2.5.7)
 - fix for new mongodb driver
 
