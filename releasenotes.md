@@ -1,3 +1,6 @@
+## [v2.5.10](https://github.com/adrai/node-cqrs-domain/compare/v2.5.9...v2.5.10)
+- correct resolve revision for commands that have no aggregate or context specified [#92](https://github.com/adrai/node-cqrs-domain/pull/#92) thanks to [velislav-bankov](https://github.com/velislav-bankov)
+
 ## [v2.5.9](https://github.com/adrai/node-cqrs-domain/compare/v2.5.8...v2.5.9)
 - update eventstore
 
