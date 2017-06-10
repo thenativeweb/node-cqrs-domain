@@ -736,7 +736,20 @@ After the initialization you can request the domain information:
 	    var id = require('uuid').v4().toString();
 	    callback(null, id);
 	  }, 50);
-	});
+	})
+  // optionally, define idGenerator function for new aggregate ids that are command aware
+  // if you define it that way, the normal defineAggregateIdGenerator function will be replaced
+  // sync
+  .defineCommandAwareAggregateIdGenerator(function (cmd) {
+    return cmd.id + require('uuid').v4().toString();
+  });
+  // or async
+  .defineCommandAwareAggregateIdGenerator(function (cmd, callback) {
+    setTimeout(function () {
+      var id = cmd.id + require('uuid').v4().toString();
+      callback(null, id);
+    }, 50);
+  });
 
 
 ## Command validation

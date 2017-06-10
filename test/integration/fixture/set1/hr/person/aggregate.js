@@ -11,7 +11,10 @@ module.exports = require('../../../../../../').defineAggregate({
   emails: ['default@mycomp.org'],
   phoneNumbers: []
 })
-  // define snapshot need algorithm...
+.defineCommandAwareAggregateIdGenerator(function (cmd) {
+  return cmd.id + require('uuid').v4().toString();
+})
+// define snapshot need algorithm...
 .defineSnapshotNeed(function (loadingTime, events, aggregate) {
   return events.length >= 20;
 })

@@ -791,6 +791,60 @@ describe('integration', function () {
 
         });
 
+        describe('that is completely valid but with usage of defineCommandAwareAggregateIdGenerator', function () {
+
+          it('it should publish a the resulting event and it should callback without an error and with events', function (done) {
+
+            var publishedEvents = [];
+
+            domain.onEvent(function (evt) {
+              publishedEvents.push(evt);
+            });
+
+            var cmd = {
+              id: 'mySpecialCommandId' + uuid().toString(),
+              name: 'enterNewPerson',
+              aggregate: {
+                name: 'person'
+              },
+              context: {
+                name: 'hr'
+              },
+              payload: {
+                firstname: 'jack',
+                lastname: 'doe',
+                email: 'jack'
+              },
+              revision: 0,
+              version: 0,
+              meta: {
+                userId: 'userId'
+              }
+            };
+
+            domain.handle(cmd, function (err, evts, aggData, meta) {
+              expect(err).not.to.be.ok();
+              expect(evts.length).to.eql(1);
+              expect(evts[0].name).to.eql('enteredNewPerson');
+              expect(evts[0].payload).to.eql(cmd.payload);
+              expect(evts[0].meta).to.eql(cmd.meta);
+              expect(publishedEvents.length).to.eql(1);
+              expect(publishedEvents[0].name).to.eql('enteredNewPerson');
+              expect(publishedEvents[0].payload).to.eql(cmd.payload);
+              expect(publishedEvents[0].meta).to.eql(cmd.meta);
+
+              expect(aggData.lastname).to.eql('doe');
+              expect(meta.aggregateId.indexOf('mySpecialCommandId')).to.eql(0);
+              expect(meta.aggregate).to.eql('person');
+              expect(meta.context).to.eql('hr');
+
+              done();
+            });
+
+          });
+
+        });
+
         describe('that is completely valid', function () {
 
           it('it should publish a the resulting event and it should callback without an error and with events', function (done) {

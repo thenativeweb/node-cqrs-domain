@@ -1,3 +1,6 @@
+## [v2.6.0](https://github.com/adrai/node-cqrs-domain/compare/v2.5.10...v2.6.0)
+- Added non breaking commandAwareAggregateIdGenerator [#93](https://github.com/adrai/node-cqrs-domain/pull/#93) thanks to the idea of [nanov](https://github.com/nanov)
+
 ## [v2.5.10](https://github.com/adrai/node-cqrs-domain/compare/v2.5.9...v2.5.10)
 - correct resolve revision for commands that have no aggregate or context specified [#92](https://github.com/adrai/node-cqrs-domain/pull/#92) thanks to [velislav-bankov](https://github.com/velislav-bankov)
 

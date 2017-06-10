@@ -35,6 +35,7 @@ describe('aggregate definition', function () {
 
       expect(aggr.idGenerator).to.be.a('function');
       expect(aggr.defineAggregateIdGenerator).to.be.a('function');
+      expect(aggr.defineCommandAwareAggregateIdGenerator).to.be.a('function');
       expect(aggr.defineContext).to.be.a('function');
       expect(aggr.addCommand).to.be.a('function');
       expect(aggr.addEvent).to.be.a('function');
@@ -214,7 +215,26 @@ describe('aggregate definition', function () {
 
       });
 
-      describe('in an synchronous way', function() {
+      describe('in a synchronous way command aware', function() {
+
+        it('it should be transformed internally to an asynchronous way', function(done) {
+
+          aggr.defineCommandAwareAggregateIdGenerator(function (cmd) {
+            var id = cmd.id + require('uuid').v4().toString();
+            return id;
+          });
+
+          aggr.getNewAggregateId({ id: 'cmdId' }, function (err, id) {
+            expect(id).to.be.a('string');
+            expect(id.indexOf('cmdId')).to.eql(0);
+            done();
+          });
+
+        });
+
+      });
+
+      describe('in an asynchronous way', function() {
 
         it('it should be taken as it is', function(done) {
 
@@ -227,6 +247,27 @@ describe('aggregate definition', function () {
 
           aggr.getNewAggregateId(function (err, id) {
             expect(id).to.be.a('string');
+            done();
+          });
+
+        });
+
+      });
+
+      describe('in an asynchronous way command aware', function() {
+
+        it('it should be taken as it is', function(done) {
+
+          aggr.defineCommandAwareAggregateIdGenerator(function (cmd, callback) {
+            setTimeout(function () {
+              var id = cmd.id + require('uuid').v4().toString();
+              callback(null, id);
+            }, 10);
+          });
+
+          aggr.getNewAggregateId({ id: 'cmdId' }, function (err, id) {
+            expect(id).to.be.a('string');
+            expect(id.indexOf('cmdId')).to.eql(0);
             done();
           });
 
