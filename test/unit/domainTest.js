@@ -239,7 +239,7 @@ describe('domain', function () {
             return id;
           });
 
-          domain.getNewAggregateId(function (err, id) {
+          domain.getNewAggregateId({}, function (err, id) {
             expect(id).to.be.a('string');
             done();
           });
@@ -259,7 +259,7 @@ describe('domain', function () {
             }, 10);
           });
 
-          domain.getNewAggregateId(function (err, id) {
+          domain.getNewAggregateId({}, function (err, id) {
             expect(id).to.be.a('string');
             done();
           });
