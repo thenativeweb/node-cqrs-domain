@@ -997,7 +997,7 @@ describe('defaultCommandHandler', function () {
             });
 
             cmdHnd.useAggregate({
-              getNewAggregateId: function ({}, clb) {
+              getNewAggregateId: function (cmd, clb) {
                 clb(null, 'newIdFromAggregate');
               }
             });
