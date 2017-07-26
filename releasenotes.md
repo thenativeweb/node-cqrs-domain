@@ -1,3 +1,6 @@
+## [v2.7.0](https://github.com/adrai/node-cqrs-domain/compare/v2.6.0...v2.7.0)
+- Added non-breaking option for asynchronous command validation. [#99](https://github.com/adrai/node-cqrs-domain/pull/#99) thanks to the idea of [velislav-bankov](https://github.com/velislav-bankov)
+
 ## [v2.6.0](https://github.com/adrai/node-cqrs-domain/compare/v2.5.10...v2.6.0)
 - Added non breaking commandAwareAggregateIdGenerator [#93](https://github.com/adrai/node-cqrs-domain/pull/#93) thanks to the idea of [nanov](https://github.com/nanov)
 
