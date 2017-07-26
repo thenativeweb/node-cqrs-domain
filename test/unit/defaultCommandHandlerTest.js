@@ -524,13 +524,13 @@ describe('defaultCommandHandler', function () {
 
         var cmd = { my: 'cmd' };
         var aggr = {
-          validateCommand: function (c) {
+          validateCommand: function (c, clb) {
             expect(c).to.eql(cmd);
-            done();
+            clb();
           }
         };
         cmdHnd.useAggregate(aggr);
-        cmdHnd.validateCommand(cmd);
+        cmdHnd.validateCommand(cmd, function (error, result){ done() });
 
       });
 
@@ -739,10 +739,11 @@ describe('defaultCommandHandler', function () {
 
         var step = 1;
 
-        cmdHnd.validateCommand = function (c) {
+        cmdHnd.validateCommand = function (c, clb) {
           expect(c).to.eql(cmd);
           expect(step).to.eql(1);
           step++;
+          clb();
         };
 
         cmdHnd.checkPreLoadConditions = function (a, clb) {
