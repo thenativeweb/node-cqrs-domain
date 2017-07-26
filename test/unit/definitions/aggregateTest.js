@@ -987,7 +987,7 @@ describe('aggregate definition', function () {
 
       describe('passing a command object that not have a name', function () {
 
-        it('it should throw an Error', function () {
+        it('it should throw an Error', function (done) {
 
           var aggr = api.defineAggregate();
 
@@ -995,9 +995,10 @@ describe('aggregate definition', function () {
             name: 'cmdName'
           });
 
-          expect(function () {
-            aggr.validateCommand({ my: 'cmd', with: 'payload' });
-          }).to.throwError(/name/);
+          aggr.validateCommand({ my: 'cmd', with: 'payload' }, function(err){
+            expect(err).to.be.an(Error);
+            done();
+          });
 
         });
 
@@ -1005,7 +1006,7 @@ describe('aggregate definition', function () {
 
       describe('passing a command object that not matches an existing command', function () {
 
-        it('it should throw an Error', function () {
+        it('it should throw an Error', function (done) {
 
           var aggr = api.defineAggregate();
 
@@ -1013,17 +1014,18 @@ describe('aggregate definition', function () {
             name: 'cmdName'
           });
 
-          expect(function () {
-            aggr.validateCommand({ cmdName: 'cmd', with: 'payload' });
-          }).to.throwError(/not found/);
-
+          aggr.validateCommand({cmdName: 'cmd', with: 'payload'}, function (err) {
+            expect(err).to.be.an(Error);
+            done();
+          });
         });
+
 
       });
 
       describe('passing a command object that matches an existing command', function () {
 
-        it('it should not throw an Error', function () {
+        it('it should not throw an Error', function (done) {
 
           var aggr = api.defineAggregate();
 
@@ -1034,13 +1036,14 @@ describe('aggregate definition', function () {
 
           aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return null; }, defineAggregate: function () {} });
 
-          expect(function () {
-            aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' });
-          }).not.to.throwError();
+          aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' }, function(error){
+            expect(error).to.be.null;
+            done();
+          });
 
         });
 
-        it('it should return what the command validation function returns', function () {
+        it('it should return what the command validation function returns', function (done) {
 
           var aggr = api.defineAggregate();
 
@@ -1051,9 +1054,10 @@ describe('aggregate definition', function () {
 
           aggr.addCommand({ name: 'cmd', version: 2, validate: function () { return 'myValidationRes'; }, defineAggregate: function () {} });
 
-          var err = aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' });
-          expect(err).to.eql('myValidationRes')
-
+          aggr.validateCommand({ cmdName: 'cmd', v: 2, with: 'payload' }, function(err) {
+            expect(err).to.eql('myValidationRes');
+            done();
+          });
         });
 
       });

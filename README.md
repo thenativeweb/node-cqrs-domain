@@ -779,6 +779,7 @@ To extend tv4 just catch the validator before having initialized the domain:
         // options.schemas => all schemas
         // options.formats => all formats
 
+        // sync        
         return function (cmdDataToValidate) {
           if (everythingIsOk) {
             return null;
@@ -786,6 +787,17 @@ To extend tv4 just catch the validator before having initialized the domain:
             return new require('cqrs-domain').errors.ValidationError('command not valid', { 'because': 'of this' });
           }
         };
+        // or async
+        return function (cmdDataToValidate, callback) {
+          externalAsyncValidator(cmdDataToValidate, function(errors){
+            if (!error) {
+                callback();
+            } else {
+                callback(new require('cqrs-domain').errors.ValidationError('command not valid', { 'because': 'of this' }));
+            }
+          });
+        };
+                   
       });
 
     });
