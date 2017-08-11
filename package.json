@@ -23,6 +23,7 @@
     "uuid": "3.0.1"
   },
   "devDependencies": {
+    "aws-sdk": "2.94.0",
     "azure-storage": ">=0.10.0",
     "cradle": ">=0.6.7",
     "eslint": ">=1.0.0",

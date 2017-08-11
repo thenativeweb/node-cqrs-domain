@@ -1,4 +1,16 @@
 sudo: false
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-set-default
+
+before_install:
+  - wget http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz -O /tmp/dynamodb_local_latest.tar.gz
+  - tar -xzf /tmp/dynamodb_local_latest.tar.gz -C /tmp
+  - java -Djava.library.path=/tmp/DynamoDBLocal_lib -jar /tmp/DynamoDBLocal.jar -inMemory &
+  - sleep 2
+  
 services:
   - redis-server
   - mongodb
@@ -19,3 +31,10 @@ branches:
 notifications:
   email:
     - adriano@raiano.ch
+
+env:
+  global:
+    - AWS_ACCESS_KEY_ID=AKID
+    - AWS_SECRET_ACCESS_KEY=SECRET
+    - AWS_REGION=us-east-1
+    - AWS_DYNAMODB_ENDPOINT=http://localhost:8000
