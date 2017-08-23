@@ -1,3 +1,6 @@
+## [v2.8.1](https://github.com/adrai/node-cqrs-domain/compare/v2.8.0...v2.8.1)
+- fix aggregateLock [#103](https://github.com/adrai/node-cqrs-domain/pull/#103) thanks to [emmkong](https://github.com/emmkong)
+
 ## [v2.8.0](https://github.com/adrai/node-cqrs-domain/compare/v2.7.0...v2.8.0)
 - dynamodb aggregateLock implementation [#100](https://github.com/adrai/node-cqrs-domain/pull/#100) thanks to [emmkong](https://github.com/emmkong)
 
