@@ -1,3 +1,6 @@
+## [v2.9.0](https://github.com/adrai/node-cqrs-domain/compare/v2.8.1...v2.9.0)
+- Support default exports [#104](https://github.com/adrai/node-cqrs-domain/pull/#104) thanks to [IRT-fbachmann](https://github.com/IRT-fbachmann)
+
 ## [v2.8.1](https://github.com/adrai/node-cqrs-domain/compare/v2.8.0...v2.8.1)
 - fix aggregateLock [#103](https://github.com/adrai/node-cqrs-domain/pull/#103) thanks to [emmkong](https://github.com/emmkong)
 
