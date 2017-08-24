@@ -1092,6 +1092,28 @@ Is your use case not solvable without a custom command handling? Sagas? Micro-Se
 	  });
 	});
 
+## ES6 default exports
+Importing ES6 style default exports is supported for all definitions where you also use `module.exports`:
+```
+module.exports = defineContext({...});
+```
+works as well as 
+```
+exports.default = defineContext({...});
+```
+as well as (must be transpiled by babel or tsc to be runnable in node)
+```
+export default defineContext({...});
+```
+
+Also: 
+```
+exports.default = defineAggregate({...});
+exports.default = defineCommand({...});
+exports.default = defineEvent({...});
+// etc...
+```
+Exports other than the default export are then ignored by this package's structure loader.
 
 [Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
 
