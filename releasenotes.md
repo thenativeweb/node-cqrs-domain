@@ -1,3 +1,6 @@
+## [v2.9.1](https://github.com/adrai/node-cqrs-domain/compare/v2.9.0...v2.9.1)
+- fixing dynamodb DocumentClient initialization [#105](https://github.com/adrai/node-cqrs-domain/pull/105) thanks to [Glockenbeat](https://github.com/Glockenbeat)
+
 ## [v2.9.0](https://github.com/adrai/node-cqrs-domain/compare/v2.8.1...v2.9.0)
 - Support default exports [#104](https://github.com/adrai/node-cqrs-domain/pull/#104) thanks to [IRT-fbachmann](https://github.com/IRT-fbachmann)
 
