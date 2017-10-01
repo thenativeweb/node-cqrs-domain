@@ -1,3 +1,6 @@
+## [v2.9.2](https://github.com/adrai/node-cqrs-domain/compare/v2.9.1...v2.9.2)
+- update eventstore
+
 ## [v2.9.1](https://github.com/adrai/node-cqrs-domain/compare/v2.9.0...v2.9.1)
 - fixing dynamodb DocumentClient initialization [#105](https://github.com/adrai/node-cqrs-domain/pull/105) thanks to [Glockenbeat](https://github.com/Glockenbeat)
 
