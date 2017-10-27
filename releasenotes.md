@@ -1,3 +1,6 @@
+## [v2.9.5](https://github.com/adrai/node-cqrs-domain/compare/v2.9.4...v2.9.5)
+- update eventstore
+
 ## [v2.9.4](https://github.com/adrai/node-cqrs-domain/compare/v2.9.3...v2.9.4)
 - update eventstore
 
