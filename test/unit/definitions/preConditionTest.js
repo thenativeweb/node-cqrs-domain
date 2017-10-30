@@ -63,7 +63,7 @@ describe('pre-condition definition', function () {
         expect(pc).to.be.a(PreCondition);
         expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql(undefined);
-        expect(pc.version).to.eql(0);
+        expect(pc.version).to.eql(undefined);
         expect(pc.priority).to.eql(Infinity);
         expect(pc.payload).to.eql(null);
         expect(pc.definitions).to.be.an('object');
@@ -74,6 +74,34 @@ describe('pre-condition definition', function () {
         expect(pc.defineOptions).to.be.a('function');
 
         expect(pc.check).to.be.a('function');
+
+      });
+
+      describe('with a defined version', function () {
+
+        it('it should return a correct object', function () {
+
+          var pcFn = function () {};
+          var pc = api.definePreCondition({
+            version: 0
+          }, pcFn);
+          expect(pc).to.be.a(DefinitionBase);
+          expect(pc).to.be.a(PreCondition);
+          expect(pc.preConditionFn).to.eql(pcFn);
+          expect(pc.description).to.eql(undefined);
+          expect(pc.version).to.eql(0);
+          expect(pc.priority).to.eql(Infinity);
+          expect(pc.payload).to.eql(null);
+          expect(pc.definitions).to.be.an('object');
+          expect(pc.definitions.command).to.be.an('object');
+          expect(pc.definitions.event).to.be.an('object');
+          expect(pc.defineCommand).to.be.a('function');
+          expect(pc.defineEvent).to.be.a('function');
+          expect(pc.defineOptions).to.be.a('function');
+
+          expect(pc.check).to.be.a('function');
+
+        });
 
       });
 
@@ -97,7 +125,7 @@ describe('pre-condition definition', function () {
         expect(pc).to.be.a(PreCondition);
         expect(pc.preConditionFn).to.eql(pcFn);
         expect(pc.description).to.eql('bla bla bla');
-        expect(pc.version).to.eql(0);
+        expect(pc.version).to.eql(undefined);
         expect(pc.priority).to.eql(3);
         expect(pc.payload).to.eql(null);
         expect(pc.definitions).to.be.an('object');

@@ -1,3 +1,6 @@
+## [v2.9.6](https://github.com/adrai/node-cqrs-domain/compare/v2.9.5...v2.9.6)
+- fixing definePreLoadCondition handing commands with version [#111](https://github.com/adrai/node-cqrs-domain/issues/111) thanks to [repkins](https://github.com/repkins)
+
 ## [v2.9.5](https://github.com/adrai/node-cqrs-domain/compare/v2.9.4...v2.9.5)
 - update eventstore
 

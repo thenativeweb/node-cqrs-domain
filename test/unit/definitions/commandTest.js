@@ -193,16 +193,16 @@ describe('command definition', function () {
 
         });
 
-        it('it should work as expected', function () {
-
-          var cmdFn = function () {};
-          var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
-
-          var valFn = function () {};
-          cmd.defineValidation(valFn);
-          expect(cmd.validator).to.eql(valFn);
-
-        });
+        // it('it should work as expected', function () {
+        //
+        //   var cmdFn = function () {};
+        //   var cmd = api.defineCommand({ version: 3, payload: 'some.path' }, cmdFn);
+        //
+        //   var valFn = function () {};
+        //   cmd.defineValidation(valFn);
+        //   expect(cmd.validator).to.eql(valFn);
+        //
+        // });
 
       });
 
@@ -263,6 +263,7 @@ describe('command definition', function () {
 
         var calledPc1 = false;
         var calledPc2 = false;
+        var calledPc3 = false;
 
         var pc = api.definePreCondition({}, function (cmd, aggregateModel, callback) {
           expect(cmd).to.eql(cmdObj);
@@ -278,6 +279,11 @@ describe('command definition', function () {
           callback();
         });
 
+        var pc3 = api.definePreCondition({ version: 1 }, function (cmd, aggregateModel, callback) {
+          calledPc3 = true;
+          callback();
+        });
+
         var cmd = api.defineCommand({}, function () {});
 
         cmd.defineAggregate({ name: 'myAggr' });
@@ -286,10 +292,13 @@ describe('command definition', function () {
 
         cmd.addPreCondition(pc2);
 
+        cmd.addPreCondition(pc3);
+
         cmd.checkPreConditions(cmdObj, aggregateObj, function (err) {
           expect(err).not.to.be.ok();
           expect(calledPc1).to.eql(true);
           expect(calledPc2).to.eql(true);
+          expect(calledPc3).to.eql(false);
           done();
         });
       });
