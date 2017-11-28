@@ -543,6 +543,8 @@ describe('defaultCommandHandler', function () {
         var cmd = { my: 'cmd' };
         var aggr = { my: 'aggr' };
 
+        cmdHnd.useAggregate({});
+
         cmdHnd.isAggregateDestroyed = function (a) {
           expect(a).to.eql(aggr);
           return null;
