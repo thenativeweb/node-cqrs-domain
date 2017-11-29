@@ -174,7 +174,11 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 			prefix: 'domain_aggregate_lock',            // optional
 			timeout: 10000                              // optional
 			// password: 'secret'                          // optional
-	  }
+	  },
+	  
+	  // optional, default false
+	  // resolves valid file types from loader extensions instead of default values while parsing definition files
+	  useLoaderExtensions: true
 	});
 
 ## Using factory methods for event store or / and aggregate lock in domain definition
