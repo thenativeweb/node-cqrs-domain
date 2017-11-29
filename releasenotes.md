@@ -1,3 +1,6 @@
+## [v2.10.0](https://github.com/adrai/node-cqrs-domain/compare/v2.9.8...v2.10.0)
+- Use of node loader extensions for valid file types of parsing definition sources [#113](https://github.com/adrai/node-cqrs-domain/pull/113) thanks to [repkins](https://github.com/repkins)
+
 ## [v2.9.8](https://github.com/adrai/node-cqrs-domain/compare/v2.9.7...v2.9.8)
 - do not verify the revision when disablePersistence is set to true [#112](https://github.com/adrai/node-cqrs-domain/issues/112) thanks to [repkins](https://github.com/repkins)
 
