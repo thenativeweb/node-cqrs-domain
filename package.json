@@ -29,7 +29,7 @@
     "eslint": ">=1.0.0",
     "expect.js": ">= 0.1.2",
     "mocha": "3.x.x",
-    "mongodb": ">= 0.0.1",
+    "mongodb": "2.1.x",
     "redis": ">= 0.10.1",
     "tingodb": ">= 0.0.1",
     "tv4-formats": ">=1.0.0"
