@@ -1,3 +1,6 @@
+## [v2.11.0](https://github.com/adrai/node-cqrs-domain/compare/v2.10.0...v2.11.0)
+- compatibility with new mongodb version (3.x)
+
 ## [v2.10.0](https://github.com/adrai/node-cqrs-domain/compare/v2.9.8...v2.10.0)
 - Use of node loader extensions for valid file types of parsing definition sources [#113](https://github.com/adrai/node-cqrs-domain/pull/113) thanks to [repkins](https://github.com/repkins)
 

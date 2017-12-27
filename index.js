@@ -1,5 +1,3 @@
-'use strict';
-
 var Domain = require('./lib/domain'),
   ValidationError = require('./lib/errors/validationError'),
   BusinessRuleError = require('./lib/errors/businessRuleError'),

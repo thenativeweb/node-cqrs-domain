@@ -175,7 +175,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 			timeout: 10000                              // optional
 			// password: 'secret'                          // optional
 	  },
-	  
+
 	  // optional, default false
 	  // resolves valid file types from loader extensions instead of default values while parsing definition files
 	  useLoaderExtensions: true
@@ -801,7 +801,7 @@ To extend tv4 just catch the validator before having initialized the domain:
             }
           });
         };
-                   
+
       });
 
     });
@@ -1101,7 +1101,7 @@ Importing ES6 style default exports is supported for all definitions where you a
 ```
 module.exports = defineContext({...});
 ```
-works as well as 
+works as well as
 ```
 exports.default = defineContext({...});
 ```
@@ -1110,7 +1110,7 @@ as well as (must be transpiled by babel or tsc to be runnable in node)
 export default defineContext({...});
 ```
 
-Also: 
+Also:
 ```
 exports.default = defineAggregate({...});
 exports.default = defineCommand({...});
@@ -1123,7 +1123,7 @@ Exports other than the default export are then ignored by this package's structu
 
 # License
 
-Copyright (c) 2017 Adriano Raiano
+Copyright (c) 2018 Adriano Raiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
