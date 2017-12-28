@@ -1,3 +1,6 @@
+## [v2.11.1](https://github.com/adrai/node-cqrs-domain/compare/v2.11.0...v2.11.1)
+- update eventstore
+
 ## [v2.11.0](https://github.com/adrai/node-cqrs-domain/compare/v2.10.0...v2.11.0)
 - compatibility with new mongodb version (3.x)
 
