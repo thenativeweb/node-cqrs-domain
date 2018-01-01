@@ -775,7 +775,7 @@ To extend tv4 just catch the validator before having initialized the domain:
       });
 
       // or other schemas
-      validator.addSchema({ 'mySharedSchema'; { /* the schema json */ } });
+      validator.addSchema({ 'mySharedSchema': { /* the schema json */ } });
       validator.addSchema('myOtherSharedSchema', { /* the schema json */ });
 
       // or replace the core valitator
