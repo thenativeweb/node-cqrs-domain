@@ -1,3 +1,6 @@
+## [v2.12.0](https://github.com/adrai/node-cqrs-domain/compare/v2.11.4...v2.12.0)
+- introduce event transformers; to give possibility to be GDPR compliant
+
 ## [v2.11.4](https://github.com/adrai/node-cqrs-domain/compare/v2.11.2...v2.11.4)
 - remove deprecated option max_attempts from redis options
 
