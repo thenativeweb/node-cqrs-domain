@@ -212,7 +212,7 @@ describe('defaultCommandHandler', function () {
       it('it should work as expected', function (done) {
 
         var snap = { version: 2, data: 'my data' };
-        var stream = { events: [ { payload: { the: 'event' } } ] };
+        var stream = { events: [ { payload: { name: 'my-name', the: 'event' } } ] };
         var calledBackSnap = false;
         var calledLoad = false;
         var eventStore = {
@@ -235,6 +235,8 @@ describe('defaultCommandHandler', function () {
         cmdHnd.useEventStore(eventStore);
         cmdHnd.useAggregate({ name: 'aggName',
           context: { name: 'ctx' },
+          loadingSnapshotTransformers: {},
+          getLoadingEventTransformer: function () {},
           create: function (id) { return { id: id }; },
           loadFromHistory: function (aggregate, snapshot, events, time) {
             if (firstTime) {
@@ -278,8 +280,8 @@ describe('defaultCommandHandler', function () {
         it('it should work as expected', function (done) {
 
           var snap = { version: 2, data: 'my data' };
-          var stream = { events: [ { payload: { the: 'event' }, streamRevision: 1, id: 'id2' } ] };
-          var streamAll = { events: [ { payload: { the: 'eventOld' }, streamRevision: 0, id: 'id1' }, { payload: { the: 'event' }, streamRevision: 1, id: 'id2' } ] };
+          var stream = { events: [ { payload: { name: 'my-event', the: 'event' }, streamRevision: 1, id: 'id2' } ] };
+          var streamAll = { events: [ { payload: { name: 'my-event',  the: 'eventOld' }, streamRevision: 0, id: 'id1' }, { payload: { name: 'my-event',  the: 'event' }, streamRevision: 1, id: 'id2' } ] };
           var calledBackSnap = false;
           var calledLoad = false;
           var eventStore = {
@@ -311,6 +313,8 @@ describe('defaultCommandHandler', function () {
           cmdHnd.useEventStore(eventStore);
           cmdHnd.useAggregate({ name: 'aggName',
             context: { name: 'ctx' },
+            loadingSnapshotTransformers: {},
+            getLoadingEventTransformer: function () {},
             create: function (id) { return { id: id }; },
             loadFromHistory: function (aggregate, snapshot, events, time) {
             if (firstTime) {
@@ -384,7 +388,8 @@ describe('defaultCommandHandler', function () {
         cmdHnd.useEventStore(eventStore);
         cmdHnd.useAggregate({ name: 'aggName',
           context: { name: 'ctx' },
-          version: 2
+          version: 2,
+          committingSnapshotTransformers: {}
         });
 
         cmdHnd.createSnapshot(aggr, stream, function (err) {
@@ -689,7 +694,7 @@ describe('defaultCommandHandler', function () {
       it('it should work as expected', function (done) {
 
         var called = false;
-        var evts = [{ my: 'first', context: 'c', aggregate: 'a', aggregateId: 'aId' }, { my: 'second', context: 'c', aggregate: 'a', aggregateId: 'aId' }];
+        var evts = [{ payload: { name: 'my-event' }, my: 'first', context: 'c', aggregate: 'a', aggregateId: 'aId' }, { payload: { name: 'my-event' }, my: 'second', context: 'c', aggregate: 'a', aggregateId: 'aId' }];
         var agg = { getUncommittedEvents: function () { return evts; } };
         var stream = {
           eventsToDispatch: [],
@@ -708,7 +713,7 @@ describe('defaultCommandHandler', function () {
           aggregateId: 'aId'
         };
 
-        cmdHnd.useAggregate({ name: 'aggName', context: { name: 'ctxName' } });
+        cmdHnd.useAggregate({ name: 'aggName', context: { name: 'ctxName' }, getLoadingEventTransformer: function () {} });
 
         cmdHnd.defineEvent({
           context: 'context',

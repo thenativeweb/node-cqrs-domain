@@ -729,6 +729,42 @@ After the initialization you can request the domain information:
 	  aggregate.set('firstname', names[0]);
 	  aggregate.set('lastname', names[1]);
 	})
+  // optionally, define committingSnapshotTransformer (i.e. for GDPR: to encrypt data in storage)
+	.defineCommittingSnapshotTransformer({
+	  version: 1
+	}, function (data) {
+	  // data is the snapshot data
+	  data.firstname = encrypt(data.firstname);
+    return data;
+	})
+  // or async
+	.defineCommittingSnapshotTransformer({
+	  version: 1
+	}, function (data, callback) {
+	  // data is the snapshot data
+	  encrypt(data.firstname, function (err, encrypted) {
+      data.firstname = encrypted;
+      callback(err, data);
+    });
+	})
+  // optionally, define loadingSnapshotTransformer (i.e. for GDPR: to decrypt stored data)
+	.defineLoadingSnapshotTransformer({
+	  version: 1
+	}, function (data) {
+	  // data is the snapshot data
+	  data.firstname = decrypt(data.firstname);
+    return data;
+	})
+  // or async
+	.defineLoadingSnapshotTransformer({
+	  version: 1
+	}, function (data, callback) {
+	  // data is the snapshot data
+	  decrypt(data.firstname, function (err, decrypted) {
+      data.firstname = decrypted;
+      callback(err, data);
+    });
+	})
 	// optionally, define idGenerator function for new aggregate ids
 	// sync
 	.defineAggregateIdGenerator(function () {
@@ -1059,6 +1095,68 @@ This is the place where you should manipulate your aggregate.
     //   // or
     //   // throw new require('cqrs-domain').BusinessRuleError('names not valid', { /* more infos */ });
     // }
+	});
+
+
+## EventTransformer
+i.e. useful for GDPR relevant data... to have your data encrypted in the eventstore
+
+  // i.e. encrypt
+  module.exports = require('cqrs-domain').defineCommittingEventTransformer({
+	  // optional, default is file name without extension
+	  name: 'enteredNewPerson',
+
+	  // optional, default 0
+	  version: 3
+	},
+	// passing a function is optional
+	function (evt) {
+	  evt.payload.firstname = encrypt(evt.payload.firstname);
+    return evt;
+	});
+  // or async
+  module.exports = require('cqrs-domain').defineCommittingEventTransformer({
+	  // optional, default is file name without extension
+	  name: 'enteredNewPerson',
+
+	  // optional, default 0
+	  version: 3
+	},
+	// passing a function is optional
+	function (evt, callback) {
+	  encrypt(evt.payload.firstname, function (err, encrypted) {
+      evt.payload.firstname = encrypted;
+      callback(err, evt);
+    });
+	});
+
+  // i.e decrypt
+	module.exports = require('cqrs-domain').defineLoadingEventTransformer({
+	  // optional, default is file name without extension
+	  name: 'enteredNewPerson',
+
+	  // optional, default 0
+	  version: 3
+	},
+	// passing a function is optional
+	function (evt) {
+	  evt.payload.firstname = decrypt(evt.payload.firstname);
+    return evt;
+	});
+  // or async
+  module.exports = require('cqrs-domain').defineLoadingEventTransformer({
+	  // optional, default is file name without extension
+	  name: 'enteredNewPerson',
+
+	  // optional, default 0
+	  version: 3
+	},
+	// passing a function is optional
+	function (evt, callback) {
+	  decrypt(evt.payload.firstname, function (err, decrypted) {
+      evt.payload.firstname = decrypted;
+      callback(err, evt);
+    });
 	});
 
 

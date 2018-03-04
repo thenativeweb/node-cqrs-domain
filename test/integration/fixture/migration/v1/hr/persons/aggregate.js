@@ -12,4 +12,26 @@ module.exports = require('../../../../../../../').defineAggregate({
 })
 .defineSnapshotNeed(function (loadingTime, events, aggregate) {
   return events.length >= 2;
+})
+.defineLoadingSnapshotTransformer({
+  version: 0
+}, function (snap) {
+  if (snap.persons) {
+    for (var i = 0; i < snap.persons.length; i++) {
+      if (snap.persons[i].firstname.indexOf('_encrypted_') < 0) throw new Error('Encrypted prop not found!\nThis should not happen!');
+      snap.persons[i].firstname = snap.persons[i].firstname.replace('_encrypted_', '');
+    }
+  }
+  return snap;
+})
+.defineCommittingSnapshotTransformer({
+  version: 0
+}, function (snap) {
+  if (snap.persons) {
+    for (var i = 0; i < snap.persons.length; i++) {
+      if (snap.persons[i].firstname.indexOf('_encrypted_') === 0) throw new Error('Encrypted prop found!\nThis should not happen!');
+      snap.persons[i].firstname = '_encrypted_' + snap.persons[i].firstname;
+    }
+  }
+  return snap;
 });
