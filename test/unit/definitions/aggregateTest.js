@@ -1437,8 +1437,34 @@ describe('aggregate definition', function () {
 
         });
 
-      });
+        it('it should not set revision when persistance is disabled', function () {
 
+          var evts = [{ evtName: 'nonPersistant'}];
+          var rev = null;
+          var aggModel = {
+            set: function () {},
+            setRevision: function (info, r) { rev = r;},
+            toJSON: function () { return 'json'; }
+          };
+
+          var aggr = api.defineAggregate({
+            skipHistory: true,
+            applyLastEvent: true,
+            disablePersistence: true
+          });
+
+          aggr.apply = function (evts, aggregateModel) { // mock
+            expect(events).to.eql(evts);
+            expect(aggregateModel).to.eql(aggModel);
+            expect(aggregateModel).to.eql(aggModel);
+          };
+
+          expect(rev).to.eql(null);
+
+        });
+
+    });
+    
       describe('passing a snapshot and some events', function () {
 
         it('it should actualize the aggregateModel correctly', function () {
