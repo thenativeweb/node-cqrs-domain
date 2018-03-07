@@ -1,3 +1,6 @@
+## [v2.12.1](https://github.com/adrai/node-cqrs-domain/compare/v2.12.0...v2.12.1)
+- Do not set revision when persistence is disabled [#120](https://github.com/adrai/node-cqrs-domain/pull/120) thanks to [nanov](https://github.com/nanov)
+
 ## [v2.12.0](https://github.com/adrai/node-cqrs-domain/compare/v2.11.4...v2.12.0)
 - introduce event transformers; to give possibility to be GDPR compliant
 
