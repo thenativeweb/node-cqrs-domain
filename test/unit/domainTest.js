@@ -690,7 +690,7 @@ describe('domain', function () {
         it('it should return an event as expected', function () {
 
           var cmd = { i: 'cmdId', n: 'cmdName', ai: 'aggregateId', c: 'context', p: 'payload', r: 'revision', v: 'version', m: 'meta' };
-          var err = new AggregateDestroyedError('my err', { mo: 're' });
+          var err = new AggregateDestroyedError('my err', { mo: 're', aggregateRevision: 3 });
 
           var evt = domain.createCommandRejectedEvent(cmd, err);
 
@@ -700,7 +700,7 @@ describe('domain', function () {
           expect(evt.ai).to.eql(cmd.ai);
           expect(evt.c).to.eql(cmd.c);
           expect(evt.a).to.eql(cmd.a);
-          expect(evt.r).not.to.be.ok();
+          expect(evt.r).to.eql(3);
           expect(evt.v).not.to.be.ok();
           expect(evt.m).to.eql(cmd.m);
           expect(evt.p.command).to.eql(cmd);

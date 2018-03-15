@@ -1,3 +1,6 @@
+## [v2.12.2](https://github.com/adrai/node-cqrs-domain/compare/v2.12.1...v2.12.2)
+- generated rejectedCommand for AggregateDestroyedError now contains revision information (if provided)
+
 ## [v2.12.1](https://github.com/adrai/node-cqrs-domain/compare/v2.12.0...v2.12.1)
 - Do not set revision when persistence is disabled [#120](https://github.com/adrai/node-cqrs-domain/pull/120) thanks to [nanov](https://github.com/nanov)
 
