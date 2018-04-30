@@ -1,3 +1,6 @@
+## [v2.12.3](https://github.com/adrai/node-cqrs-domain/compare/v2.12.2...v2.12.3)
+- update eventstore
+
 ## [v2.12.2](https://github.com/adrai/node-cqrs-domain/compare/v2.12.1...v2.12.2)
 - generated rejectedCommand for AggregateDestroyedError now contains revision information (if provided)
 
