@@ -653,6 +653,18 @@ After the initialization you can request the domain information:
 	  name: 'hr'
 	});
 
+### Externally loaded context ( self-loaded ) 
+
+	A special option to define a context with all its aggregates, commands, events and rules exists by adding the externallyLoaded option to the context :
+
+	module.exports = require('cqrs-domain').defineContext({
+	  // optional, default is the directory name
+	  name: 'hr',
+		externallyLoaded: true
+	});
+
+	When doing so the context will be added 'as-is' to the domain, this means it won't go trough the normal tree loading and parsing process.
+	This option is aimed mainly at plugin developers, as it leaves the responsibility of structuring the domain right in the hand of the one defining the context ( most-probably a plug-in ).
 
 ## Aggregate
 
