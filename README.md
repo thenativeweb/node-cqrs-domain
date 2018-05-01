@@ -660,7 +660,7 @@ After the initialization you can request the domain information:
 	module.exports = require('cqrs-domain').defineContext({
 	  // optional, default is the directory name
 	  name: 'hr',
-		externallyLoaded: true
+	  externallyLoaded: true
 	});
 
 	When doing so the context will be added 'as-is' to the domain, this means it won't go trough the normal tree loading and parsing process.

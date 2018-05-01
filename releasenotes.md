@@ -1,3 +1,6 @@
+## [v2.13.0](https://github.com/adrai/node-cqrs-domain/compare/v2.12.3...v2.13.0)
+- Introduce externallyLoaded option to context, and load those separately [#121](https://github.com/adrai/node-cqrs-domain/pull/121) thanks to [nanov](https://github.com/nanov)
+
 ## [v2.12.3](https://github.com/adrai/node-cqrs-domain/compare/v2.12.2...v2.12.3)
 - update eventstore
 
