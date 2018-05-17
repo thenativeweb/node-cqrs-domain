@@ -77,6 +77,55 @@ describe('domain', function () {
 
     });
 
+    describe('with custom "structureLoader" method', function () {
+
+      describe('creating an object of the wrong interface', function () {
+
+        it('it should throw an error', function () {
+
+          expect(function () {
+            api({
+              domainPath: __dirname + '/../integration/fixture/set1',
+              structureLoader: {
+              },
+            })
+          }).to.throwError('/structureLoader/');
+
+        });
+      });
+
+      describe('creating an object of the right interface', function () {
+
+        it('it should return as expected', function () {
+
+          var domain = api({
+            domainPath: __dirname + '/../integration/fixture/set1',
+            structureLoader: function() {
+            }});
+          expect(domain).to.be.a('object');
+          expect(domain.on).to.be.a('function');
+          expect(domain.eventStore).to.be.an('object');
+          expect(domain.structureLoader).to.be.an('function');
+          expect(domain.eventStore.on).to.be.a('function');
+          expect(domain.aggregateLock).to.be.an('object');
+          expect(domain.aggregateLock.on).to.be.a('function');
+          expect(domain.defineCommand).to.be.a('function');
+          expect(domain.defineEvent).to.be.a('function');
+          expect(domain.idGenerator).to.be.a('function');
+          expect(domain.aggregateIdGenerator).to.be.a('function');
+          expect(domain.onEvent).to.be.a('function');
+          expect(domain.init).to.be.a('function');
+          expect(domain.handle).to.be.a('function');
+
+          expect(domain.options.retryOnConcurrencyTimeout).to.eql(800);
+          expect(domain.options.commandRejectedEventName).to.eql('commandRejected');
+          expect(domain.options.snapshotThreshold).to.eql(100);
+
+        });
+      });
+    });
+
+
     describe('with "eventStore" factory method', function () {
 
       describe('creating an object of the wrong interface', function () {
@@ -825,7 +874,48 @@ describe('domain', function () {
         });
 
       });
+    });
 
+    describe('loading custom structure', function() {
+      it('it should return as expected', function(done) {
+        var domain = api({
+          domainPath: __dirname + '/../integration/fixture/set1',
+          structureLoader: function(options) {
+            var context = new options.definitions.Context({
+              name: 'ctx',
+            });
+            var aggregate = new options.definitions.Aggregate({
+              name: 'agg'
+            }, function() {});
+            context.addAggregate(aggregate);
+            var command = new options.definitions.Command({
+              name: 'cmd'
+            }, function() {});
+            var event = new options.definitions.Event({
+              name: 'evt'
+            }, function() {});
+            aggregate.addCommand(command);
+            aggregate.addEvent(event);
+            return {
+              ctx: context
+            }
+          }
+        });
+
+        domain.init(function(){
+          var contexts = domain.getInfo().contexts;
+          expect(contexts.length).to.eql(1);
+          expect(contexts[0].name).to.eql('ctx');
+          expect(contexts[0].aggregates.length).to.eql(1);
+          expect(contexts[0].aggregates[0].name).to.eql('agg');
+          expect(contexts[0].aggregates[0].commands.length).to.eql(1);
+          expect(contexts[0].aggregates[0].commands[0].name).to.eql('cmd');
+          expect(contexts[0].aggregates[0].events.length).to.eql(1);
+          expect(contexts[0].aggregates[0].events[0].name).to.eql('evt');
+          done();
+        })
+
+      });
     });
 
     describe('handling a command', function () {
