@@ -263,237 +263,276 @@ When using factory methods, the objects they return are required to implement th
 You can also replace the built-in structure loader with one that suits your needs.
 To do that, you need to include a loading method in the options object passed to the domain constructor.
 
-    // options will contain a the domainPath, validatorExtension, and useLoaderExtensions options passed to the constructor
-    // ass well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. )
-    function myCustomLoader(options) {
-    	return {
-    		myContext:  new Context({ name: 'myContext' }).addAggregate(new Aggregate({ name : 'agg' }, function(){}).addCommand({ name: 'cmd' }, function(){}))
-    	}
-    	// or, more probably
-    	return myExternalCoolLoader(options.domainPath, options.definitions);
-    }
+```javascript
+// options will contain a the domainPath, validatorExtension, and useLoaderExtensions options passed to the constructor
+// ass well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. )
+function myCustomLoader(options) {
+  return {
+    myContext: new Context({ name: "myContext" }).addAggregate(
+      new Aggregate({ name: "agg" }, function() {}).addCommand(
+        { name: "cmd" },
+        function() {}
+      )
+    )
+  };
+  // or, more probably
+  return myExternalCoolLoader(options.domainPath, options.definitions);
+}
 
-    var domain = require('cqrs-domain')({
-      domainPath: '/path/to/my/files',
-    	structureLoader: myCustomLoader
-    });
+var domain = require("cqrs-domain")({
+  domainPath: "/path/to/my/files",
+  structureLoader: myCustomLoader
+});
+```
 
 ## Exposed errors
 
 You can use this for example in you custom command handlers.
 
-    require('cqrs-domain').errors.ValidationError
-    require('cqrs-domain').errors.BusinessRuleError
-    require('cqrs-domain').errors.AggregateDestroyedError
-    require('cqrs-domain').errors.AggregateConcurrencyError
-    require('cqrs-domain').errors.ConcurrencyError
-    require('cqrs-domain').errors.DuplicateCommandError
+```javascript
+require("cqrs-domain").errors.ValidationError;
+require("cqrs-domain").errors.BusinessRuleError;
+require("cqrs-domain").errors.AggregateDestroyedError;
+require("cqrs-domain").errors.AggregateConcurrencyError;
+require("cqrs-domain").errors.ConcurrencyError;
+require("cqrs-domain").errors.DuplicateCommandError;
+```
 
 ## Catch connect and disconnect events
 
-    // eventStore
-    domain.eventStore.on('connect', function() {
-      console.log('eventStore connected');
-    });
+```javascript
+// eventStore
+domain.eventStore.on("connect", function() {
+  console.log("eventStore connected");
+});
 
-    domain.eventStore.on('disconnect', function() {
-      console.log('eventStore disconnected');
-    });
+domain.eventStore.on("disconnect", function() {
+  console.log("eventStore disconnected");
+});
 
-    // aggregateLock
-    domain.aggregateLock.on('connect', function() {
-      console.log('aggregateLock connected');
-    });
+// aggregateLock
+domain.aggregateLock.on("connect", function() {
+  console.log("aggregateLock connected");
+});
 
-    domain.aggregateLock.on('disconnect', function() {
-      console.log('aggregateLock disconnected');
-    });
+domain.aggregateLock.on("disconnect", function() {
+  console.log("aggregateLock disconnected");
+});
 
-    // commandBumper
-    domain.commandBumper.on('connect', function() {
-      console.log('commandBumper connected');
-    });
+// commandBumper
+domain.commandBumper.on("connect", function() {
+  console.log("commandBumper connected");
+});
 
-    domain.commandBumper.on('disconnect', function() {
-      console.log('commandBumper disconnected');
-    });
+domain.commandBumper.on("disconnect", function() {
+  console.log("commandBumper disconnected");
+});
 
+// anything (eventStore or aggregateLock or commandBumper)
+domain.on("connect", function() {
+  console.log("something connected");
+});
 
-    // anything (eventStore or aggregateLock or commandBumper)
-    domain.on('connect', function() {
-      console.log('something connected');
-    });
-
-    domain.on('disconnect', function() {
-      console.log('something disconnected');
-    });
+domain.on("disconnect", function() {
+  console.log("something disconnected");
+});
+```
 
 ## Define the command structure
 
 The values describes the path to that property in the command message.
 
-    domain.defineCommand({
-      // optional, default is 'id'
-      id: 'id',
+```javascript
+domain.defineCommand({
+  // optional, default is 'id'
+  id: "id",
 
-      // optional, default is 'name'
-      name: 'name',
+  // optional, default is 'name'
+  name: "name",
 
-      // optional, default is 'aggregate.id'
-      // if an aggregate id is not defined in the command, the command handler will create a new aggregate instance
-      aggregateId: 'aggregate.id',
+  // optional, default is 'aggregate.id'
+  // if an aggregate id is not defined in the command, the command handler will create a new aggregate instance
+  aggregateId: "aggregate.id",
 
-      // optional, only makes sense if contexts are defined in the 'domainPath' structure
-      context: 'context.name',
+  // optional, only makes sense if contexts are defined in the 'domainPath' structure
+  context: "context.name",
 
-      // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
-      aggregate: 'aggregate.name',
+  // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
+  aggregate: "aggregate.name",
 
-      // optional, but recommended
-      payload: 'payload',
+  // optional, but recommended
+  payload: "payload",
 
-      // optional, if defined the command handler will check if the command can be handled
-      // if you want the command to be handled in a secure/transactional way pass a revision value that matches the current aggregate revision
-      revision: 'revision',
+  // optional, if defined the command handler will check if the command can be handled
+  // if you want the command to be handled in a secure/transactional way pass a revision value that matches the current aggregate revision
+  revision: "revision",
 
-      // optional, if defined the command handler will search for a handle that matches command name and version number
-      version: 'version',
+  // optional, if defined the command handler will search for a handle that matches command name and version number
+  version: "version",
 
-      // optional, if defined theses values will be copied to the event (can be used to transport information like userId, etc..)
-      meta: 'meta'
-    });
+  // optional, if defined theses values will be copied to the event (can be used to transport information like userId, etc..)
+  meta: "meta"
+});
+```
 
 ## Define the event structure
 
 The values describes the path to that property in the event message.
 
-    domain.defineEvent({
-      // optional, default is 'correlationId'
-      // will use the command id as correlationId, so you can match it in the sender
-      correlationId: 'correlationId',
+```javascript
+domain.defineEvent({
+  // optional, default is 'correlationId'
+  // will use the command id as correlationId, so you can match it in the sender
+  correlationId: "correlationId",
 
-      // optional, default is 'id'
-      id: 'id',
+  // optional, default is 'id'
+  id: "id",
 
-      // optional, default is 'name'
-      name: 'name',
+  // optional, default is 'name'
+  name: "name",
 
-      // optional, default is 'aggregate.id'
-      aggregateId: 'aggregate.id',
+  // optional, default is 'aggregate.id'
+  aggregateId: "aggregate.id",
 
-      // optional, only makes sense if contexts are defined in the 'domainPath' structure
-      context: 'context.name',
+  // optional, only makes sense if contexts are defined in the 'domainPath' structure
+  context: "context.name",
 
-      // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
-      aggregate: 'aggregate.name',
+  // optional, only makes sense if aggregates with names are defined in the 'domainPath' structure
+  aggregate: "aggregate.name",
 
-      // optional, default is 'payload'
-      payload: 'payload',
+  // optional, default is 'payload'
+  payload: "payload",
 
-      // optional, default is 'revision'
-      // will represent the aggregate revision, can be used in next command
-      revision: 'revision',
+  // optional, default is 'revision'
+  // will represent the aggregate revision, can be used in next command
+  revision: "revision",
 
-      // optional
-      version: 'version',
+  // optional
+  version: "version",
 
-      // optional, if defined the values of the command will be copied to the event (can be used to transport information like userId, etc..)
-      meta: 'meta',
+  // optional, if defined the values of the command will be copied to the event (can be used to transport information like userId, etc..)
+  meta: "meta",
 
-      // optional, if defined the commit date of the eventstore will be saved in this value
-      commitStamp: 'commitStamp'
-    });
+  // optional, if defined the commit date of the eventstore will be saved in this value
+  commitStamp: "commitStamp"
+});
+```
 
 ## Define the id generator function [optional]
 
 ### you can define a synchronous function
 
-    domain.idGenerator(function () {
-      var id = require('uuid').v4().toString();
-      return id;
-    });
+```javascript
+domain.idGenerator(function() {
+  var id = require("uuid")
+    .v4()
+    .toString();
+  return id;
+});
+```
 
 ### or you can define an asynchronous function
 
-    domain.idGenerator(function (callback) {
-      setTimeout(function () {
-        var id = require('uuid').v4().toString();
-        callback(null, id);
-      }, 50);
-    });
+```javascript
+domain.idGenerator(function(callback) {
+  setTimeout(function() {
+    var id = require("uuid")
+      .v4()
+      .toString();
+    callback(null, id);
+  }, 50);
+});
+```
 
 ## Define the aggregate id generator function [optional]
 
 ### you can define a synchronous function
 
-    domain.aggregateIdGenerator(function () {
-      var id = require('uuid').v4().toString();
-      return id;
-    });
+```javascript
+domain.aggregateIdGenerator(function() {
+  var id = require("uuid")
+    .v4()
+    .toString();
+  return id;
+});
+```
 
 ### or you can define an asynchronous function
 
-    domain.aggregateIdGenerator(function (callback) {
-      setTimeout(function () {
-        var id = require('uuid').v4().toString();
-        callback(null, id);
-      }, 50);
-    });
+```javascript
+domain.aggregateIdGenerator(function(callback) {
+  setTimeout(function() {
+    var id = require("uuid")
+      .v4()
+      .toString();
+    callback(null, id);
+  }, 50);
+});
+```
 
 ## Wire up events [optional]
 
 ### you can define a synchronous function
 
-    // pass events to bus
-    domain.onEvent(function (evt) {
-      bus.emit('event', evt);
-    });
+```javascript
+// pass events to bus
+domain.onEvent(function(evt) {
+  bus.emit("event", evt);
+});
+```
 
 ### or you can define an asynchronous function
 
-    // pass events to bus
-    domain.onEvent(function (evt, callback) {
-      bus.emit('event', evt, function ack () {
-        callback();
-      });
-    });
+```javascript
+// pass events to bus
+domain.onEvent(function(evt, callback) {
+  bus.emit("event", evt, function ack() {
+    callback();
+  });
+});
+```
 
 ## Initialization
 
-    domain.init(function (err, warnings) {
-      // this callback is called when all is ready...
-      // warnings: if no warnings warnings is null, else it's an array containing errors during require of files
-    });
+```javascript
+domain.init(function(err, warnings) {
+  // this callback is called when all is ready...
+  // warnings: if no warnings warnings is null, else it's an array containing errors during require of files
+});
 
-    // or
+// or
 
-    domain.init(); // callback is optional
+domain.init(); // callback is optional
+```
 
 ## Handling a command
 
-    domain.handle({
-      id: 'b80ade36-dd05-4340-8a8b-846eea6e286f',
-      name: 'enterNewPerson',
-      aggregate: {
-        id: '3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70',
-        name: 'person'
-      },
-      context: {
-        name: 'hr'
-      },
-      payload: {
-        firstname: 'Jack',
-        lastname: 'Huston'
-      },
-      revision: 0,
-      version: 1,
-      meta: {
-        userId: 'ccd65819-4da4-4df9-9f24-5b10bf89ef89'
-      }
-    }); // callback is optional
+```javascript
+domain.handle({
+  id: "b80ade36-dd05-4340-8a8b-846eea6e286f",
+  name: "enterNewPerson",
+  aggregate: {
+    id: "3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70",
+    name: "person"
+  },
+  context: {
+    name: "hr"
+  },
+  payload: {
+    firstname: "Jack",
+    lastname: "Huston"
+  },
+  revision: 0,
+  version: 1,
+  meta: {
+    userId: "ccd65819-4da4-4df9-9f24-5b10bf89ef89"
+  }
+}); // callback is optional
+```
 
 ### or
 
+```javascript
     domain.handle({
       id: 'b80ade36-dd05-4340-8a8b-846eea6e286f',
       name: 'renamePerson',
@@ -589,75 +628,78 @@ The values describes the path to that property in the event message.
 
       // metaInfos: { aggregateId: '3b4d44b0-34fb-4ceb-b212-68fe7a7c2f70', aggregate: 'person', context: 'context' }
     });
+```
 
 ## Request domain information
 
 After the initialization you can request the domain information:
 
-    domain.init(function (err) {
-      domain.getInfo();
-      // ==>
-      // { contexts: [
-      //   {
-      //      "name": "hr",
-      //      "aggregates": [
-      //        {
-      //          "name": "person",
-      //          "version": 3,
-      //          "commands": [
-      //            {
-      //              "name": "enterNewPerson",
-      //              "version": 0,
-      //							"preconditions": [...]
-      //            },
-      //            {
-      //              "name": "unregisterAllContactInformation",
-      //              "version": 2,
-      //							"preconditions": [...]
-      //            },
-      //            {
-      //              "name": "unregisterAllContactInformation",
-      //              "version": 1,
-      //							"preconditions": [...]
-      //            }
-      //          ],
-      //          "events": [
-      //            {
-      //              "name": "enteredNewPerson",
-      //              "version": 3
-      //            },
-      //            {
-      //              "name": "enteredNewPerson",
-      //              "version": 0
-      //            },
-      //            {
-      //              "name": "enteredNewPerson",
-      //              "version": 2
-      //            },
-      //            {
-      //              "name": "unregisteredEMailAddress",
-      //              "version": 0
-      //            },
-      //            {
-      //              "name": "unregisteredPhoneNumber",
-      //              "version": 0
-      //            }
-      //          ],
-      //          "businessRules": [
-      //            {
-      //              "name": "atLeast1EMail",
-      //              "description": "at least one character should be in email address"
-      //            },
-      //            {
-      //              "name": "nameEquality",
-      //              "description": "firstname should never be equal lastname"
-      //            }
-      //          ]
-      //        }
-      //      ]
-      //   }
-      //]}
-    });
+```javascript
+domain.init(function(err) {
+  domain.getInfo();
+  // ==>
+  // { contexts: [
+  //   {
+  //      "name": "hr",
+  //      "aggregates": [
+  //        {
+  //          "name": "person",
+  //          "version": 3,
+  //          "commands": [
+  //            {
+  //              "name": "enterNewPerson",
+  //              "version": 0,
+  //							"preconditions": [...]
+  //            },
+  //            {
+  //              "name": "unregisterAllContactInformation",
+  //              "version": 2,
+  //							"preconditions": [...]
+  //            },
+  //            {
+  //              "name": "unregisterAllContactInformation",
+  //              "version": 1,
+  //							"preconditions": [...]
+  //            }
+  //          ],
+  //          "events": [
+  //            {
+  //              "name": "enteredNewPerson",
+  //              "version": 3
+  //            },
+  //            {
+  //              "name": "enteredNewPerson",
+  //              "version": 0
+  //            },
+  //            {
+  //              "name": "enteredNewPerson",
+  //              "version": 2
+  //            },
+  //            {
+  //              "name": "unregisteredEMailAddress",
+  //              "version": 0
+  //            },
+  //            {
+  //              "name": "unregisteredPhoneNumber",
+  //              "version": 0
+  //            }
+  //          ],
+  //          "businessRules": [
+  //            {
+  //              "name": "atLeast1EMail",
+  //              "description": "at least one character should be in email address"
+  //            },
+  //            {
+  //              "name": "nameEquality",
+  //              "description": "firstname should never be equal lastname"
+  //            }
+  //          ]
+  //        }
+  //      ]
+  //   }
+  //]}
+});
+```
 
 # Components definition
 
@@ -672,17 +714,20 @@ After the initialization you can request the domain information:
 
     A special option to define a context with all its aggregates, commands, events and rules exists by adding the externallyLoaded option to the context :
 
-    module.exports = require('cqrs-domain').defineContext({
-      // optional, default is the directory name
-      name: 'hr',
-      externallyLoaded: true
-    });
+```javascript
+module.exports = require("cqrs-domain").defineContext({
+  // optional, default is the directory name
+  name: "hr",
+  externallyLoaded: true
+});
+```
 
     When doing so the context will be added 'as-is' to the domain, this means it won't go trough the normal tree loading and parsing process.
     This option is aimed mainly at plugin developers, as it leaves the responsibility of structuring the domain right in the hand of the one defining the context ( most-probably a plug-in ).
 
 ## Aggregate
 
+```javascript
     module.exports = require('cqrs-domain').defineAggregate({
       // optional, default is last part of path name
       name: 'person',
@@ -818,6 +863,7 @@ var id = cmd.id + require('uuid').v4().toString();
 callback(null, id);
 }, 50);
 });
+```
 
 ## Command validation
 
@@ -826,48 +872,61 @@ All command schemas are json schemas. Hint [http://jsonary.com/documentation/jso
 Internally the [tv4](http://geraintluff.github.io/tv4/) module is used for validation. Additionaly you can extend the tv4 instance with other functionality like [tv4-formats](https://github.com/ikr/tv4-formats), so you can easily use format constraints (i.e. 'email') for your 'string'-types.
 To extend tv4 just catch the validator before having initialized the domain:
 
-    domain.extendValidator(function (validator) {
+```javascript
+domain.extendValidator(function(validator) {
+  // own formats
+  validator.addFormat(require("tv4-formats"));
+  validator.addFormat("mySpecialFormat", function(data) {
+    if (data === "special") {
+      return null;
+    }
+    return "wrong format for special";
+  });
 
-      // own formats
-      validator.addFormat(require('tv4-formats'));
-      validator.addFormat('mySpecialFormat', function (data) {
-        if (data === 'special') {
-          return null;
+  // or other schemas
+  validator.addSchema({
+    mySharedSchema: {
+      /* the schema json */
+    }
+  });
+  validator.addSchema("myOtherSharedSchema", {
+    /* the schema json */
+  });
+
+  // or replace the core valitator
+  validator.validator(function(options, schema) {
+    // options.schemas => all schemas
+    // options.formats => all formats
+
+    // sync
+    return function(cmdDataToValidate) {
+      if (everythingIsOk) {
+        return null;
+      } else {
+        return new require("cqrs-domain").errors.ValidationError(
+          "command not valid",
+          { because: "of this" }
+        );
+      }
+    };
+    // or async
+    return function(cmdDataToValidate, callback) {
+      externalAsyncValidator(cmdDataToValidate, function(errors) {
+        if (!error) {
+          callback();
+        } else {
+          callback(
+            new require("cqrs-domain").errors.ValidationError(
+              "command not valid",
+              { because: "of this" }
+            )
+          );
         }
-        return 'wrong format for special';
       });
-
-      // or other schemas
-      validator.addSchema({ 'mySharedSchema': { /* the schema json */ } });
-      validator.addSchema('myOtherSharedSchema', { /* the schema json */ });
-
-      // or replace the core valitator
-      validator.validator(function (options, schema) {
-        // options.schemas => all schemas
-        // options.formats => all formats
-
-        // sync
-        return function (cmdDataToValidate) {
-          if (everythingIsOk) {
-            return null;
-          } else {
-            return new require('cqrs-domain').errors.ValidationError('command not valid', { 'because': 'of this' });
-          }
-        };
-        // or async
-        return function (cmdDataToValidate, callback) {
-          externalAsyncValidator(cmdDataToValidate, function(errors){
-            if (!error) {
-                callback();
-            } else {
-                callback(new require('cqrs-domain').errors.ValidationError('command not valid', { 'because': 'of this' }));
-            }
-          });
-        };
-
-      });
-
-    });
+    };
+  });
+});
+```
 
 Each command schema title should match the command name. Example: [enterNewPerson.json](https://github.com/adrai/node-cqrs-domain/blob/1.0/test/integration/fixture/set1/hr/person/validationRules/enterNewPerson.json)
 
