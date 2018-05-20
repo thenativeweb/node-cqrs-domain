@@ -49,7 +49,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
 # Workflow
 
-```
+```bash
         │
        cmd
         │
@@ -103,83 +103,87 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 
 # Installation
 
+```bash
     npm install cqrs-domain
+```
 
 # Usage
 
-    var domain = require('cqrs-domain')({
-      // the path to the "working directory"
-      // can be structured like
-      // [set 1](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set1) or
-      // [set 2](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set2)
-      domainPath: '/path/to/my/files',
+```javascript
+var domain = require("cqrs-domain")({
+  // the path to the "working directory"
+  // can be structured like
+  // [set 1](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set1) or
+  // [set 2](https://github.com/adrai/node-cqrs-domain/tree/master/test/integration/fixture/set2)
+  domainPath: "/path/to/my/files",
 
-      // optional, default is 'commandRejected'
-      // will be used if an error occurs and an event should be generated
-      commandRejectedEventName: 'rejectedCommand',
+  // optional, default is 'commandRejected'
+  // will be used if an error occurs and an event should be generated
+  commandRejectedEventName: "rejectedCommand",
 
-      // optional, default is 800
-      // if using in scaled systems and not guaranteeing that each command for an aggregate instance
-      // dispatches to the same worker process, this module tries to catch the concurrency issues and
-      // retries to handle the command after a timeout between 0 and the defined value
-      retryOnConcurrencyTimeout: 1000,
+  // optional, default is 800
+  // if using in scaled systems and not guaranteeing that each command for an aggregate instance
+  // dispatches to the same worker process, this module tries to catch the concurrency issues and
+  // retries to handle the command after a timeout between 0 and the defined value
+  retryOnConcurrencyTimeout: 1000,
 
-      // optional, default is 100
-      // global snapshot threshold value for all aggregates
-      // defines the amount of loaded events, if there are more events to load, it will do a snapshot, so next loading is faster
-      // an individual snapshot threshold defining algorithm can be defined per aggregate (scroll down)
-      snapshotThreshold: 1000,
+  // optional, default is 100
+  // global snapshot threshold value for all aggregates
+  // defines the amount of loaded events, if there are more events to load, it will do a snapshot, so next loading is faster
+  // an individual snapshot threshold defining algorithm can be defined per aggregate (scroll down)
+  snapshotThreshold: 1000,
 
-      // optional, default is in-memory
-      // currently supports: mongodb, redis, tingodb, azuretable and inmemory
-      // hint: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
-      eventStore: {
-        type: 'mongodb',
-        host: 'localhost',                          // optional
-        port: 27017,                                // optional
-        dbName: 'domain',                           // optional
-        eventsCollectionName: 'events',             // optional
-        snapshotsCollectionName: 'snapshots',       // optional
-        transactionsCollectionName: 'transactions', // optional
-        timeout: 10000                              // optional
-      // authSource: 'authedicationDatabase',        // optional
-        // username: 'technicalDbUser',                // optional
-        // password: 'secret'                          // optional
-      // url: 'mongodb://user:pass@host:port/db?opts // optional
-      },
+  // optional, default is in-memory
+  // currently supports: mongodb, redis, tingodb, azuretable and inmemory
+  // hint: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
+  eventStore: {
+    type: "mongodb",
+    host: "localhost", // optional
+    port: 27017, // optional
+    dbName: "domain", // optional
+    eventsCollectionName: "events", // optional
+    snapshotsCollectionName: "snapshots", // optional
+    transactionsCollectionName: "transactions", // optional
+    timeout: 10000 // optional
+    // authSource: 'authedicationDatabase',        // optional
+    // username: 'technicalDbUser',                // optional
+    // password: 'secret'                          // optional
+    // url: 'mongodb://user:pass@host:port/db?opts // optional
+  },
 
-      // optional, default is in-memory
-      // currently supports: mongodb, redis, tingodb, couchdb, azuretable, dynamodb and inmemory
-      // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
-      aggregateLock: {
-        type: 'redis',
-        host: 'localhost',                          // optional
-        port: 6379,                                 // optional
-        db: 0,                                      // optional
-        prefix: 'domain_aggregate_lock',            // optional
-        timeout: 10000                              // optional
-        // password: 'secret'                          // optional
-      },
+  // optional, default is in-memory
+  // currently supports: mongodb, redis, tingodb, couchdb, azuretable, dynamodb and inmemory
+  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
+  aggregateLock: {
+    type: "redis",
+    host: "localhost", // optional
+    port: 6379, // optional
+    db: 0, // optional
+    prefix: "domain_aggregate_lock", // optional
+    timeout: 10000 // optional
+    // password: 'secret'                          // optional
+  },
 
-      // optional, default is not set
-      // checks if command was already seen in the last time -> ttl
-      // currently supports: mongodb, redis, tingodb and inmemory
-      // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
-      deduplication: {
-    		type: 'redis',
-    		ttl: 1000 * 60 * 60 * 1, // 1 hour          // optional
-    		host: 'localhost',                          // optional
-    		port: 6379,                                 // optional
-    		db: 0,                                      // optional
-    		prefix: 'domain_aggregate_lock',            // optional
-    		timeout: 10000                              // optional
-    		// password: 'secret'                          // optional
-      },
+  // optional, default is not set
+  // checks if command was already seen in the last time -> ttl
+  // currently supports: mongodb, redis, tingodb and inmemory
+  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
+  deduplication: {
+    type: "redis",
+    ttl: 1000 * 60 * 60 * 1, // 1 hour          // optional
+    host: "localhost", // optional
+    port: 6379, // optional
+    db: 0, // optional
+    prefix: "domain_aggregate_lock", // optional
+    timeout: 10000 // optional
+    // password: 'secret'                          // optional
+  },
 
-      // optional, default false
-      // resolves valid file types from loader extensions instead of default values while parsing definition files
-      useLoaderExtensions: true
-    });
+  // optional, default false
+  // resolves valid file types from loader extensions instead of default values while parsing definition files
+  useLoaderExtensions: true
+});
+```
 
 ## Using factory methods for event store or / and aggregate lock in domain definition
 
@@ -187,6 +191,7 @@ You can replace the framework-provided implementation of event store or / and ag
 To do that, you need to include a factory method in the options object passed to the domain constructor.
 Using the factory methods, the example above might become:
 
+```javascript
     var myGetEventStore = require('./getEventStore.js');
     var myLock = require('./myLock.js');
 
@@ -217,6 +222,7 @@ Using the factory methods, the example above might become:
     		});
       }
     });
+```
 
 When using factory methods, the objects they return are required to implement the following public interfaces:
 
