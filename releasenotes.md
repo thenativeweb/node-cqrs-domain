@@ -1,5 +1,8 @@
+## [v2.14.1](https://github.com/adrai/node-cqrs-domain/compare/v2.14.0...v2.14.1)
+- Schema validation rules structure loader bug fix [#127](https://github.com/adrai/node-cqrs-domain/pull/127) thanks to [OrH](https://github.com/OrH)
+
 ## [v2.14.0](https://github.com/adrai/node-cqrs-domain/compare/v2.13.1...v2.14.0)
-- add option to add custom structureLoader implementation[#125](https://github.com/adrai/node-cqrs-domain/pull/125) thanks to [nanov](https://github.com/nanov)
+- add option to add custom structureLoader implementation [#125](https://github.com/adrai/node-cqrs-domain/pull/125) thanks to [nanov](https://github.com/nanov)
 
 ## [v2.13.1](https://github.com/adrai/node-cqrs-domain/compare/v2.12.3...v2.13.1)
 - Introduce externallyLoaded option to context, and load those separately [#121](https://github.com/adrai/node-cqrs-domain/pull/121) thanks to [nanov](https://github.com/nanov)
