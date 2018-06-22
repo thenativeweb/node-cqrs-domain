@@ -264,13 +264,17 @@ You can also replace the built-in structure loader with one that suits your need
 To do that, you need to include a loading method in the options object passed to the domain constructor.
 
 	// options will contain a the domainPath, validatorExtension, and useLoaderExtensions options passed to the constructor
-	// ass well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. )
+	// as well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. )
 	function myCustomLoader(options) {
 		return {
 			myContext:  new Context({ name: 'myContext' }).addAggregate(new Aggregate({ name : 'agg' }, function(){}).addCommand({ name: 'cmd' }, function(){}))
 		}
 		// or, more probably 
 		return myExternalCoolLoader(options.domainPath, options.definitions);
+	}
+	// or async
+	function myCustomLoaderAsync(options, callback) {
+		callback(null, myExternalCoolLoader(options.domainPath, options.definitions));
 	}
 
 	var domain = require('cqrs-domain')({
