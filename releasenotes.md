@@ -1,3 +1,6 @@
+## [v2.14.2](https://github.com/adrai/node-cqrs-domain/compare/v2.14.0...v2.14.1)
+- add option for asynchronous custom structureLoader thank to [nanov](https://github.com/nanov)
+
 ## [v2.14.1](https://github.com/adrai/node-cqrs-domain/compare/v2.14.0...v2.14.1)
 - Schema validation rules structure loader bug fix [#127](https://github.com/adrai/node-cqrs-domain/pull/127) thanks to [OrH](https://github.com/OrH)
 
