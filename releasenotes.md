@@ -1,3 +1,6 @@
+## [v2.14.3](https://github.com/adrai/node-cqrs-domain/compare/v2.14.2...v2.14.3)
+- update node-eventstore dependency
+
 ## [v2.14.2](https://github.com/adrai/node-cqrs-domain/compare/v2.14.0...v2.14.1)
 - add option for asynchronous custom structureLoader thank to [nanov](https://github.com/nanov)
 
