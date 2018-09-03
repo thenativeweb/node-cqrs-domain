@@ -28,7 +28,7 @@
     "cradle": ">=0.6.7",
     "eslint": ">=1.0.0",
     "expect.js": ">= 0.1.2",
-    "mocha": "5.x.x",
+    "mocha": "3.x.x",
     "mongodb": "2.1.x",
     "redis": ">= 0.10.1",
     "tingodb": ">= 0.0.1",
