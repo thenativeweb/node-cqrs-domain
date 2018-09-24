@@ -264,7 +264,7 @@ You can also replace the built-in structure loader with one that suits your need
 To do that, you need to include a loading method in the options object passed to the domain constructor.
 
 	// options will contain a the domainPath, validatorExtension, and useLoaderExtensions options passed to the constructor
-	// as well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. )
+	// as well as a definition object containing all the constructors of the domain components  ( Context, Aggregate etc. ) and error constructors ( inside errors )
 	function myCustomLoader(options) {
 		return {
 			myContext:  new Context({ name: 'myContext' }).addAggregate(new Aggregate({ name : 'agg' }, function(){}).addCommand({ name: 'cmd' }, function(){}))
