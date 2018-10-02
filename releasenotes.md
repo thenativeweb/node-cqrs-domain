@@ -1,3 +1,6 @@
+## [v2.14.6](https://github.com/adrai/node-cqrs-domain/compare/v2.14.5...v2.14.6)
+- updated node-eventstore and added optional position property to event
+
 ## [v2.14.5](https://github.com/adrai/node-cqrs-domain/compare/v2.14.4...v2.14.5)
 - updated node-eventstore and lodash dependencies
 
