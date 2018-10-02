@@ -1,3 +1,6 @@
+## [v2.14.5](https://github.com/adrai/node-cqrs-domain/compare/v2.14.4...v2.14.5)
+- updated node-eventstore and lodash dependencies
+
 ## [v2.14.4](https://github.com/adrai/node-cqrs-domain/compare/v2.14.3...v2.14.4)
 - pass error constructors to customLoader
 
