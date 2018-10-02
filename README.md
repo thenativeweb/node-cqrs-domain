@@ -405,7 +405,10 @@ The values describes the path to that property in the event message.
 	  meta: 'meta',
 
 	  // optional, if defined the commit date of the eventstore will be saved in this value
-	  commitStamp: 'commitStamp'
+	  commitStamp: 'commitStamp',
+
+	  // optional, if defined and the eventstore db implemntation supports this the position of the event in the eventstore will be saved in this value
+	  position: 'position'
 	});
 
 
