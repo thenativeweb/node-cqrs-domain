@@ -61,6 +61,6 @@
     }
   ],
   "scripts": {
-    "test": "mocha test/unit/aggregateLockTest.js"
+    "test": "mocha test/unit && mocha test/integration"
   }
 }
