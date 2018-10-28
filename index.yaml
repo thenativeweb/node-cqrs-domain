@@ -1,0 +1,8 @@
+# This is needed for testing google cloud datastore, since a lot of queries are using composite index
+# please set up your gcloud-cli, and run "gcloud datastore create-indexes index.yaml"
+
+indexes:
+- kind: aggregatelock
+  ancestor: yes
+  properties:
+  - name: timeStamp

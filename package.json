@@ -23,6 +23,7 @@
     "uuid": "3.1.0"
   },
   "devDependencies": {
+    "@google-cloud/datastore": "^2.0.0",
     "aws-sdk": ">=2.96.0",
     "azure-storage": ">=0.10.0",
     "cradle": ">=0.6.7",
@@ -60,6 +61,6 @@
     }
   ],
   "scripts": {
-    "test": "mocha test/unit && mocha test/integration"
+    "test": "mocha test/unit/aggregateLockTest.js"
   }
 }
