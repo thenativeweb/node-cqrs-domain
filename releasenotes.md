@@ -1,3 +1,6 @@
+## [v2.14.7](https://github.com/adrai/node-cqrs-domain/compare/v2.14.6...v2.14.7)
+- prepare previousModel before evaluating preConditions in order to prevent model mutation inside them 
+
 ## [v2.14.6](https://github.com/adrai/node-cqrs-domain/compare/v2.14.5...v2.14.6)
 - updated node-eventstore and added optional position property to event
 
