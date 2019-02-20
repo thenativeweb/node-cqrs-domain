@@ -1,3 +1,6 @@
+## [v2.14.71](https://github.com/adrai/node-cqrs-domain/compare/v2.14.7...v2.14.71)
+- update eventstore
+
 ## [v2.14.7](https://github.com/adrai/node-cqrs-domain/compare/v2.14.6...v2.14.7)
 - prepare previousModel before evaluating preConditions in order to prevent model mutation inside them 
 
