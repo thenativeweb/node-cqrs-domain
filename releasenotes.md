@@ -1,3 +1,6 @@
+## [v2.14.73](https://github.com/adrai/node-cqrs-domain/compare/v2.14.72...v2.14.73)
+- add edge case error handling on main command handler
+
 ## [v2.14.72](https://github.com/adrai/node-cqrs-domain/compare/v2.14.71...v2.14.72)
 - update deps and eventstore
 
