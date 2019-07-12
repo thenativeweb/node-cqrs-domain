@@ -1,4 +1,3 @@
-
 # Introduction
 
 [![travis](https://img.shields.io/travis/adrai/node-cqrs-domain.svg)](https://travis-ci.org/adrai/node-cqrs-domain) [![npm](https://img.shields.io/npm/v/cqrs-domain.svg)](https://npmjs.org/package/cqrs-domain)
@@ -767,15 +766,15 @@ After the initialization you can request the domain information:
 	  aggregate.set('firstname', names[0]);
 	  aggregate.set('lastname', names[1]);
 	})
-  // optionally, define committingSnapshotTransformer (i.e. for GDPR: to encrypt data in storage)
-	.defineCommittingSnapshotTransformer({
+    // optionally, define committingSnapshotTransformer (i.e. for GDPR: to encrypt data in storage)
+  	.defineCommittingSnapshotTransformer({
 	  version: 1
 	}, function (data) {
 	  // data is the snapshot data
 	  data.firstname = encrypt(data.firstname);
     return data;
 	})
-  // or async
+    // or async
 	.defineCommittingSnapshotTransformer({
 	  version: 1
 	}, function (data, callback) {
@@ -785,7 +784,7 @@ After the initialization you can request the domain information:
       callback(err, data);
     });
 	})
-  // optionally, define loadingSnapshotTransformer (i.e. for GDPR: to decrypt stored data)
+    // optionally, define loadingSnapshotTransformer (i.e. for GDPR: to decrypt stored data)
 	.defineLoadingSnapshotTransformer({
 	  version: 1
 	}, function (data) {
@@ -793,7 +792,7 @@ After the initialization you can request the domain information:
 	  data.firstname = decrypt(data.firstname);
     return data;
 	})
-  // or async
+    // or async
 	.defineLoadingSnapshotTransformer({
 	  version: 1
 	}, function (data, callback) {
@@ -1254,6 +1253,31 @@ exports.default = defineEvent({...});
 // etc...
 ```
 Exports other than the default export are then ignored by this package's structure loader.
+
+[Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
+
+# License
+
+Copyright (c) 2018 Adriano Raiano
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+ts other than the default export are then ignored by this package's structure loader.
 
 [Release notes](https://github.com/adrai/node-cqrs-domain/blob/master/releasenotes.md)
 
