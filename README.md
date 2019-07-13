@@ -1,4 +1,3 @@
-
 # Introduction
 
 [![travis](https://img.shields.io/travis/adrai/node-cqrs-domain.svg)](https://travis-ci.org/adrai/node-cqrs-domain) [![npm](https://img.shields.io/npm/v/cqrs-domain.svg)](https://npmjs.org/package/cqrs-domain)
@@ -767,15 +766,15 @@ After the initialization you can request the domain information:
 	  aggregate.set('firstname', names[0]);
 	  aggregate.set('lastname', names[1]);
 	})
-  // optionally, define committingSnapshotTransformer (i.e. for GDPR: to encrypt data in storage)
-	.defineCommittingSnapshotTransformer({
+    // optionally, define committingSnapshotTransformer (i.e. for GDPR: to encrypt data in storage)
+  	.defineCommittingSnapshotTransformer({
 	  version: 1
 	}, function (data) {
 	  // data is the snapshot data
 	  data.firstname = encrypt(data.firstname);
     return data;
 	})
-  // or async
+    // or async
 	.defineCommittingSnapshotTransformer({
 	  version: 1
 	}, function (data, callback) {
@@ -785,7 +784,7 @@ After the initialization you can request the domain information:
       callback(err, data);
     });
 	})
-  // optionally, define loadingSnapshotTransformer (i.e. for GDPR: to decrypt stored data)
+    // optionally, define loadingSnapshotTransformer (i.e. for GDPR: to decrypt stored data)
 	.defineLoadingSnapshotTransformer({
 	  version: 1
 	}, function (data) {
@@ -793,7 +792,7 @@ After the initialization you can request the domain information:
 	  data.firstname = decrypt(data.firstname);
     return data;
 	})
-  // or async
+    // or async
 	.defineLoadingSnapshotTransformer({
 	  version: 1
 	}, function (data, callback) {
