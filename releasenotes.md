@@ -1,3 +1,6 @@
+## [v2.14.78](https://github.com/adrai/node-cqrs-domain/compare/v2.14.77...v2.14.78)
+- catch throwing errors during command handling
+
 ## [v2.14.77](https://github.com/adrai/node-cqrs-domain/compare/v2.14.76...v2.14.77)
 - Fix for validation error(s) swallowing thanks to [ssipos90](https://github.com/ssipos90)
 
