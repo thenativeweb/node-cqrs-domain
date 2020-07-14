@@ -1,3 +1,6 @@
+## [v2.14.79](https://github.com/adrai/node-cqrs-domain/compare/v2.14.78...v2.14.79)
+- mongodb: useUnifiedTopology
+
 ## [v2.14.78](https://github.com/adrai/node-cqrs-domain/compare/v2.14.77...v2.14.78)
 - catch throwing errors during command handling
 
