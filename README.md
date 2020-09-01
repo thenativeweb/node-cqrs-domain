@@ -178,7 +178,7 @@ It can be very useful as domain component if you work with (d)ddd, cqrs, eventde
 	  },
 
 	  // optional, default is in-memory
-	  // currently supports: mongodb, redis, tingodb, couchdb, azuretable, dynamodb and inmemory
+	  // currently supports: mongodb, redis, tingodb, couchdb, azuretable, dynamodb, cloud datastore and inmemory
 	  // hint settings like: [eventstore](https://github.com/adrai/node-eventstore#provide-implementation-for-storage)
 	  aggregateLock: {
 	    type: 'redis',
